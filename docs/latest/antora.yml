@@ -1,0 +1,6 @@
+name: liz-gc
+title: Rancher AI Assistant
+version: latest
+start_page: zh:introduction.adoc
+nav:
+- modules/zh/nav.adoc
