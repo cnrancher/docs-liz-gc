@@ -1,0 +1,64 @@
+include::partial$variables.adoc[]
+
+= 已验证模型
+:page-languages: [zh]
+:revdate: 2026-08-24
+:page-revdate: {revdate}
+:description: 对已验证模型的说明。
+
+以下模型均经过专门的测试验证，以确认其与 Rancher AI GC 产品的集成兼容性。
+
+[cols="1,3", options="header"]
+|===
+| 模型提供商 | 已验证模型
+
+| OpenAI
+a| * gpt-5.4
+* gpt-5.4-mini
+* gpt-5.2
+* gpt-4.1-mini
+
+| Gemini
+a| * gemini-3.6-flash
+* gemini-3.5-flash
+* gemini-3.5-flash-lite
+* gemini-3.1-flash-lite
+* gemini-3.1-pro-preview
+* gemini-3-flash-preview
+* gemini-2.5-flash
+* gemini-2.5-pro
+
+| Qwen
+a| * qwen3.7-plus
+* qwen3.7-max
+* qwen3.6-plus
+* qwen3.6-max-preview
+* qwen3.6-flash
+* qwen3-max
+* qwen-plus
+
+| Deepseek
+a| * deepseek-v4-pro
+* deepseek-v4-flash
+
+| MiMo
+a| * mimo-v2.5-pro
+* mimo-v2.5
+
+| Kimi
+a| * kimi-k3
+* kimi-k2.7-code
+* kimi-k2.7-code-highspeed
+* kimi-k2.6
+
+| GLM
+a| * glm-5.2
+* glm-5.1
+|===
+
+[NOTE]
+====
+任何支持 link:https://ollama.com/search?c=tools[tool calls] 的模型都应该是兼容的。
+
+如需请求支持新模型，请联系 Rancher AI GC 团队。
+====

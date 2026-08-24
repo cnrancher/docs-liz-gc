@@ -1,0 +1,151 @@
+include::partial$variables.adoc[]
+
+= 故障排除
+:page-languages: [zh]
+:revdate: 2026-08-24
+:page-revdate: {revdate}
+:description: 故障排除
+
+== 快速故障排除
+
+AI 助手位于 local 集群的 kopilot-system 命名空间中。您可以访问 Agent 日志来了解任何问题。
+
+[source,bash]
+----
+kubectl get po -n kopilot-system
+----
+
+要获取 kopilot-agent pod 下 container `kopilot-runtime` 的日志：
+[source,bash]
+----
+kubectl logs -n kopilot-system -l app=kopilot-agent -c kopilot-runtime
+----
+
+要获取 rancher-ai-mcp pod 的日志：
+[source,bash]
+----
+kubectl logs -n kopilot-system -l app=rancher-mcp-server
+----
+
+== 启用 DEBUG 日志
+
+您可以在通过 Helm 部署 Agent 时，将 `agent.runtime.logLevel` 设置为 `DEBUG`，以启用 DEBUG 日志。
+
+更新 values.yaml
+[source,yaml]
+----
+...
+agent:
+  runtime:
+    logLevel: DEBUG
+...
+----
+
+更新 Helm Chart:
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    -f values.yaml \
+    kopilot ./kopilot-{version}.tgz
+----
+
+== 更新模型配置
+
+模型配置存储在 `kopilot-llm-config` Secret 中。如果您通过 Settings 页面修改了模型配置，这些修改会直接保存到该 Secret。
+
+默认情况下，执行 Helm upgrade 时不会覆盖现有的 `kopilot-llm-config` Secret：
+
+[,yaml]
+----
+llm:
+  # When false (default), helm upgrade keeps an existing kopilot-llm-config Secret
+  # (e.g. after UI edits). Set true to overwrite it from these values.
+  forceUpdate: false
+----
+
+因此，如果您已经通过 Settings 页面配置了模型，修改 `values.yaml` 中的模型配置后执行 Helm upgrade，**默认不会覆盖现有的模型配置**。
+
+如果希望使用 `values.yaml` 中的配置覆盖现有的 `kopilot-llm-config` Secret，请将 `llm.forceUpdate` 设置为 `true`：
+
+[,yaml]
+----
+llm:
+  forceUpdate: true
+----
+
+[NOTE]
+====
+如果您通过 Settings 页面配置了模型，请在更新之前，将所需的模型配置同步到 `values.yaml` 中，并设置 `llm.forceUpdate: true`，以确保 Helm upgrade 使用 `values.yaml` 中的配置覆盖现有的 `kopilot-llm-config` Secret。
+====
+
+== 使用 Ingress NGINX 时出现 `missing user header` 错误
+
+在本地 RKE2 集群中，如果使用 Ingress NGINX，访问相关服务时可能出现以下错误：
+
+[,text]
+----
+{ "type": "error", "links": {}, "code": "InvalidBodyContent", "message": "invalid request, missing user header", "status": 422 }
+----
+
+=== 原因
+
+Ingress NGINX 默认情况下会忽略包含下划线的请求头，导致服务端无法获取所需的用户信息，从而返回 `422` 错误。
+
+=== 解决方法
+
+在 `rke2-ingress-nginx-controller` ConfigMap 中启用下划线请求头支持：
+
+[,bash]
+----
+kubectl patch configmap rke2-ingress-nginx-controller -n kube-system \
+  --type merge \
+  -p '{"data":{"enable-underscores-in-headers":"true"}}'
+----
+
+配置修改后会立即生效，无需重启 Ingress NGINX Controller。
+
+您可以使用以下命令确认配置是否已生效：
+
+[,bash]
+----
+kubectl get configmap rke2-ingress-nginx-controller -n kube-system \
+  -o jsonpath='{.data.enable-underscores-in-headers}'
+----
+
+预期输出：
+
+[,text]
+----
+true
+----
+
+== 使用过程中页面自动退出登录
+
+在使用 Rancher AI GC 的过程中，页面可能会自动退出登录，并出现以下错误：
+
+[,text]
+----
+{"Code":{"Code": "Unauthorized", "Status": 401}, "Message": "must authenticate","Cause": null, "FieldName": ""}
+----
+
+=== 原因
+
+如果 `values.yaml` 中缺少 `rancher_sso` 配置，Agent 无法正确获取或验证 Rancher 的认证信息，从而导致请求返回 `401 Unauthorized`，页面自动退出登录。
+
+=== 解决方法
+
+在 `values.yaml` 中配置 Rancher SSO：
+
+[,yaml]
+----
+rancher_sso:
+  enabled: true
+  url: "https://rancher.mycompany.com"
+----
+
+将 `url` 设置为 Rancher Server 的实际访问地址。
+
+修改 `values.yaml` 后重新执行 Helm upgrade，使配置生效。
+
