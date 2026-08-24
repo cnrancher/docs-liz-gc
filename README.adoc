@@ -1,6 +1,6 @@
 = Liz-GC-docs
 
-SUSE product documentation for Liz GC: The Rancher AI Assistant.
+SUSE product documentation for Liz GC: The Rancher & Kubernetes AI Assistant.
 
 Welcome aboard! Make yourself a fork and contribute.
 

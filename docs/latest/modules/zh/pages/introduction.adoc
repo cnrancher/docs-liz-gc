@@ -1,0 +1,65 @@
+include::partial$variables.adoc[]
+
+= 认识 {project-name}
+:page-languages: [zh]
+:revdate: 2026-08-23
+:page-revdate: {revdate}
+:description: 介绍 {project-name}，这是一个SUSE® Rancher Prime产品。
+
+{short-project-name} 是一款上下文感知型 AI 智能体：既可以集成到 SUSE Rancher Prime 环境中，也可以不依赖 Rancher、独立为用户提供服务。与通用型 AI 不同，{short-project-name} 旨在理解集群、命名空间和工作负载的实时状态。
+
+{short-project-name} 既可作为 Rancher 扩展提供，也可作为不依赖 Rancher 的独立 UI 提供。无论采用哪种方式，它都相当于驻留在您的工作区中，随时为您提供所需的实时指导。无论您是在排查失败的部署，还是在理解新的 Rancher 与 Kubernetes 概念，{short-project-name} 都借助模型上下文协议 (MCP)，弥合运维数据与 LLM 生成的可操作建议之间的鸿沟。
+
+无论您需要的是站点可靠性工程师 (SRE) 的意见，还是 Rancher 与 Kubernetes 专家的帮助，{short-project-name} 都能提供有效参考，帮助您更快做出正确决策。{short-project-name} 的优势在于：不仅支持与 Rancher UI 集成，也支持不依赖 Rancher 的独立 UI，并具备适应企业安全要求的多种能力。
+
+
+== 关键组件
+
+* **AI 智能体**: LLM 推理引擎与 MCP 服务（Rancher MCP 与 Kubernetes MCP）之间的领域专用桥梁。
+  它将复杂请求分解并路由到安全的工具调用，同时强制执行安全防护措施。
+  它确保上下文感知的执行，并将难懂的技术数据转化为清晰易懂的响应。
+  它还提供统一的技术框架，同时支持独立 UI 和 Rancher UI 扩展。
+* **Rancher MCP 服务**: 该组件依赖于 Rancher，适用于使用 Rancher 的场景。它是负责与 Rancher API 交互的 Rancher 模型上下文协议 (MCP) 组件，通过 Rancher 公共 API 机制，并以多种定制工具对外提供能力，从而带来最佳用户体验。
+* **Rancher UI 扩展**: 该组件依赖于 Rancher，适用于使用 Rancher 的场景。它扩展 Rancher UI 以支持 {short-project-name}，不再局限于普通聊天窗口，而是将 {short-project-name} 嵌入 Rancher UI 的合适位置，并把助手集成到错误消息和状态徽章中，以提供即时的上下文支持。
+* **Kubernetes MCP 服务**: 该组件不依赖于 Rancher，适用于无法使用 Rancher 的场景。它是负责与 Kubernetes API 交互的 Kubernetes 模型上下文协议 (MCP) 组件，通过 Kubernetes 公共 API 机制，并参考 kubectl 能力实现了多种定制工具对外提供能力，从而带来最佳用户体验。
+* **独立 UI 支持**: 该组件不依赖于 Rancher，适用于无法使用 Rancher 的场景。它不仅提供与 Rancher 高度相似的权限管理能力，还提供以 kubeconfig 为核心的多集群管理能力，让未使用 Rancher 的用户也能友好地使用 {short-project-name}。
+
+== 主要特征
+
+=== 灵活的模型自主权
+
+鉴于安全至关重要，{short-project-name} 允许您自由选择底层 AI 引擎。
+
+* 通过 OpenAI 兼容的方式连接本地或隔离的 LLM，以实现最大程度的数据隐私。
+* 使用国内外主流公共引擎进行高性能推理，例如：
+** OpenAI 的 ChatGPT
+** Google 的 Gemini
+** 阿里的 Qwen
+** 深度求索的 DeepSeek
+** 小米的 Mimo
+** 月之暗面的 Kimi
+** 智谱的 GLM
+
+=== 灵活的智能体定制权
+
+不同团队面临的运维场景各不相同，{short-project-name} 允许您按需定制多个智能体，使其贴合各自的职责边界与工具链。
+
+* 自定义智能体的名称与描述，便于在多智能体协作中识别职责。
+* 编写系统提示词，约束智能体的角色、回答风格与安全边界。
+* 按需配置智能体的 MCP 工具，只提供该智能体真正需要的能力。
+
+
+== 为什么需要 AI 助手？
+
+随着 Kubernetes 环境规模的扩大，运维人员的“认知负担”呈指数级增长。{short-project-name} 旨在解决现代平台运维中的三个关键挑战：
+
+. **缩小技能差距**：Kubernetes 的学习曲线向来陡峭。{short-project-name} 为不熟悉特定资源或错误类型的工程师提供即时的专家级支持，从而减少对资深“英雄”工程师的依赖。
+. **加速解决问题**：运维人员无需再手动检查日志或搜索外部文档，即可请 {short-project-name} 总结命名空间的状态或解释特定故障，从而缩短平均故障解决时间 (MTTR)。
+. **主动系统意识**：{short-project-name} 支持主动运维。通过询问“哪些部署当前处于不健康状态？”或“总结此集群的运行状况”等问题，团队可以在问题升级为故障之前识别并修复，从而实现主动系统感知。
+
+[NOTE]
+====
+
+虽然 {short-project-name} 是一个强大的助手，但它旨在扩展人类知识，而不是取代它。用户在应用建议的修复时，应验证 AI 的建议并遵循其组织的标准安全实践。
+
+====
