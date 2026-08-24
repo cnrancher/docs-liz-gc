@@ -1,0 +1,147 @@
+include::partial$variables.adoc[]
+
+= Liz GC 安装部署快速入门
+:page-languages: [zh]
+:revdate: 2026-08-23
+:page-revdate: {revdate}
+:description: 在 Rancher local 集群通过 Helm 安装 Liz GC，并启用 Rancher UI Extension 作为 AI Assistant。
+
+本文介绍如何在 Rancher 环境中部署 Liz GC，并安装 UI Extension，以便在 Rancher UI 中直接使用 AI Assistant。
+
+== 先决条件
+
+开始前请确认已满足以下条件：
+
+* Rancher 2.13 或以上版本
+* 已安装 Helm
+* 已准备可用的 LLM API Key
+
+== 支持模型矩阵
+
+Liz GC 当前支持以下 LLM 厂商与模型。安装时需提供对应厂商的 API Key。
+
+[cols="1,3", options="header"]
+|===
+| LLM 厂商 | 支持模型
+
+| OpenAI
+| `gpt-4.1-mini`, `gpt-5.2`, `gpt-5.4-mini`, `gpt-5.4`
+
+| Gemini
+| `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-3-flash-preview`, `gemini-3.1-pro-preview`, `gemini-3.1-flash-lite`, `gemini-3.5-flash`, `gemini-3.6-flash`
+
+| Qwen
+| `qwen-plus`, `qwen3-max`, `qwen3.6-flash`, `qwen3.6-max-preview`, `qwen3.6-plus`, `qwen3.7-max`, `qwen3.7-plus`
+
+| DeepSeek
+| `deepseek-v4-flash`, `deepseek-v4-pro`
+
+| MiMo
+| `mimo-v2.5`, `mimo-v2.5-pro`
+
+| Kimi
+| `kimi-k2.6`, `kimi-k2.7-code`, `kimi-k2.7-code-highspeed`, `kimi-k3`
+
+| GLM
+| `glm-5.1`, `glm-5.2`
+|===
+
+== 安装 cert-manager
+
+Liz GC 使用 cert-manager 签发和管理 TLS 证书。
+若 Rancher 环境中已安装 cert-manager，可跳过本节，直接进入 <<helm-install-liz-gc,Helm 安装 Liz GC>>。
+
+[source,bash]
+----
+helm repo add jetstack https://charts.jetstack.io
+
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace --set crds.enabled=true
+----
+
+[[helm-install-liz-gc]]
+== Helm 安装 Liz GC
+
+在 Rancher local 集群上安装 Liz GC v0.6.0。
+
+. 从 https://github.com/cnrancher/kopilot/releases/tag/v0.6.0[GitHub Release Assets] 下载 Helm Chart：`kopilot-0.6.0.tgz` 和 `kopilot-crd-0.6.0.tgz`。
+. 安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者（也可使用其他 provisioner）。
++
+[source,bash]
+----
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.36/deploy/local-path-storage.yaml
+kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+----
++
+. 在 Rancher local 集群上安装 Liz GC：
++
+[source,bash]
+----
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    kopilot-crd ./kopilot-crd-0.6.0.tgz
+
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    --set bootstrapPassword="<your bootstrap password>" \
+    --set llm.active=gemini \
+    --set llm.provider=google_genai \
+    --set llm.apiKey="<your llm api key>" \
+    --set rancher_sso.enabled=true \
+    --set rancher_sso.url="<your rancher url>" \
+    kopilot ./kopilot-0.6.0.tgz
+----
+
+== 安装 Rancher UI Extension
+
+Helm 安装完成后，在 Rancher 中启用 UI Extension，即可在 Rancher UI 中使用 AI Assistant。
+
+. 打开 Rancher，点击左侧 *Extensions* 菜单，再点击下拉菜单中的 *Manage Extension Catalogs*，导入 Liz GC UI 扩展。
++
+image::quick-start/quick_start_1.png[Extensions 管理页面]
++
+. 点击 *Import Extension Catalog*，输入 Catalog Image Reference：
++
+----
+registry.rancher.cn/cnrancher/ui-extension-kopilot-ai-ui:0.6.0
+----
++
+image::quick-start/quick_start_2.png[Import Extension Catalog 对话框]
++
+. 等待扩展目录状态变为 Active 后，点击 *Reload* 重新加载页面。
++
+image::quick-start/quick_start_3.png[Import Extension Catalog Reload]
++
+. 由于存在已知问题，需要手动刷新 Liz GC UI Repository。
+点击 *Repositories*，进入 Repositories 列表。如果 Liz GC UI Repository 未处于 Active 状态，请点击下拉菜单中的 *Refresh*，直至该 Repository 变为 Active。
++
+image::quick-start/quick_start_4.png[Repositories 列表页面]
++
+. 在 Extensions 页面安装 *Kopilot AI Assistant*，安装完成后点击 *Reload* 重新加载页面。
++
+image::quick-start/quick_start_5.png[Kopilot AI Assistant 安装页面]
++
+image::quick-start/quick_start_6.png[Kopilot AI Assistant 重载页面]
+
+== 在 Rancher UI 中使用
+
+=== 开始对话
+
+点击右上角的 *Ask Liz GC* 图标，进入对话页面。
+
+image::quick-start/quick_start_7.png[Ask Liz GC 对话页面]
+
+=== 配置页面
+
+在 Rancher UI 中打开 *Global Settings* -> *SUSE AI Assistant GC*，可修改 Liz GC 相关配置。
+
+image::quick-start/quick_start_8.png[Settings 页面]
+
+=== 用户权限
+
+Liz GC UI Extension 可使用 Rancher 用户，并继承其权限。添加用户时，需额外勾选 *Custom Kopilot User (AI Assistant)*。
+
+image::quick-start/quick_start_9.png[Users 页面]
