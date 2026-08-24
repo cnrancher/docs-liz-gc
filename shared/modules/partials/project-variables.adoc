@@ -1,3 +1,0 @@
-:build-type: product
-:project-name: Liz GC: The Rancher AI Assistant
-:short-project-name: Liz GC

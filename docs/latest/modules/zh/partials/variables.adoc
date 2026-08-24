@@ -1,1 +1,1 @@
-latest@shared:partial$project-variables.adoc
+include::latest@shared:zh:partial$project-variables.adoc[]

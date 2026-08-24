@@ -1,5 +1,5 @@
-name: liz-gc
-title: Rancher AI Assistant
+name: rancher-ai-gc
+title: 'Rancher & Kubernetes AI'
 version: latest
 start_page: zh:introduction.adoc
 nav:

@@ -1,7 +1,7 @@
 ---
 site:
-  title: 'Liz GC: The Rancher AI Assistant'
-  start_page: latest@liz-gc:zh:introduction.adoc
+  title: 'Rancher & Kubernetes AI'
+  start_page: latest@rancher-ai-gc:zh:introduction.adoc
 
 content:
   sources:
