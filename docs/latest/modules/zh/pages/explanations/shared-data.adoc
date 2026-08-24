@@ -1,0 +1,68 @@
+include::partial$variables.adoc[]
+
+= 共享数据和上下文
+:page-languages: [zh]
+:revdate: 2026-08-23
+:page-revdate: {revdate}
+:description: Liz GC 如何管理来自 Rancher 及其下游集群的上下文信息与安全数据收集。
+
+为了提供准确且具备上下文感知能力的响应，系统会在 UI、Supervisor、专用的 Agent MCP 服务器以及已配置的 LLM Provider 之间共享特定的元数据。
+
+== UI 上下文
+
+当用户与聊天界面交互时，系统会自动捕获并共享当前的 UI 上下文。这样，AI Agent 无需用户显式提及资源，也能理解其当前关注的内容。
+
+共享的上下文包括：
+
+* 集群 ID：当前在 Rancher 仪表板中查看的集群。
+
+* 命名空间：特定的命名空间上下文。
+
+* 资源元数据：当前资源的详细信息（例如 UI 中显示的特定 Deployment、Node 或 Fleet Bundle）。
+
+这些数据由 Supervisor 与用户的提示词一起打包，路由到相应的专用 Agent，并与 LLM Provider 共享。
+
+== 通过 MCP 工具进行数据收集
+
+Rancher Agent 通过 link:https://github.com/rancher/rancher-ai-mcp?tab=readme-ov-file#available-tools[Rancher MCP 服务器] 提供的专用工具，从环境中检索实时数据。这些工具充当 AI 推理过程与基础设施实际状态之间的桥梁。
+
+以下操作定义了从 Rancher Manager 和下游集群中收集的数据范围：
+
+[cols="1,2", options="header"]
+|===
+| 操作类别 | 具体操作
+
+| Kubernetes 资源
+| getKubernetesResource、listKubernetesResources、getDeployment
+
+| 集群分析
+| analyzeCluster、analyzeClusterMachines、getNodes、getProject
+
+| 持续交付与 GitOps
+| listGitRepos、getGitRepo、analyzeFleetResources
+|===
+
+这些操作从环境中获取数据，并将结果返回给 LLM。
+通过此类调用检索到的敏感数据可能包括：
+
+* Secret 和 API 密钥
+
+* 用户名和用户组
+
+* IP 地址和网络配置
+
+== 处理敏感信息
+
+从下游集群检索的数据（尤其是 Pod 日志和资源定义）可能包含敏感信息。系统通过“安全设计”的数据共享模型来管理此风险：
+
+* Agent 从不使用 root 账户或服务账户。它使用用户自身的权限执行每一次数据收集操作。这确保了 Agent 只能查看和共享用户已通过 Rancher RBAC 授权访问的数据。
+
+* 数据按需获取。系统不会维护集群敏感内容的辅助数据库；只有在 Agent 推理循环中触发特定工具调用时，才会查询 Rancher 和 Kubernetes API。
+
+除权限隔离外，Liz GC 还会在工具结果返回给 LLM / UI 之前，对敏感字段做脱敏处理。
+
+* 默认脱敏关键字：`password`、`apikey`。
+* 可通过环境变量 `TOOL_RESULT_MASK_EXTRA_KEYS`（Helm 对应 `agent.runtime.toolResult.maskExtraKeys`）追加关键字。
+
+* 命中字段的值统一替换为 `************`，其余内容保持不变。
+
