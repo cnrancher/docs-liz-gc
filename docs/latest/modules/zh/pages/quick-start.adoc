@@ -115,11 +115,6 @@ image::quick-start/quick_start_2.png[Import Extension Catalog 对话框]
 +
 image::quick-start/quick_start_3.png[Import Extension Catalog Reload]
 +
-. 由于存在已知问题，需要手动刷新 Liz GC UI Repository。
-点击 *Repositories*，进入 Repositories 列表。如果 Liz GC UI Repository 未处于 Active 状态，请点击下拉菜单中的 *Refresh*，直至该 Repository 变为 Active。
-+
-image::quick-start/quick_start_4.png[Repositories 列表页面]
-+
 . 在 Extensions 页面安装 *Kopilot AI Assistant*，安装完成后点击 *Reload* 重新加载页面。
 +
 image::quick-start/quick_start_5.png[Kopilot AI Assistant 安装页面]

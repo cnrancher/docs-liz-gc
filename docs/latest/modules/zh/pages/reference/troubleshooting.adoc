@@ -51,6 +51,19 @@ helm upgrade --install \
     kopilot ./kopilot-{version}.tgz
 ----
 
+== 在 Extensions 可用列表中看不到 SUSE AI Assistant GC
+
+导入 Extension Catalog 后，返回 Extensions 页面，在可用列表中仍然看不到 `SUSE AI Assistant GC`。
+
+您可以进入 Local 集群 -> Apps -> Repositories 页面，查看 `ui-extension-kopilot-ai-ui-charts` 的状态。
+
+如果该 Repository 未处于 Active 状态，请点击下拉菜单中的 *Refresh*，直到该 Repository 变为 Active。
+
+image::quick-start/quick_start_4.png[Repositories 列表页面]
+
+再次返回 Extensions 页面，即可看到 `SUSE AI Assistant GC`。
+
+
 == 更新模型配置
 
 模型配置存储在 `kopilot-llm-config` Secret 中。如果您通过 Settings 页面修改了模型配置，这些修改会直接保存到该 Secret。
