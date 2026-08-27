@@ -95,6 +95,13 @@ helm upgrade --install \
     kopilot ./kopilot-0.6.0.tgz
 ----
 
+[NOTE]
+====
+
+这些说明中并没有包含其他安装选项。如果您在执行这些步骤时遇到任何问题，请参考完整的 xref:/reference/installation.adoc[Liz GC 安装说明]
+
+====
+
 == 安装 Rancher UI Extension
 
 Helm 安装完成后，在 Rancher 中启用 UI Extension，即可在 Rancher UI 中使用 AI Assistant。

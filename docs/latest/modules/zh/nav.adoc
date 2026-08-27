@@ -10,4 +10,5 @@ include::partial$variables.adoc[]
 ** xref:how-tos/how-to-admin.adoc[管理员操作指南]
 ** xref:how-tos/how-to-user.adoc[用户操作指南]
 * 参考手册
+** xref:reference/installation.adoc[安装指南]
 ** xref:reference/troubleshooting.adoc[查错]
