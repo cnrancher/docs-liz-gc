@@ -1,0 +1,250 @@
+include::partial$variables.adoc[]
+
+= Liz GC 安装说明
+:page-languages: [zh]
+:revdate: 2026-08-27
+:page-revdate: {revdate}
+:description: 介绍 Liz GC 的更多 Helm 安装参数
+
+本文介绍如何在已有的 Kubernetes 集群中安装 Liz GC 应用，并介绍相关的安装参数。
+
+== 常规选项
+
+[cols="1,1,3", options="header"]
+|===
+| 参数 | 默认值 | 描述
+
+| bootstrapPassword
+| ""
+| string - 设置第一个管理员用户的引导密码。如果未设置该值，则使用随机生成的引导密码
+
+| hostname
+| ""
+| string - Liz GC 访问的完全域名
+
+| llm.provider
+| "google_genai"
+| string - LLM 模型提供商，例如 `openai`, `google_genai`
+
+| llm.baseURL
+| ""
+| string - LLM API 的访问地址，例如 Qwen `https://dashscope.aliyuncs.com/compatible-mode/v1`
+
+| llm.apiKey
+| ""
+| string - LLM API Key
+
+| llm.model
+| "gemini-3-flash-preview"
+| string - LLM 提供商支持的模型名称
+
+| llm.active
+| "gemini"
+| string - 当前使用的模型
+|===
+
+== 高级选项
+
+[cols="1,1,3", options="header"]
+|===
+| 参数 | 默认值 | 描述
+
+| tavily.enabled
+| false
+| bool - 是否开启 tavily search
+
+| tavily.apiKey
+| ""
+| string - tavily 的 API Key
+
+| rancher_sso.enabled
+| false
+| bool - 是否开启 Rancher UI extension
+
+| rancher_sso.url
+| ""
+| string - Rancher Server 地址，例如 https://myrancher.test.com
+|===
+
+== TLS 选项
+
+将 Liz GC 安装在 Kubernetes 集群中时，TLS 工作由集群的 ingress 控制器负责处理，用户需要选择要使用的 ingress 控制器。
+
+[cols="1,1,3", options="header"]
+|===
+| 参数 | 默认值 | 描述
+
+| tls
+| ""
+| string - 设置为空值或者 `ingress`
+
+| privateCA
+| false
+| bool - 如果使用自签名证书，需要设置为 `true`
+
+| ingress.enabled
+| true
+| bool - 是否启用 ingress 控制器，如果设置 `tls='ingress'`，这里必须设置为 true
+|===
+
+== SSL 配置
+
+Liz GC 默认需要配置 SSL/TLS 协议。
+
+[NOTE]
+====
+
+如果你希望从外部终止 SSL/TLS 连接，请参阅 <<external-tls,在外部负载均衡器上终止 TLS>>相关内容。如该页面所述，此选项对 TLS 验证有一些额外的要求。
+
+====
+
+关于 Liz GC SSL 配置有两种推荐方案：
+
+* Liz GC 生成的 TLS 证书：在这种情况下，您需要将 `cert-manager` 安装到集群中，Liz GC 使用 `cert-manager` 来颁发和维护其证书，Liz GC 会自行生成自己的 CA 证书，并使用该 CA 来签名证书，后续 `cert-manager` 就负责管理该证书。
+* 使用您自己的证书：这种方案允许您使用自己拥有的、由公共或私有CA签名的证书。Liz GC 会使用该证书来保护 WebSocket 和 HTTPS 流量。在这种情况下，您需要将该证书（以及相关的密钥）以 PEM 格式上传，文件名为 `tls.crt` 和 `tls.key`。如果您使用的是私有CA，那么还需要上传该证书，因为您的节点可能不信任这个私有 CA。
+
+=== Liz GC 生成 TLS 证书
+
+[source,bash]
+----
+# install cert-manager
+helm repo add jetstack https://charts.jetstack.io
+
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace --set crds.enabled=true
+
+# install Liz GC
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    kopilot-crd ./kopilot-crd-0.6.0.tgz
+
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    --set bootstrapPassword="<your bootstrap password>" \
+    --set tls="ingress" \
+    --set llm.active=gemini \
+    --set llm.provider=google_genai \
+    --set llm.apiKey="<your llm api key>" \
+    --set rancher_sso.enabled=true \
+    --set rancher_sso.url="<your rancher url>" \
+    kopilot ./kopilot-0.6.0.tgz
+----
+
+=== 使用自签名证书
+
+[source,bash]
+----
+kubectl create namespace kopilot-system
+kubectl -n kopilot-system create secret tls tls-kopilot-ingress --cert=./tls.crt --key=./tls.key
+kubectl -n kopilot-system create secret generic tls-kopilot-ca --from-file=cacerts.pem
+
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    kopilot-crd ./kopilot-crd-0.6.0.tgz
+
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    --set bootstrapPassword="<your bootstrap password>" \
+    --set llm.active=gemini \
+    --set llm.provider=google_genai \
+    --set llm.apiKey="<your llm api key>" \
+    --set tls="ingress" \
+    --set privateCA=true \
+    --set rancher_sso.enabled=true \
+    --set rancher_sso.url="<your rancher url>" \
+    kopilot ./kopilot-0.6.0.tgz
+----
+
+[[external-tls]]
+=== 在外部负载均衡器上终止 TLS
+
+你的负载均衡器必须能够支持长期存在的 WebSocket 连接，并且需要插入代理头信息，以便 Liz GC 能够正确地处理这些连接。
+
+==== Required Headers
+* Host
+* X-Forwarded-Proto
+* X-Forwarded-Port
+* X-Forwarded-For
+
+==== Recommended Timeouts
+
+* Read Timeout: 1800 seconds
+* Write Timeout: 1800 seconds
+* Connect Timeout: 30 seconds
+
+[source,bash]
+----
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    kopilot-crd ./kopilot-crd-0.6.0.tgz
+
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    --set bootstrapPassword="<your bootstrap password>" \
+    --set llm.active=gemini \
+    --set llm.provider=google_genai \
+    --set llm.apiKey="<your llm api key>" \
+    --set tls="" \
+    --set rancher_sso.enabled=true \
+    --set rancher_sso.url="<your rancher url>" \
+    kopilot ./kopilot-0.6.0.tgz
+----
+
+以下是用于快速启动外部负载均衡器的 NGINX 配置示例。
+
+[source,bash]
+----
+# nginx.conf
+worker_processes 4;
+worker_rlimit_nofile 40000;
+
+events {
+    worker_connections 8192;
+}
+
+http {
+    upstream kopilot {
+        server IP_NODE:80;
+    }
+
+    map $http_upgrade $connection_upgrade {
+        default Upgrade;
+        ''      close;
+    }
+
+    server {
+        listen 443 ssl http2;
+        server_name FQDN;
+        ssl_certificate /etc/cert/tls.crt;
+        ssl_certificate_key /etc/cert/tls.key;
+
+        location / {
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_pass http://kopilot;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            # This allows the execution shell window to remain open for up to 15 minutes.
+            # It will automatically turn off after 1 minute by default.
+            proxy_read_timeout 900s;
+            proxy_buffering off;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name FQDN;
+        return 301 https://$server_name$request_uri;
+    }
+}
+----

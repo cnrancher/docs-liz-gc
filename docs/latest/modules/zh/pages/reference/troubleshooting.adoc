@@ -162,3 +162,46 @@ rancher_sso:
 
 修改 `values.yaml` 后重新执行 Helm upgrade，使配置生效。
 
+== 访问 Liz GC UI 重定向次数过多，无法访问
+
+使用外部负载均衡器上终止 TLS 的方式部署 Liz GC，访问其 UI 时出现了重定向次数过多，无法进入页面的问题。
+
+=== 原因
+
+Liz GC 所在集群的 ingress 控制器未启用与外部 TLS 的转发头机制。如果不设置此选项，外部 LB 将不断响应来自入口控制器的重定向请求。
+
+=== 解决方法
+
+集群中的 ingress 控制器开启 forwarded header 选项。
+
+==== Ingress Nginx
+
+[,yaml]
+----
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: rke2-ingress-nginx
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    controller:
+      config:
+        use-forwarded-headers: "true"
+----
+
+==== Traefik
+
+[,yaml]
+----
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    additionalArguments:
+      - "--entryPoints.web.proxyProtocol.insecure"
+      - "--entryPoints.web.forwardedHeaders.insecure"
+----
