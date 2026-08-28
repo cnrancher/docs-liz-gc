@@ -1,3 +1,4 @@
 :build-type: product
 :project-name: Liz GC：Rancher & Kubernetes AI 助手
 :short-project-name: Liz GC
+:version: 0.6.0

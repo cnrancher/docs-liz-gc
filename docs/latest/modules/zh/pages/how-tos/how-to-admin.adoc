@@ -9,26 +9,22 @@ include::partial$variables.adoc[]
 [#upgrading-liz]
 == 升级 Liz GC
 
-=== 升级 `Kopilot`
-
-要升级 **kopilot-crd** 和 **kopilot** Helm Chart，请运行以下命令：
-
-[source,console]
+[source,console,subs="attributes+"]
 ----
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-0.6.0.tgz
+    kopilot-crd ./kopilot-crd-{version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot ./kopilot-0.6.0.tgz
+    kopilot ./kopilot-{version}.tgz
 ----
 
 [NOTE]
 ====
-如果您通过设置页面配置了模型，请在更新之前将设置值报告给 values 文件。
+如果你通过设置页面配置了模型，请在更新前将这些信息写入 values 文件中，或通过参数设置进去。
 ====
 
 === 升级 UI 扩展
@@ -37,7 +33,6 @@ helm upgrade --install \
 . 再点击下拉菜单中的 **Manage Extension Catalogs**，导入 Liz GC UI 扩展。
 . 点击 **Import Extension Catalog**，输入 Catalog Image Reference。
 . 等待扩展目录状态变为 Active 后，点击 **Reload** 重新加载页面。
-. 手动刷新 Liz GC UI Repository。进入 local 集群，点击 **Repositories**，进入 Repositories 列表。如果 Liz GC UI Repository 未处于 Active 状态，请点击下拉菜单中的 **Refresh**，直至该 Repository 变为 Active。
 . 在 **可用** 页面安装 **SUSE AI Assistant GC**，安装完成后点击 **Reload** 重新加载页面。
 
 有关管理扩展程序的更多信息，请参阅link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html[Rancher 扩展程序管理]文档。
@@ -54,11 +49,11 @@ helm upgrade --install \
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/openai-config.png[OpenAI 配置屏幕]
+image::how-tos/openai-config.png[OpenAI 配置]
 
-=== 通过 Helm 图表选择 OpenAI
+=== 通过 Helm Chart 配置 OpenAI
 
-使用以下 Helm 值配置从 Agent Helm 图表配置 OpenAI：
+使用以下 Helm values 配置使用 OpenAI：
 
 [source,yaml]
 ----
@@ -71,10 +66,10 @@ llm:
   active: openai
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -83,18 +78,18 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
-=== 配置一个类似 OpenAI 的端点
+=== 配置兼容 OpenAI 规范的 API 端点
 
-通过 UI 或 Helm 图表，您可以设置一个类似 OpenAI 的端点。
+通过 UI 或 Helm Chart，你可以设置一个兼容 OpenAI 规范的 API 端点。
 
-* **在 UI 上**： 点击 **Show Advanced** 部分。 输入有效的端点，然后点击 Save。
-* **在 Helm 图表中**： 设置 **llm.baseURL** 值。
+* **在 UI 上**： 点击 **Show Advanced** 部分。 输入有效的 API 端点，然后点击 Save。
+* **在 Helm Chart 中**： 设置 **llm.baseURL** 值。
 +
-image:how-tos/openai-like-end.png[类似 OpenAI 的端点配置屏幕]
+image:how-tos/openai-like-end.png[兼容 OpenAI 规范的 API 端点]
 
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace --set llm.baseURL="https://myendpoint.example" kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace --set llm.baseURL="https://myendpoint.example" kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -104,7 +99,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
 [#gemini]
-== 配置 Gemini 提供者
+== 配置 Gemini
 
 === 通过 UI 选择 Gemini
 
@@ -114,11 +109,11 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/gemini-config.png[Gemini 配置屏幕]
+image::how-tos/gemini-config.png[Gemini 配置]
 
-=== 通过 Helm 图表选择 Gemini
+=== 通过 Helm Chart 配置 Gemini
 
-使用以下 Helm 值配置来自 Agent Helm 图表的 Gemini：
+使用以下 Helm values 配置使用 Gemini：
 
 [source,yaml]
 ----
@@ -131,10 +126,10 @@ llm:
   active: gemini
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -144,7 +139,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
 [#qwen]
-== 配置 Qwen 提供者
+== 配置 Qwen
 
 === 通过 UI 选择 Qwen
 
@@ -154,11 +149,11 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/qwen-config.png[Qwen 配置屏幕]
+image::how-tos/qwen-config.png[Qwen 配置]
 
-=== 通过 Helm 图表选择 Qwen
+=== 通过 Helm Chart 配置 Qwen
 
-使用以下 Helm 值配置来自 Agent Helm 图表的 Qwen：
+使用以下 Helm values 配置使用 Qwen：
 
 [source,yaml]
 ----
@@ -171,10 +166,10 @@ llm:
   active: qwen
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -184,7 +179,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
 [#deepseek]
-== 配置 Deepseek 提供者
+== 配置 Deepseek
 
 === 通过 UI 选择 Deepseek
 
@@ -194,11 +189,11 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/deepseek-config.png[Deepseek 配置屏幕]
+image::how-tos/deepseek-config.png[Deepseek 配置]
 
-=== 通过 Helm 图表选择 Deepseek
+=== 通过 Helm Chart 配置 Deepseek
 
-使用以下 Helm 值配置来自 Agent Helm 图表的 Deepseek：
+使用以下 Helm values 配置使用 Deepseek：
 
 [source,yaml]
 ----
@@ -211,10 +206,10 @@ llm:
   active: deepseek
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -224,7 +219,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
 [#mimo]
-== 配置 Mimo 提供者
+== 配置 Mimo
 
 === 通过 UI 选择 Mimo
 
@@ -234,9 +229,9 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/mimo-config.png[Mimo 配置屏幕]
+image::how-tos/mimo-config.png[Mimo 配置]
 
-=== 通过 Helm 图表选择 Mimo
+=== 通过 Helm Chart 配置 Mimo
 
 使用以下 Helm 值配置来自 Agent Helm 图表的 Mimo：
 
@@ -251,10 +246,10 @@ llm:
   active: mimo
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -264,7 +259,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
 [#kimi]
-== 配置 Kimi 提供者
+== 配置 Kimi
 
 === 通过 UI 选择 Kimi
 
@@ -274,9 +269,9 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/kimi-config.png[Kimi 配置屏幕]
+image::how-tos/kimi-config.png[Kimi 配置]
 
-=== 通过 Helm 图表选择 Kimi
+=== 通过 Helm Chart 配置 Kimi
 
 使用以下 Helm 值配置来自 Agent Helm 图表的 Kimi：
 
@@ -291,10 +286,10 @@ llm:
   active: kimi
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -304,7 +299,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 ----
 
 [#glm]
-== 配置 GLM 提供者
+== 配置 GLM
 
 === 通过 UI 选择 GLM
 
@@ -314,9 +309,9 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 . 选择要使用的模型。
 . 点击 Save，代理将重启，这可能需要几秒钟。
 +
-image::how-tos/glm-config.png[GLM 配置屏幕]
+image::how-tos/glm-config.png[GLM 配置]
 
-=== 通过 Helm 图表选择 GLM
+=== 通过 Helm Chart 配置 GLM
 
 使用以下 Helm 值配置来自 Agent Helm 图表的 GLM：
 
@@ -331,10 +326,10 @@ llm:
   active: glm
 ----
 
-更新图表：
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启 Liz GC：
@@ -348,7 +343,7 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 通过配置专门的 AI 代理扩展 {short-project-name} 的功能。
 
-这些代理允许 {short-project-name} 处理特定领域，如 GitOps、集群配置区域（CAPI 资源、K3k）、安全性和可观测性。
+这些代理允许 {short-project-name} 处理特定领域，如 GitOps、集群配置（CAPI 资源、K3k）、安全性和可观测性。
 
 {short-project-name}  默认部署了 3 个内置 AI 代理：
 
@@ -370,7 +365,7 @@ Fleet::
 建议启用 **内置** 锁，以防止意外修改此核心代理配置。
 =====
 
-**安装：** 将以下 `AIAgentConfig` 应用到您的本地群集。
+**安装：** 将以下 `SubAgentConfig` 应用到 local 集群。
 
 [source,yaml]
 ----
@@ -497,7 +492,7 @@ Cluster-Provisioning::
 建议启用 **内置** 锁，以防止意外修改此核心代理配置。
 =====
 
-**安装：** 将以下 `AIAgentConfig` 应用到您的本地群集。
+**安装：** 将以下 `SubAgentConfig` 应用到 local 集群。
 
 [source,yaml]
 ----
@@ -586,7 +581,7 @@ SUSE 应用程序集合::
 1.  **生成 API 密钥：** 访问 link:https://docs.apps.rancher.io/developer-toolkit/mcp-server[SUSE 应用程序集合 MCP] 页面以生成您的凭据。
 2.  **导航到设置：** 前往 **全局设置** > **SUSE AI Assistant GC**。
 3.  **添加代理：** 点击 **添加 AI Agent** 并输入以下内容：
-
++
 image:how-tos/ai-agent-suse-appco.png[SUSE 应用程序集合 AI Agent]
 
 使用以下设置：
@@ -611,7 +606,7 @@ image:how-tos/ai-agent-suse-appco.png[SUSE 应用程序集合 AI Agent]
 |===
 
 **编程安装：**
-或者，您可以将此 `AIAgentConfig` YAML 应用到您的本地群集：
+或者，您可以将此 `SubAgentConfig` YAML 应用到 local 集群：
 
 [source,yaml]
 ----
@@ -737,7 +732,7 @@ SUSE Observability::
 **先决条件：**
 
 1. 启用 MCP 服务器部署 link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/advanced/ai-assistant.html[SUSE-Observability]。
-
++
 [NOTE]
 =====
 如果 SUSE Observability 运行在自管理证书之后， 请使用程序化安装并使用 `caBundleRef` 加载自定义 CA 包。 有关更多详细信息，请参阅 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP与自定义证书]。
@@ -747,7 +742,7 @@ SUSE Observability::
 
 1.  **生成令牌：** 访问 link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/use/ai-assistant/mcp-server.html[SUSE Observability MCP] 页面以生成令牌并获取 `mcp` 端点。
 2. 使用步骤 1 中的令牌在 **local** 集群中创建一个密钥。
-
++
 [source,bash]
 ----
 # 对于 API-token 类型的令牌
@@ -757,7 +752,7 @@ kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --fro
 ----
 3.  **导航到设置** 前往 **全局设置** > **SUSE AI Assistant GC**。
 4.  **添加代理：** 点击 **添加 AI Agent** 并输入以下内容：
-
++
 image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 
 使用以下设置：
@@ -821,7 +816,7 @@ image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 |===
 
 **编程安装：**
-或者，您可以将此 `AIAgentConfig` YAML 应用到您的本地群集：
+或者，您可以将此 `SubAgentConfig` YAML 应用到 local 集群：
 
 [source,yaml]
 ----
@@ -896,7 +891,7 @@ SUSE Security::
 
 [NOTE]
 =====
-SBOMScanner MCP 服务器可以使用 `TLS `启动，请使用程序化安装并使用 `caBundleRef` 加载自定义 CA 包。有关更多详细信息，请参阅：xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP 与自定义证书]。 
+SBOMScanner MCP 服务器可以使用 `TLS `启动，请使用程序化安装并使用 `caBundleRef` 加载自定义 CA 包。有关更多详细信息，请参阅：xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP 与自定义证书]。
 
 =====
 --
@@ -910,7 +905,7 @@ CloudCasa::
 1.  **获取凭证：** 访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档] 以检索您的 MCP 服务器凭证（用户名和密码）。
 2.  **导航到设置：** 前往 **全局设置** > **SUSE AI Assistant GC**。
 3.  **添加代理** 点击 **添加 AI Agent** 并输入以下内容：
-
++
 [cols="1,3"]
 |===
 | 设置 | Value
@@ -924,7 +919,7 @@ CloudCasa::
 |===
 
 **编程安装：**
-或者，将此 `AIAgentConfig` YAML 应用到您的本地群集：
+或者，将此 `SubAgentConfig` YAML 应用到 local 集群：
 
 [source,yaml]
 ----
@@ -978,7 +973,7 @@ What information do you need before creating a restore?
 Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 ----
 
-**查错：**
+**故障排查：**
 
 * **身份验证错误：** 验证表单中创建的密钥是否包含来自 CloudCasa 门户的正确凭据。
 * **代理无响应：** 确认代理已 "启用"，并且端点可访问。有关详细故障排除，请访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档]。
@@ -1000,7 +995,7 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 
 [NOTE]
 =====
-此功能需要支持 **可流式传输的 HTTP** 的 MCP 服务器。 
+此功能需要支持 **可流式传输的 HTTP** 的 MCP 服务器。
 如果您使用的是服务器发送事件（SSE），请切换到可流式传输的 HTTP 配置以连接您的外部 MCP。
 =====
 
@@ -1009,7 +1004,7 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 1.  导航到 **全局设置** > **SUSE AI Assistant GC**.
 2.  滚动到 **AI Agents**  部分并点击 **+** （加号）图标。
 3.  提供配置详细信息：
-
++
 [cols="1,3", options="header"]
 |===
 | 字段 | 说明
@@ -1030,19 +1025,19 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 如果您的 MCP 服务器使用自签名证书运行，您可以按照以下步骤信任它。
 
 1. 在 **local** 集群中创建密钥
-
++
 [source,bash]
 ----
  kubectl create secret generic suse-obs-ca \
   --namespace kopilot-system \
   --from-file=ca.crt=stackstate-ca.crt
 ----
-2. 然后使用 `caBundleRef` 以编程方式配置 **AIAgentConfig**
-
+2. 然后使用 `caBundleRef` 以编程方式配置 **SubAgentConfig**
++
 [source,yaml]
 ----
-apiVersion: ai.cattle.io/v1alpha1
-kind: AIAgentConfig
+apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
 metadata:
   name: observability-agent
   namespace: kopilot-system
@@ -1074,7 +1069,7 @@ spec:
 ====
 此全局角色提供对 Rancher 管理器的非常有限的访问权限。
 
-它授予对在本地群集中运行的代理端点的访问权限。
+它授予对在 local 集群中运行的代理端点的访问权限。
 ====
 
 [#ui-tools]
@@ -1147,7 +1142,7 @@ postgres:
 
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 ----
 
 重启Liz GC：

@@ -63,9 +63,9 @@ helm install cert-manager jetstack/cert-manager \
 [[helm-install-liz-gc]]
 == Helm 安装 Liz GC
 
-在 Rancher local 集群上安装 Liz GC v0.6.0。
+在 Rancher local 集群上安装 Liz GC。
 
-. 从 https://github.com/cnrancher/kopilot/releases/tag/v0.6.0[GitHub Release Assets] 下载 Helm Chart：`kopilot-0.6.0.tgz` 和 `kopilot-crd-0.6.0.tgz`。
+. 从 https://github.com/cnrancher/kopilot/releases/tag/v{version}[GitHub Release Assets] 下载 Helm Chart：`kopilot-{version}.tgz` 和 `kopilot-crd-{version}.tgz`。
 . 安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者（也可使用其他 provisioner）。
 +
 [source,bash]
@@ -76,12 +76,12 @@ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storagec
 +
 . 在 Rancher local 集群上安装 Liz GC：
 +
-[source,bash]
+[source,bash,subs="attributes+"]
 ----
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-0.6.0.tgz
+    kopilot-crd ./kopilot-crd-{version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -92,7 +92,7 @@ helm upgrade --install \
     --set llm.apiKey="<your llm api key>" \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-0.6.0.tgz
+    kopilot ./kopilot-{version}.tgz
 ----
 
 [NOTE]
@@ -113,7 +113,7 @@ image::quick-start/quick_start_1.png[Extensions 管理页面]
 . 点击 *Import Extension Catalog*，输入 Catalog Image Reference：
 +
 ----
-registry.rancher.cn/cnrancher/ui-extension-kopilot-ai-ui:0.6.0
+registry.rancher.cn/cnrancher/ui-extension-kopilot-ai-ui:{version}
 ----
 +
 image::quick-start/quick_start_2.png[Import Extension Catalog 对话框]
