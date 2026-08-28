@@ -1,27 +1,27 @@
 include::partial$variables.adoc[]
 
-= 故障排除
+= 故障排查
 :page-languages: [zh]
 :revdate: 2026-08-24
 :page-revdate: {revdate}
-:description: 故障排除
+:description: 故障排查
 
-== 快速故障排除
+== 快速故障排查
 
-AI 助手位于 local 集群的 kopilot-system 命名空间中。您可以访问 Agent 日志来了解任何问题。
+AI 助手位于 local 集群的 kopilot-system 命名空间中。您可以通过查看 Agent 日志，排查并定位相关问题。
 
 [source,bash]
 ----
 kubectl get po -n kopilot-system
 ----
 
-要获取 kopilot-agent pod 下 container `kopilot-runtime` 的日志：
+如需获取 kopilot-agent pod 内 `kopilot-runtime` 容器的日志，请执行以下命令：
 [source,bash]
 ----
 kubectl logs -n kopilot-system -l app=kopilot-agent -c kopilot-runtime
 ----
 
-要获取 rancher-ai-mcp pod 的日志：
+如需获取 rancher-ai-mcp pod 的日志，请执行以下命令：
 [source,bash]
 ----
 kubectl logs -n kopilot-system -l app=rancher-mcp-server
@@ -29,19 +29,30 @@ kubectl logs -n kopilot-system -l app=rancher-mcp-server
 
 == 启用 DEBUG 日志
 
-您可以在通过 Helm 部署 Agent 时，将 `agent.runtime.logLevel` 设置为 `DEBUG`，以启用 DEBUG 日志。
+Agent 包含 `operator`、`gateway` 和 `runtime` 三个容器，每个容器都可以单独开启 DEBUG 日志。
 
-更新 values.yaml
+在 `values.yaml` 中，根据需要设置对应容器的 DEBUG 参数：
+
 [source,yaml]
 ----
-...
 agent:
+  operator:
+    debug: true
+  gateway:
+    debug: true
   runtime:
     logLevel: DEBUG
-...
-----
+---
 
-更新 Helm Chart:
+其中：
+
+* `agent.operator.debug`：开启 `operator` 容器的 DEBUG 日志。
+* `agent.gateway.debug`：开启 `gateway` 容器的 DEBUG 日志。
+* `agent.runtime.logLevel`：设置 `runtime` 容器的日志级别。
+
+可以根据问题排查的需要，只开启特定容器的 DEBUG 日志，也可以同时开启三个容器的 DEBUG 日志。
+
+然后，更新 Helm Chart:
 [source,bash,subs="attributes+"]
 ----
 helm upgrade --install \
