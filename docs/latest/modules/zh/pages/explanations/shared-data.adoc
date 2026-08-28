@@ -61,8 +61,6 @@ Rancher Agent 通过 link:https://github.com/rancher/rancher-ai-mcp?tab=readme-o
 
 除权限隔离外，Liz GC 还会在工具结果返回给 LLM / UI 之前，对敏感字段做脱敏处理。
 
-* 默认脱敏关键字：`password`、`apikey`。
-* 可通过环境变量 `TOOL_RESULT_MASK_EXTRA_KEYS`（Helm 对应 `agent.runtime.toolResult.maskExtraKeys`）追加关键字。
-
+* 默认脱敏关键字：`password` 和 `apikey`。
+* 支持通过环境变量 `TOOL_RESULT_MASK_EXTRA_KEYS`（Helm 对应 `agent.runtime.toolResult.maskExtraKeys`）追加脱敏关键字。当前该配置项已经设置了脱敏关键字 `token,secret,credential`，再加上默认的 `password` 和 `apikey`，可以应对大多数情况。
 * 命中字段的值统一替换为 `+************+`，其余内容保持不变。
-
