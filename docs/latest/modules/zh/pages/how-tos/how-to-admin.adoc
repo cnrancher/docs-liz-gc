@@ -38,7 +38,7 @@ helm upgrade --install \
 有关管理扩展程序的更多信息，请参阅link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html[Rancher 扩展程序管理]文档。
 
 [#openai]
-== 配置 OpenAI 提供者
+== 配置 OpenAI
 
 === 通过 UI 选择 OpenAI
 
