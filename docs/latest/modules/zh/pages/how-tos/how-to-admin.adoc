@@ -1,6 +1,6 @@
 include::partial$variables.adoc[]
 
-= {project-name} 管理员操作指南
+= 管理员操作指南
 :page-languages: [zh]
 :revdate: 2026-08-24
 :page-revdate: {revdate}
@@ -35,7 +35,7 @@ helm upgrade --install \
 . 等待扩展目录状态变为 Active 后，点击 **Reload** 重新加载页面。
 . 在 **可用** 页面安装 **SUSE AI Assistant GC**，安装完成后点击 **Reload** 重新加载页面。
 
-有关管理扩展程序的更多信息，请参阅link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html[Rancher 扩展程序管理]文档。
+有关管理扩展程序的更多信息，请参阅 link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html[Rancher 扩展程序管理] 文档。
 
 [#openai]
 == 配置 OpenAI
@@ -47,13 +47,13 @@ helm upgrade --install \
 . 选择 OpenAI，提供 OpenAI API 密钥。 前往
   http://platform.openai.com[platform.openai.com] 注册 OpenAI 并生成 API 密钥。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/openai-config.png[OpenAI 配置]
 
 === 通过 Helm Chart 配置 OpenAI
 
-使用以下 Helm values 配置使用 OpenAI：
+使用以下 Helm values 配置使用 OpenAI 模型：
 
 [source,yaml]
 ----
@@ -75,7 +75,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 === 配置兼容 OpenAI 规范的 API 端点
@@ -95,7 +95,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace --set llm.b
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#gemini]
@@ -107,13 +107,13 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 . 选择 Gemini，通过 https://aistudio.google.com/[Google AI Studio] 提供 Google API 密钥，或在 GCP 门户中创建 API 密钥凭证。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/gemini-config.png[Gemini 配置]
 
 === 通过 Helm Chart 配置 Gemini
 
-使用以下 Helm values 配置使用 Gemini：
+使用以下 Helm values 配置使用 Gemini 模型：
 
 [source,yaml]
 ----
@@ -135,7 +135,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#qwen]
@@ -147,13 +147,13 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 . 选择 Qwen，通过 https://bailian.console.aliyun.com/[Qwen] 提供 Qwen API 密钥。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/qwen-config.png[Qwen 配置]
 
 === 通过 Helm Chart 配置 Qwen
 
-使用以下 Helm values 配置使用 Qwen：
+使用以下 Helm values 配置使用 Qwen 模型：
 
 [source,yaml]
 ----
@@ -175,7 +175,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#deepseek]
@@ -187,13 +187,13 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 . 选择 Deepseek，通过 https://platform.deepseek.com/[Deepseek] 提供 Deepseek API 密钥。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/deepseek-config.png[Deepseek 配置]
 
 === 通过 Helm Chart 配置 Deepseek
 
-使用以下 Helm values 配置使用 Deepseek：
+使用以下 Helm values 配置使用 Deepseek 模型：
 
 [source,yaml]
 ----
@@ -215,7 +215,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#mimo]
@@ -227,13 +227,13 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 . 选择 Mimo，通过 https://platform.xiaomimimo.com/[Xiaomi MIMO] 提供 Mimo API 密钥。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/mimo-config.png[Mimo 配置]
 
 === 通过 Helm Chart 配置 Mimo
 
-使用以下 Helm 值配置来自 Agent Helm 图表的 Mimo：
+使用以下 Helm values 配置使用 Mimo 模型：
 
 [source,yaml]
 ----
@@ -255,7 +255,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#kimi]
@@ -267,13 +267,13 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 . 选择 Kimi，通过 https://platform.kimi.com/[KIMI] 提供 Kimi API 密钥。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/kimi-config.png[Kimi 配置]
 
 === 通过 Helm Chart 配置 Kimi
 
-使用以下 Helm 值配置来自 Agent Helm 图表的 Kimi：
+使用以下 Helm values 配置使用 Kimi 模型：
 
 [source,yaml]
 ----
@@ -295,7 +295,7 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#glm]
@@ -307,13 +307,13 @@ kubectl rollout restart deployment -n kopilot-system kopilot
 
 . 选择 GLM，通过 https://bigmodel.cn/[BigModel] 提供 GLM API 密钥。
 . 选择要使用的模型。
-. 点击 Save，代理将重启，这可能需要几秒钟。
+. 点击 Save，模型的配置就生效了。
 +
 image::how-tos/glm-config.png[GLM 配置]
 
 === 通过 Helm Chart 配置 GLM
 
-使用以下 Helm 值配置来自 Agent Helm 图表的 GLM：
+使用以下 Helm values 配置使用 GLM 模型：
 
 [source,yaml]
 ----
@@ -335,34 +335,34 @@ helm upgrade --install --namespace kopilot-system --create-namespace -f values.y
 重启 Liz GC：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot
+kubectl rollout restart deployment -n kopilot-system kopilot-agent
 ----
 
 [#multi-agent]
-== 多代理配置
+== 多智能体配置
 
-通过配置专门的 AI 代理扩展 {short-project-name} 的功能。
+通过配置专门的 AI 智能体扩展 {short-project-name} 的功能。
 
-这些代理允许 {short-project-name} 处理特定领域，如 GitOps、集群配置（CAPI 资源、K3k）、安全性和可观测性。
+这些智能体允许 {short-project-name} 处理特定领域，如 GitOps、集群配置（CAPI 资源、K3k）、安全性和可观测性。
 
-{short-project-name}  默认部署了 3 个内置 AI 代理：
+{short-project-name}  默认部署了 3 个内置 AI 智能体：
 
-* Rancher - 主要的 Rancher 代理
+* Rancher - Rancher 专家
 * Fleet - GitOps 专家
-* 集群配置 - 集群专家
+* Cluster Provisioning - Cluster Provisioning 专家
 
 [tabs]
 ====
 Fleet::
 +
 --
-默认情况下，{short-project-name} 部署此内置代理。
+默认情况下，{short-project-name} 部署此内置智能体。
 
 优化词元使用，或通过部署专用的 **Continuous Delivery Agent** 来定制 GitOps 的用户体验。
 
 [NOTE]
 =====
-建议启用 **内置** 锁，以防止意外修改此核心代理配置。
+建议启用 **内置** 锁，以防止意外修改此核心智能体配置。
 =====
 
 **安装：** 将以下 `SubAgentConfig` 应用到 local 集群。
@@ -483,13 +483,13 @@ spec:
 Cluster-Provisioning::
 +
 --
-默认情况下，{short-project-name} 部署此内置代理。
+默认情况下，{short-project-name} 部署此内置智能体。
 
 优化词元使用，或通过部署专用的 **Provisioning Agent** 来定制集群管理的用户体验。
 
 [NOTE]
 =====
-建议启用 **内置** 锁，以防止意外修改此核心代理配置。
+建议启用 **内置** 锁，以防止意外修改此核心智能体配置。
 =====
 
 **安装：** 将以下 `SubAgentConfig` 应用到 local 集群。
@@ -571,18 +571,18 @@ spec:
 ----
 
 --
-SUSE 应用程序集合::
+SUSE Application Collection::
 +
 --
 **Application Collection Agent** 帮助您发现经过强化的安全镜像，并验证 SBOM 或 CVE 数据。
 
 **配置步骤：**
 
-1.  **生成 API 密钥：** 访问 link:https://docs.apps.rancher.io/developer-toolkit/mcp-server[SUSE 应用程序集合 MCP] 页面以生成您的凭据。
+1.  **生成 API 密钥：** 访问 link:https://docs.apps.rancher.io/developer-toolkit/mcp-server[SUSE Application Collection MCP] 页面以生成您的凭据。
 2.  **导航到设置：** 前往 **全局设置** > **SUSE AI Assistant GC**。
-3.  **添加代理：** 点击 **添加 AI Agent** 并输入以下内容：
+3.  **添加智能体：** 点击 **添加 AI Agent** 并输入以下内容：
 +
-image:how-tos/ai-agent-suse-appco.png[SUSE 应用程序集合 AI Agent]
+image:how-tos/ai-agent-suse-appco.png[SUSE Application Collection AI Agent]
 
 使用以下设置：
 [cols="1,3"]
@@ -593,10 +593,10 @@ image:how-tos/ai-agent-suse-appco.png[SUSE 应用程序集合 AI Agent]
 | **认证类型** | `Basic authentication`
 | **密文** | 使用您的用户名和步骤 1 中的 API 密钥创建一个密钥。
 | **人工验证工具** | 无
-| **代理控制文件** | SUSE 应用程序集合 agent 是一个 AI 助手，提供有关 Rancher 应用程序集合中可用应用程序的信息。它可以回答有关应用程序版本、CVE 扫描、SBOM 和其他相关信息的问题。回答诸如如何用加固的 SUSE 等效项替换高漏洞社区镜像的问题。如何访问特定 AppCo 容器镜像的 SBOM 和最新的 CVE 扫描结果？如何使用官方 AppCo Helm 图表文档配置部署参数？如何验证特定应用程序版本是否符合企业安全合规标准？
-| **准则** | SUSE 应用程序集合代理 ## 角色与身份 您是 SUSE 应用程序集合 (AppCo) 代理，是安全软件供应链中的精英技术专家。您的使命是协助用户发现、审查和部署经过策划的、加固的云原生应用程序。您充当用户需求与 SUSE 近零 CVE（公共漏洞和暴露）镜像库之间的桥梁。
+| **智能体控制文件** | SUSE Application Collection agent 是一个 AI 助手，提供有关 Rancher 应用程序集合中可用应用程序的信息。它可以回答有关应用程序版本、CVE 扫描、SBOM 和其他相关信息的问题。回答诸如如何用加固的 SUSE 等效项替换高漏洞社区镜像的问题。如何访问特定 AppCo 容器镜像的 SBOM 和最新的 CVE 扫描结果？如何使用官方 AppCo Helm 图表文档配置部署参数？如何验证特定应用程序版本是否符合企业安全合规标准？
+| **准则** | SUSE Application Collection智能体 ## 角色与身份 您是 SUSE Application Collection (AppCo) 智能体，是安全软件供应链中的精英技术专家。您的使命是协助用户发现、审查和部署经过策划的、加固的云原生应用程序。您充当用户需求与 SUSE 近零 CVE（公共漏洞和暴露）镜像库之间的桥梁。
   您可以访问以下专业工具集： - ApplicationCollection_search_applications:按名称、类别或关键字查找应用程序。 - ApplicationCollection_get_application_details:检索元数据、可用版本、架构支持和注册表路径。 - ApplicationCollection_get_helm_chart_documentation:访问部署说明和配置参数。 - ApplicationCollection_get_container_image_documentation:访问特定镜像的详细使用指南。
-  ## 核心指令 安全第一：每次互动都必须强调应用程序的安全态势。如果用户请求一个应用程序，不仅要找到它，还要确认其加固状态。可验证的完整性：始终提供 SBOM（软件材料清单）和 CVE 扫描结果。不要把安全视为理所当然；用数据证明它。版本精度：永远不要猜测版本。使用工具识别确切的最新或稳定标签，并在可用时提及基础镜像（例如，BCI/SLES）。零信任指导：如果用户请求过时版本，温和地提醒他们安全风险，并引导他们查看集合中最新的修补版本。##示例：完整调查示例：比较调查与迁移 当用户提供有关现有部署的详细信息（例如，“我目前正在运行标准库/postgres:15镜像。”它与 AppCo 相比如何，我该如何切换？” 代理应：1 分析当前状态：确认用户当前的镜像及其典型的漏洞概况（例如，标准社区镜像通常由于基础层臃肿而携带50多个漏洞）。2 搜索AppCo：使用ApplicationCollection_search_applications查找等效的PostgreSQL条目。3 交叉引用安全性：使用ApplicationCollection_get_application_details提取CVE计数和基础镜像信息（例如，BCI-Minimal）。4 比较与对比：提供清晰的比较。5 迁移路径：提供切换的技术步骤。示例响应结构："我已经分析了您当前的 postgres:15 镜像。通常，社区版本会包含多个 '中等' 和 '高' CVE，因为它包含许多您在生产中可能不需要的操作系统工具。比较： \| 特性 \| 当前（社区） \| SUSE AppCo 等效 \| \| :--- \| :--- \| :--- \| \| 漏洞 \| ~50-100（估计） \| 0 个严重 / 0 个高风险 \| \| 基础镜像 \| Debian/Alpine \| SUSE Linux Enterprise BCI \| \| SBOM \| 非标准 \| 可用（CycloneDX/SPDX） \|
+  ## 核心指令 安全第一：每次互动都必须强调应用程序的安全态势。如果用户请求一个应用程序，不仅要找到它，还要确认其加固状态。可验证的完整性：始终提供 SBOM（软件材料清单）和 CVE 扫描结果。不要把安全视为理所当然；用数据证明它。版本精度：永远不要猜测版本。使用工具识别确切的最新或稳定标签，并在可用时提及基础镜像（例如，BCI/SLES）。零信任指导：如果用户请求过时版本，温和地提醒他们安全风险，并引导他们查看集合中最新的修补版本。##示例：完整调查示例：比较调查与迁移 当用户提供有关现有部署的详细信息（例如，“我目前正在运行标准库/postgres:15镜像。”它与 AppCo 相比如何，我该如何切换？” 智能体应：1 分析当前状态：确认用户当前的镜像及其典型的漏洞概况（例如，标准社区镜像通常由于基础层臃肿而携带50多个漏洞）。2 搜索AppCo：使用ApplicationCollection_search_applications查找等效的PostgreSQL条目。3 交叉引用安全性：使用ApplicationCollection_get_application_details提取CVE计数和基础镜像信息（例如，BCI-Minimal）。4 比较与对比：提供清晰的比较。5 迁移路径：提供切换的技术步骤。示例响应结构："我已经分析了您当前的 postgres:15 镜像。通常，社区版本会包含多个 '中等' 和 '高' CVE，因为它包含许多您在生产中可能不需要的操作系统工具。比较： \| 特性 \| 当前（社区） \| SUSE AppCo 等效 \| \| :--- \| :--- \| :--- \| \| 漏洞 \| ~50-100（估计） \| 0 个严重 / 0 个高风险 \| \| 基础镜像 \| Debian/Alpine \| SUSE Linux Enterprise BCI \| \| SBOM \| 非标准 \| 可用（CycloneDX/SPDX） \|
   ## 响应格式 输出应始终以 Markdown 格式提供。
   - 简洁：没有不必要的对话内容。   - 始终以确切的三个可操作建议结束：
     - 格式： <suggestion>建议1</suggestion><suggestion>建议2</suggestion><suggestion>建议3</suggestion>
@@ -731,7 +731,7 @@ SUSE Observability::
 
 **先决条件：**
 
-1. 启用 MCP 服务器部署 link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/advanced/ai-assistant.html[SUSE-Observability]。
+1. 启用 MCP 服务部署 link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/advanced/ai-assistant.html[SUSE-Observability]。
 +
 [NOTE]
 =====
@@ -751,7 +751,7 @@ kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --fro
 kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --from-literal=X-API-Key="svctok-..."
 ----
 3.  **导航到设置** 前往 **全局设置** > **SUSE AI Assistant GC**。
-4.  **添加代理：** 点击 **添加 AI Agent** 并输入以下内容：
+4.  **添加智能体：** 点击 **添加 AI Agent** 并输入以下内容：
 +
 image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 
@@ -764,14 +764,14 @@ image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 | **身份验证类型** | `Custom Headers authentication`
 | **Secret** | 选择步骤 2 中创建的密钥。
 | **人工验证工具** | 无
-| **代理控制文件** | SUSE Observability Agent 是 Liz 团队的一员。它可以访问有关集群、Pod 和应用程序的高级可观测性信息。它可用于询问有关 SUSE® Observability 所监控的应用程序和基础架构的问题，并让 Agent 根据可用的遥测数据调查问题或创建仪表板。
+| **智能体控制文件** | SUSE Observability Agent 是 Liz 团队的一员。它可以访问有关集群、Pod 和应用程序的高级可观测性信息。它可用于询问有关 SUSE® Observability 所监控的应用程序和基础架构的问题，并让 Agent 根据可用的遥测数据调查问题或创建仪表板。
 提示示例：
 - 请列出 my-app 命名空间中资源使用量排名前 5 的列表。
 - sock-shop 命名空间中 checkout Pod 的依赖项是什么？
 - 是否有任何处于严重状态？
 - 为我的 checkout 服务最重要的指标创建一个仪表板。
-| **准则** | # SUSE Observability AI 代理故障排除指南
-    您可以访问 SUSE Observability MCP 服务器，该服务器提供用于调查 Kubernetes 基础架构问题的工具。请系统地使用这些工具来诊断问题、识别根本原因并提供可操作的见解。
+| **准则** | # SUSE Observability AI 智能体故障排除指南
+    您可以访问 SUSE Observability MCP 服务，该服务提供用于调查 Kubernetes 基础架构问题的工具。请系统地使用这些工具来诊断问题、识别根本原因并提供可操作的见解。
 ## 最佳实践
     ### 查询效率
     - 在调查特定环境时，**始终按命名空间或域进行筛选**。
@@ -891,7 +891,7 @@ SUSE Security::
 
 [NOTE]
 =====
-SBOMScanner MCP 服务器可以使用 `TLS `启动，请使用程序化安装并使用 `caBundleRef` 加载自定义 CA 包。有关更多详细信息，请参阅：xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP 与自定义证书]。
+SBOMScanner MCP 服务可以使用 `TLS `启动，请使用程序化安装并使用 `caBundleRef` 加载自定义 CA 包。有关更多详细信息，请参阅：xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP 与自定义证书]。
 
 =====
 --
@@ -902,20 +902,20 @@ CloudCasa::
 
 **配置步骤：**
 
-1.  **获取凭证：** 访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档] 以检索您的 MCP 服务器凭证（用户名和密码）。
+1.  **获取凭证：** 访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档] 以检索您的 MCP 服务凭证（用户名和密码）。
 2.  **导航到设置：** 前往 **全局设置** > **SUSE AI Assistant GC**。
-3.  **添加代理** 点击 **添加 AI Agent** 并输入以下内容：
+3.  **添加智能体** 点击 **添加 AI Agent** 并输入以下内容：
 +
 [cols="1,3"]
 |===
 | 设置 | Value
 | **名称** | `CloudCasa`
-| **代理控制文件** | CloudCasa 是 Kubernetes 的数据保护助手。它管理备份、恢复和跨集群迁移操作，包括快照备份、将副本卸载到对象存储、跨集群恢复和保护策略管理。
+| **智能体控制文件** | CloudCasa 是 Kubernetes 的数据保护助手。它管理备份、恢复和跨集群迁移操作，包括快照备份、将副本卸载到对象存储、跨集群恢复和保护策略管理。
 | **端点** | \https://cloudcasa-mcp.vercel.app
 | **认证类型** | `Basic authentication`
 | **密文** | 直接在表单中点击 **创建密钥** 并输入在步骤 1 中获得的凭证。
 | **人工验证工具** | `cc_create_snapshot_backup`, `cc_create_copy_backup`, `cc_create_restore`
-| **准则** | 仅将此代理用于与 CloudCasa 相关的操作。优先提供只读指导，然后提出行动建议。在任何创建、修改、恢复、迁移或删除受保护资源的操作之前，都需要经过人工验证。当参数模糊时，要求澄清。绝不要虚构集群名称或恢复点。在执行之前总结预期的操作。除非用户明确确认源和目标，否则请勿执行恢复或迁移操作。
+| **准则** | 仅将此智能体用于与 CloudCasa 相关的操作。优先提供只读指导，然后提出行动建议。在任何创建、修改、恢复、迁移或删除受保护资源的操作之前，都需要经过人工验证。当参数模糊时，要求澄清。绝不要虚构集群名称或恢复点。在执行之前总结预期的操作。除非用户明确确认源和目标，否则请勿执行恢复或迁移操作。
 |===
 
 **编程安装：**
@@ -976,7 +976,7 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 **故障排查：**
 
 * **身份验证错误：** 验证表单中创建的密钥是否包含来自 CloudCasa 门户的正确凭据。
-* **代理无响应：** 确认代理已 "启用"，并且端点可访问。有关详细故障排除，请访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档]。
+* **智能体无响应：** 确认智能体已 "启用"，并且端点可访问。有关详细故障排除，请访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档]。
 * **缺少批准提示：** 确保 **人工验证工具** 列表中的工具名称完全按照指定输入。
 
 [NOTE]
@@ -987,16 +987,16 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 ====
 
 [#bring-your-own-mcp]
-== 自带您的 MCP
+== 配置使用您的 MCP
 
-您可以通过添加自己的自定义 **模型上下文协议（MCP）** 服务器来扩展 {short-project-name} 的“团队”。
+您可以通过添加自己的自定义 **模型上下文协议（MCP）** 服务来扩展 {short-project-name} 的“团队”。
 
 这非常适合将专有数据或专业内部工具直接集成到 AI 助手中。
 
 [NOTE]
 =====
-此功能需要支持 **可流式传输的 HTTP** 的 MCP 服务器。
-如果您使用的是服务器发送事件（SSE），请切换到可流式传输的 HTTP 配置以连接您的外部 MCP。
+此功能需要支持 **可流式传输的 HTTP** 的 MCP 服务。
+如果您使用的是服务发送事件（SSE），请切换到可流式传输的 HTTP 配置以连接您的外部 MCP。
 =====
 
 **配置步骤：**
@@ -1008,21 +1008,21 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 [cols="1,3", options="header"]
 |===
 | 字段 | 说明
-| **名称** | 您代理的识别名称。
-| **代理控制文件** | 代理目的的清晰总结。**包含示例提示**，因为 {short-project-name} 使用此描述将用户请求路由到正确的代理。
-| **端点** | 您的 MCP 服务器的可访问 URL。 +
-**注意**: 服务器必须支持可流式传输的 HTTP。
+| **名称** | 您智能体的识别名称。
+| **智能体控制文件** | 智能体目的的清晰总结。**包含示例提示**，因为 {short-project-name} 使用此描述将用户请求路由到正确的智能体。
+| **端点** | 您的 MCP 服务的可访问 URL。 +
+**注意**: 服务必须支持可流式传输的 HTTP。
 | **认证类型** | 在 **Rancher 认证** (内部)、**基本认证** 或 **无** 之间选择。_(OAuth2 支持即将推出)。_
 | **人工验证工具** | 选择在 {short-project-name} 执行之前需要明确用户确认的特定工具。
-| **准则** | 提供代理的系统提示（指令）。 +
+| **准则** | 提供智能体的系统提示（指令）。 +
 查看 xref:how-tos/how-to-admin.adoc#multi-agent[Multi-Agent 配置] 以获取示例。
 |===
 
 
 [#mcp-trust-custom-cert]
-== 自带 MCP 证书及自定义证书
+== 配置使用您的 MCP（带自签名证书）
 
-如果您的 MCP 服务器使用自签名证书运行，您可以按照以下步骤信任它。
+如果您的 MCP 服务使用自签名证书运行，您可以按照以下步骤信任它。
 
 1. 在 **local** 集群中创建密钥
 +
@@ -1069,7 +1069,7 @@ spec:
 ====
 此全局角色提供对 Rancher 管理器的非常有限的访问权限。
 
-它授予对在 local 集群中运行的代理端点的访问权限。
+它授予对在 local 集群中运行的智能体端点的访问权限。
 ====
 
 [#ui-tools]
@@ -1119,34 +1119,35 @@ image::how-tos/ui-tools-example.png[UI Tools 实战]
 
 UI Tools 会消耗额外的 Token 并增加响应时间，因此，如果您希望助手提供更快、更简洁的响应，您可能需要禁用其中一些（或全部）工具。
 
-[#persistconversations]
-== 保持对话
-
-默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。
-要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：
-
-[source,yaml]
-----
-redis:
-  externalURL: "kopilot-redis.kopilot-system.svc.cluster.local:6379"
-
-postgres:
-  externalURL: "kopilot-postgres.kopilot-system.svc.cluster.local:5432"
-  username: "kopilot"
-  password: "ChangeMe"
-----
-
-`connectionString` 必须遵循 link:https://www.psycopg.org/psycopg3/docs/index.html[psycopg3 文档]中描述的标准 PostgreSQL URI 格式。
-
-使用新配置更新图表：
-
-[source,bash,subs="attributes+"]
-----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
-----
-
-重启Liz GC：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot
-----
+// TODO: 虽然这个功能目前支持，但是支持上有些问题，等下个版本修复了再放开注释。
+// [#persistconversations]
+// == 保持对话
+// 
+// 默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。
+// 要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：
+// 
+// [source,yaml]
+// ----
+// redis:
+//   externalURL: "kopilot-redis.kopilot-system.svc.cluster.local:6379"
+// 
+// postgres:
+//   externalURL: "kopilot-postgres.kopilot-system.svc.cluster.local:5432"
+//   username: "kopilot"
+//   password: "ChangeMe"
+// ----
+// 
+// `connectionString` 必须遵循 link:https://www.psycopg.org/psycopg3/docs/index.html[psycopg3 文档]中描述的标准 PostgreSQL URI 格式。
+// 
+// 使用新配置更新：
+// 
+// [source,bash,subs="attributes+"]
+// ----
+// helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+// ----
+// 
+// 重启Liz GC：
+// [source,bash,subs="attributes+"]
+// ----
+// kubectl rollout restart deployment -n kopilot-system kopilot-agent
+// ----
