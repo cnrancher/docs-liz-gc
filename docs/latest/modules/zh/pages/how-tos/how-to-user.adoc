@@ -1,36 +1,37 @@
 include::partial$variables.adoc[]
 
-= 与 Liz GC（AI 助手）交互
+= 与 Liz^GC^（AI 助手）交互
 :page-languages: [zh]
 :revdate: 2026-08-26
 :page-revdate: {revdate}
-:description: 了解如何使用 {project-name} 中的 AI 助手 Liz GC，管理工作负载和对资源进行故障排除。
+:description: 了解如何使用 Liz ^GC^：Rancher & Kubernetes AI 助手，管理工作负载和对资源进行故障排除。
 
 [#getting-started]
-== 开始使用 Liz GC
+== 开始使用 Liz^GC^
 
-{short-project-name} 包含一个常驻的 AI 助手 *Liz GC*。 您可以随时在 UI 中点击 *Liz GC 图标* image:how-to-user/liz-button.png[Liz GC 图标, width=48] 打开助手。
+{short-project-name}^GC^ 包含一个常驻的 AI 助手 *Liz^GC^*。 您可以随时在 UI 中点击 *Liz^GC^ 图标* image:how-to-user/liz-button.png[Liz GC 图标, width=48] 打开助手。
 
-打开侧边栏后，Liz GC 会显示欢迎消息，其中包含使用提示、简短的新闻资讯以及帮助您快速开始使用的建议列表（请参考 xref:/how-tos/how-to-admin.adoc#ui-tools[ui-tools] 部分）。
+打开侧边栏后，Liz^GC^ 会显示欢迎消息，其中包含使用提示、简短的新闻资讯以及帮助您快速开始使用的建议列表（请参考 xref:/how-tos/how-to-admin.adoc#ui-tools[ui-tools] 部分）。
 
 image::how-to-user/chat-panel.png[Liz GC 聊天面板, align="center",  width="50%"]
 
 [#context-aware]
 == 上下文感知
 
-Liz GC 可以准确理解您当前正在查看的内容。任何带有状态标记的资源都会显示 *Ask Liz GC* 按钮。
+Liz^GC^ 可以准确理解您当前正在查看的内容。任何带有状态标记的资源都会显示 *Ask Liz^GC^* 按钮。
 
-.  点击资源旁边的 *Ask Liz GC 滑动按钮图标*。image:how-to-user/ask-liz.png[Ask Liz GC 图标, align="center"]
+.  点击资源旁边的 *Ask Liz^GC^ 滑动按钮图标*。image:how-to-user/ask-liz.png[Ask Liz GC 图标, align="center"]
 .  侧边栏将打开，并自动针对该资源生成相应的提示词。
-.  Liz GC 会自动获取资源名称、集群 ID 和命名空间，从而提供准确的帮助。
+.  Liz^GC^ 会自动获取资源名称、集群 ID 和命名空间，从而提供准确的帮助。
 
 image::how-to-user/context.png[Liz GC 上下文界面显示集群和命名空间感知能力。, align="center"]
 
 [#user-approve]
 == 审批操作
-安全是首要考虑因素。
 
-如果您要求 Liz GC 或其某个专用 Agent 修改您的环境（例如更新 Deployment 或更改集群配置），Liz GC 会显示审批提示。
+安全是首要考虑的因素。
+
+如果您要求 Liz^GC^ 或其某个专用 Agent 修改您的环境（例如更新 Deployment 或更改集群配置），Liz^GC^ 会显示审批提示。
 
 image::how-to-user/approve.png[环境修改确认对话框。, width="50%", align="center"]
 
@@ -41,17 +42,17 @@ image::how-to-user/approve.png[环境修改确认对话框。, width="50%", alig
 
 您可以同时进行多个线程操作，也可以保存历史记录以供日后参考。
 
-* *创建新聊天:* 要开始新的会话，请点 *New Chat* 图标。
+* *创建新聊天:* 要开始新的会话，请点 *Start a New Chat* 按钮。
 
 image:how-to-user/conversation.png[New Chat 图标, width="50%"]
 
-* *复制历史记录:* 要保存你的会话记录，请点击页面右上角的复制按钮。复制后，可以粘贴内容到文本保存。
+* *复制历史记录:* 要保存您的会话记录，请点击页面右上角的复制按钮。复制后，可以粘贴内容到文本保存。
 
 image:how-to-user/copy.png[复制按钮, width="50%"]
 
 [#manual-agent-selection]
 == 切换 Agents
-默认情况下，Liz GC 使用 "智能路由"（Smart Routing）将您的请求发送给最合适的专用 Agent（例如，针对漏洞问题使用 Security Agent）。
+默认情况下，Liz^GC^ 使用 "智能路由"（Smart Routing）将您的请求发送给最合适的专用 Agent（例如，针对漏洞问题使用 Security Agent）。
 
 如果您希望手动选择特定的 Agent：
 
@@ -62,12 +63,12 @@ image:how-to-user/multi-agent-selection.png[Agent 选择按钮, width="50%"]
 . 从列表中选择所需的 Agent。
 
 // TODO: 暂时注释掉，因为此功能目前不可用。
-// NOTE: 如果 Liz GC 注意到您频繁使用同一代理，它可能会建议您在该会话中切换到手动模式。
+// NOTE: 如果 Liz^GC^ 注意到您频繁使用同一代理，它可能会建议您在该会话中切换到手动模式。
 
 [#prompt-examples]
-== 示例提示词
+== 提示词示例
 
-不知道从哪里开始？不妨问问 Liz GC 这些问题：
+不知道从哪里开始？不妨问问 Liz^GC^ 这些问题：
 
 [cols="1,2,1", options="header"]
 |===

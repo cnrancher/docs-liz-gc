@@ -4,7 +4,7 @@ include::partial$variables.adoc[]
 :page-languages: [zh]
 :revdate: 2026-08-23
 :page-revdate: {revdate}
-:description: Liz GC 如何管理来自 Rancher 及其下游集群的上下文信息与安全数据收集。
+:description: Liz^GC^ 如何管理来自 Rancher 及其下游集群的上下文信息与安全数据收集。
 
 为了提供准确且具备上下文感知能力的响应，系统会在 UI、Supervisor、专用的 Agent MCP 服务器以及已配置的 LLM Provider 之间共享特定的元数据。
 
@@ -55,11 +55,11 @@ Rancher Agent 通过 link:https://github.com/rancher/rancher-ai-mcp?tab=readme-o
 
 从下游集群检索的数据（尤其是 Pod 日志和资源定义）可能包含敏感信息。系统通过“安全设计”的数据共享模型来管理此风险：
 
-* Agent 从不使用 root 账户或服务账户。它使用用户自身的权限执行每一次数据收集操作。这确保了 Agent 只能查看和共享用户已通过 Rancher RBAC 授权访问的数据。
+* Agent 从不使用 root 用户或服务账户。它使用用户自身的权限执行每一次数据收集操作。这确保了 Agent 只能查看和共享用户已通过 Rancher RBAC 授权访问的数据。
 
 * 数据按需获取。系统不会维护集群敏感内容的辅助数据库；只有在 Agent 推理循环中触发特定工具调用时，才会查询 Rancher 和 Kubernetes API。
 
-除权限隔离外，Liz GC 还会在工具结果返回给 LLM / UI 之前，对敏感字段做脱敏处理。
+除权限隔离外，Liz^GC^ 还会在工具结果返回给 LLM / UI 之前，对敏感字段做脱敏处理。
 
 * 默认脱敏关键字：`password` 和 `apikey`。
 * 支持通过环境变量 `TOOL_RESULT_MASK_EXTRA_KEYS`（Helm 对应 `agent.runtime.toolResult.maskExtraKeys`）追加脱敏关键字。当前该配置项已经设置了脱敏关键字 `token,secret,credential`，再加上默认的 `password` 和 `apikey`，可以应对大多数情况。
