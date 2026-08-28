@@ -68,30 +68,18 @@ helm upgrade --install \
 
 您可以进入 Local 集群 -> Apps -> Repositories 页面，查看 `ui-extension-kopilot-ai-ui-charts` 的状态。
 
-如果该 Repository 未处于 Active 状态，请点击下拉菜单中的 *Refresh*，直到该 Repository 变为 Active。
+如果该 Repository 未处于 Active 状态，可点击下拉菜单中的 *Refresh*，等待 Repository 变为 Active。
 
 image::quick-start/quick_start_4.png[Repositories 列表页面]
 
-再次返回 Extensions 页面，即可看到 `SUSE AI Assistant GC`。
+再次返回 Extensions 页面，即可看到 `SUSE AI Assistant GC` 插件。
 
 
 == 更新模型配置
 
-模型配置存储在 `kopilot-llm-config` Secret 中。如果您通过 Settings 页面修改了模型配置，这些修改会直接保存到该 Secret。
+如果您通过 SUSE AI Assistant GC Settings 页面修改了模型配置，在执行 Helm upgrade 时需要将对应的模型配置同步到 `values.yaml` 中。
 
-默认情况下，执行 Helm upgrade 时不会覆盖现有的 `kopilot-llm-config` Secret：
-
-[,yaml]
-----
-llm:
-  # When false (default), helm upgrade keeps an existing kopilot-llm-config Secret
-  # (e.g. after UI edits). Set true to overwrite it from these values.
-  forceUpdate: false
-----
-
-因此，如果您已经通过 Settings 页面配置了模型，修改 `values.yaml` 中的模型配置后执行 Helm upgrade，**默认不会覆盖现有的模型配置**。
-
-如果希望使用 `values.yaml` 中的配置覆盖现有的 `kopilot-llm-config` Secret，请将 `llm.forceUpdate` 设置为 `true`：
+默认情况下，执行 Helm upgrade 时不会覆盖当前使用的模型配置，如果您希望使用 `values.yaml` 中的配置覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`：
 
 [,yaml]
 ----
@@ -99,14 +87,9 @@ llm:
   forceUpdate: true
 ----
 
-[NOTE]
-====
-如果您通过 Settings 页面配置了模型，请在更新之前，将所需的模型配置同步到 `values.yaml` 中，并设置 `llm.forceUpdate: true`，以确保 Helm upgrade 使用 `values.yaml` 中的配置覆盖现有的 `kopilot-llm-config` Secret。
-====
-
 == 使用 Ingress NGINX 时出现 `missing user header` 错误
 
-在本地 RKE2 集群中，如果使用 Ingress NGINX，访问相关服务时可能出现以下错误：
+在 RKE2 集群中，如果使用 ingress-nginx 作为 Ingress Controller，访问相关服务时可能出现以下错误：
 
 [,text]
 ----
@@ -115,7 +98,7 @@ llm:
 
 === 原因
 
-Ingress NGINX 默认情况下会忽略包含下划线的请求头，导致服务端无法获取所需的用户信息，从而返回 `422` 错误。
+ingress-nginx 默认情况下会忽略包含下划线的请求头，导致服务端无法获取所需的用户信息，从而返回 `422` 错误。
 
 === 解决方法
 
@@ -128,7 +111,7 @@ kubectl patch configmap rke2-ingress-nginx-controller -n kube-system \
   -p '{"data":{"enable-underscores-in-headers":"true"}}'
 ----
 
-配置修改后会立即生效，无需重启 Ingress NGINX Controller。
+配置修改后会立即生效，无需重启 ingress-nginx Controller。
 
 您可以使用以下命令确认配置是否已生效：
 
@@ -147,7 +130,7 @@ true
 
 == 使用过程中页面自动退出登录
 
-在使用 Rancher AI GC 的过程中，页面可能会自动退出登录，并出现以下错误：
+在使用 Liz^GC^ 的过程中，页面可能会自动退出登录，并出现以下错误：
 
 [,text]
 ----
@@ -173,13 +156,13 @@ rancher_sso:
 
 修改 `values.yaml` 后重新执行 Helm upgrade，使配置生效。
 
-== 访问 Liz GC UI 重定向次数过多，无法访问
+== 访问 Liz^GC^ UI 重定向次数过多，无法访问
 
-使用外部负载均衡器上终止 TLS 的方式部署 Liz GC，访问其 UI 时出现了重定向次数过多，无法进入页面的问题。
+使用外部负载均衡器上终止 TLS 的方式部署 Liz^GC^，访问其 UI 时出现了重定向次数过多，无法进入页面的问题。
 
 === 原因
 
-Liz GC 所在集群的 ingress 控制器未启用与外部 TLS 的转发头机制。如果不设置此选项，外部 LB 将不断响应来自入口控制器的重定向请求。
+Liz^GC^ 所在集群的 ingress 控制器未启用与外部 TLS 的转发头机制。如果不设置此选项，外部 LB 将不断响应来自入口控制器的重定向请求。
 
 === 解决方法
 

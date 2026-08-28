@@ -1,12 +1,12 @@
 include::partial$variables.adoc[]
 
-= Liz GC 安装说明
+= Liz^GC^ 安装指南
 :page-languages: [zh]
 :revdate: 2026-08-27
 :page-revdate: {revdate}
-:description: 介绍 Liz GC 的更多 Helm 安装参数
+:description: 介绍 Liz^GC^ 的更多 Helm 安装参数
 
-本文介绍如何在已有的 Kubernetes 集群中安装 Liz GC 应用，并介绍相关的安装参数。
+本文介绍如何在已有的 Kubernetes 集群中安装 Liz^GC^ 应用，并介绍相关的安装参数。
 
 == 常规选项
 
@@ -20,7 +20,7 @@ include::partial$variables.adoc[]
 
 | hostname
 | ""
-| string - Liz GC 访问的完全域名
+| string - Liz^GC^ 访问的完全域名
 
 | llm.provider
 | "google_genai"
@@ -68,7 +68,7 @@ include::partial$variables.adoc[]
 
 == TLS 选项
 
-将 Liz GC 安装在 Kubernetes 集群中时，TLS 工作由集群的 ingress 控制器负责处理，用户需要选择要使用的 ingress 控制器。
+将 Liz^GC^ 安装在 Kubernetes 集群中时，TLS 工作由集群的 ingress 控制器负责处理，用户需要选择要使用的 ingress 控制器。
 
 [cols="1,1,3", options="header"]
 |===
@@ -89,21 +89,21 @@ include::partial$variables.adoc[]
 
 == SSL 配置
 
-Liz GC 默认需要配置 SSL/TLS 协议。
+Liz^GC^ 默认需要配置 SSL/TLS 协议。
 
 [NOTE]
 ====
 
-如果你希望从外部终止 SSL/TLS 连接，请参阅 <<external-tls,在外部负载均衡器上终止 TLS>>相关内容。如该页面所述，此选项对 TLS 验证有一些额外的要求。
+如果您希望从外部终止 SSL/TLS 连接，请参阅 <<external-tls,在外部负载均衡器上终止 TLS>>相关内容，此选项对 TLS 验证有一些额外的要求。
 
 ====
 
-关于 Liz GC SSL 配置有两种推荐方案：
+关于 Liz^GC^ SSL 配置有两种推荐方案：
 
-* Liz GC 生成的 TLS 证书：在这种情况下，您需要将 `cert-manager` 安装到集群中，Liz GC 使用 `cert-manager` 来颁发和维护其证书，Liz GC 会自行生成自己的 CA 证书，并使用该 CA 来签名证书，后续 `cert-manager` 就负责管理该证书。
-* 使用您自己的证书：这种方案允许您使用自己拥有的、由公共或私有CA签名的证书。Liz GC 会使用该证书来保护 WebSocket 和 HTTPS 流量。在这种情况下，您需要将该证书（以及相关的密钥）以 PEM 格式上传，文件名为 `tls.crt` 和 `tls.key`。如果您使用的是私有CA，那么还需要上传该证书，因为您的节点可能不信任这个私有 CA。
+* Liz^GC^ 生成的 TLS 证书：在这种情况下，您需要将 `cert-manager` 安装到集群中，Liz^GC^ 使用 `cert-manager` 来颁发和维护其证书，Liz^GC^ 会自行生成自己的 CA 证书，并使用该 CA 来签名证书，后续 `cert-manager` 就负责管理该证书。
+* 使用您自己的证书：这种方案允许您使用自己拥有的、由公共或私有CA签名的证书。Liz^GC^ 会使用该证书来保护 WebSocket 和 HTTPS 流量。在这种情况下，您需要将该证书（以及相关的密钥）以 PEM 格式上传，文件名为 `tls.crt` 和 `tls.key`。如果您使用的是私有CA，那么还需要上传该证书，因为您的节点可能不信任这个私有 CA。
 
-=== Liz GC 生成 TLS 证书
+=== Liz^GC^ 生成 TLS 证书
 
 [source,bash,subs="attributes+"]
 ----
@@ -163,7 +163,7 @@ helm upgrade --install \
 [[external-tls]]
 === 在外部负载均衡器上终止 TLS
 
-你的负载均衡器必须能够支持长期存在的 WebSocket 连接，并且需要插入代理头信息，以便 Liz GC 能够正确地处理这些连接。
+您的负载均衡器必须能够支持长期存在的 WebSocket 连接，并且需要插入代理头信息，以便 Liz^GC^ 能够正确地处理这些连接。
 
 ==== Required Headers
 * Host
