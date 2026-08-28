@@ -105,7 +105,7 @@ Liz GC 默认需要配置 SSL/TLS 协议。
 
 === Liz GC 生成 TLS 证书
 
-[source,bash]
+[source,bash,subs="attributes+"]
 ----
 # install cert-manager
 helm repo add jetstack https://charts.jetstack.io
@@ -118,7 +118,7 @@ helm install cert-manager jetstack/cert-manager \
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-0.6.0.tgz
+    kopilot-crd ./kopilot-crd-{version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -130,12 +130,12 @@ helm upgrade --install \
     --set llm.apiKey="<your llm api key>" \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-0.6.0.tgz
+    kopilot ./kopilot-{version}.tgz
 ----
 
 === 使用自签名证书
 
-[source,bash]
+[source,bash,subs="attributes+"]
 ----
 kubectl create namespace kopilot-system
 kubectl -n kopilot-system create secret tls tls-kopilot-ingress --cert=./tls.crt --key=./tls.key
@@ -144,7 +144,7 @@ kubectl -n kopilot-system create secret generic tls-kopilot-ca --from-file=cacer
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-0.6.0.tgz
+    kopilot-crd ./kopilot-crd-{version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -157,7 +157,7 @@ helm upgrade --install \
     --set privateCA=true \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-0.6.0.tgz
+    kopilot ./kopilot-{version}.tgz
 ----
 
 [[external-tls]]
@@ -177,12 +177,12 @@ helm upgrade --install \
 * Write Timeout: 1800 seconds
 * Connect Timeout: 30 seconds
 
-[source,bash]
+[source,bash,subs="attributes+"]
 ----
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-0.6.0.tgz
+    kopilot-crd ./kopilot-crd-{version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -194,7 +194,7 @@ helm upgrade --install \
     --set tls="" \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-0.6.0.tgz
+    kopilot ./kopilot-{version}.tgz
 ----
 
 以下是用于快速启动外部负载均衡器的 NGINX 配置示例。
