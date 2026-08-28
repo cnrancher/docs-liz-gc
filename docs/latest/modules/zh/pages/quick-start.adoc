@@ -1,6 +1,6 @@
 include::partial$variables.adoc[]
 
-= Liz GC 安装部署快速入门
+= 快速入门
 :page-languages: [zh]
 :revdate: 2026-08-23
 :page-revdate: {revdate}
@@ -112,6 +112,7 @@ image::quick-start/quick_start_1.png[Extensions 管理页面]
 +
 . 点击 *Import Extension Catalog*，输入 Catalog Image Reference：
 +
+[source,bash,subs="attributes+"]
 ----
 registry.rancher.cn/cnrancher/ui-extension-kopilot-ai-ui:{version}
 ----
@@ -144,6 +145,4 @@ image::quick-start/quick_start_8.png[Settings 页面]
 
 === 用户权限
 
-Liz GC UI Extension 可使用 Rancher 用户，并继承其权限。添加用户时，需额外勾选 *Custom Kopilot User (AI Assistant)*。
-
-image::quick-start/quick_start_9.png[Users 页面]
+Rancher 中的用户想要使用 Liz GC，需要设置正确的权限，具体请参考 xref:/how-tos/how-to-admin.adoc#rbac[控制访问（RBAC）]

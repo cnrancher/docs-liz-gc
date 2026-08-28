@@ -1064,12 +1064,13 @@ spec:
 3.  检测 **Kopilot User(AI Assistant) 用户** 角色在 **自定义** 部分。
 4.  点击保存
 
-检查 Liz (Rancher AI 助手) 用户 角色在 自定义 部分
+image::quick-start/quick_start_9.png[Users 页面]
+
 [NOTE]
 ====
-此全局角色提供对 Rancher 管理器的非常有限的访问权限。
+此全局角色提供 Rancher 非常有限的访问权限。
 
-它授予对在 local 集群中运行的智能体端点的访问权限。
+它授予对在 local 集群中运行的 AI Agent 的访问权限。
 ====
 
 [#ui-tools]
@@ -1122,30 +1123,30 @@ UI Tools 会消耗额外的 Token 并增加响应时间，因此，如果您希�
 // TODO: 虽然这个功能目前支持，但是支持上有些问题，等下个版本修复了再放开注释。
 // [#persistconversations]
 // == 保持对话
-// 
+//
 // 默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。
 // 要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：
-// 
+//
 // [source,yaml]
 // ----
 // redis:
 //   externalURL: "kopilot-redis.kopilot-system.svc.cluster.local:6379"
-// 
+//
 // postgres:
 //   externalURL: "kopilot-postgres.kopilot-system.svc.cluster.local:5432"
 //   username: "kopilot"
 //   password: "ChangeMe"
 // ----
-// 
+//
 // `connectionString` 必须遵循 link:https://www.psycopg.org/psycopg3/docs/index.html[psycopg3 文档]中描述的标准 PostgreSQL URI 格式。
-// 
+//
 // 使用新配置更新：
-// 
+//
 // [source,bash,subs="attributes+"]
 // ----
 // helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
 // ----
-// 
+//
 // 重启Liz GC：
 // [source,bash,subs="attributes+"]
 // ----

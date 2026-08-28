@@ -47,7 +47,7 @@ MCP 服务充当 ReAct 智能体 与 Rancher 和 Kubernetes API 之间的安全�
 
 === Rancher UI 扩展 / 独立 UI
 
-在 Rancher UI 和 独立 UI 中都提供面向用户的聊天界面，它旨在无缝融入 Rancher/Kubernetes 用户体验，其功能包括：
+在 Rancher UI 和独立 UI 中都提供面向用户的聊天界面，它旨在无缝融入 Rancher/Kubernetes 用户体验，其功能包括：
 
 * **用户输入**：它捕获用户查询并将其发送给 ReAct 智能体。
 * **显示回复**：它接收来自 ReAct 智能体的回复，并以聊天格式呈现。除了正常的文本消息回复，还会根据回复内容提供如资源跳转、YAML展示、YAML变化展示和建议展示等多种可视化 UI 功能的支持。
