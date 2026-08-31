@@ -1,0 +1,206 @@
+# product names
+elemental-product-name: "SUSE® Rancher Prime: OS Manager"
+fleet-product-name: "SUSE® Rancher Prime: Continuous Delivery"
+harvester-product-name-tm: "SUSE® Virtualization"
+harvester-product-name: "SUSE Virtualization"
+k3k-product-name: "SUSE Virtual Clusters"
+k3k-product-name-tm: "SUSE® Rancher Prime: Virtual Clusters"
+k3s-product-name: "SUSE® Rancher Prime: K3s"
+kubewarden-product-name: "SUSE Security Admission Controller"
+longhorn-product-name: "SUSE Storage"
+longhorn-product-name-tm: "SUSE® Storage"
+neuvector-product-name: "SUSE Security"
+neuvector-product-name-tm: "SUSE® Security"
+# Rancher attributes are soft set (@) so that they can be changed for SRFA
+rancher-prime: Cloud Native@
+rancher-product-name: SUSE Rancher Prime@
+rancher-product-name-tm: SUSE® Rancher Prime@
+rancher-short-name: Rancher@
+rke2-product-name: "SUSE® Rancher Prime: RKE2"
+rke2-short-name: "RKE2"
+sbomscanner-product-name: "SUSE Security Vulnerability Scanner"
+sbomscanner-short-name: "Vulnerability Scanner"
+stackstate-product-name: "SUSE® Observability"
+turtles-product-name: "SUSE® Rancher Prime: Cluster API"
+
+# shared header and JSON-LD data
+# fullTitle can be added where needed/required.
+page-rancher-author: "SUSE Product & Solution Documentation Team"
+page-rancher-author-url: "https://documentation.suse.com"
+
+# project data for building
+page-project-data: [
+  # global anchor for the documentation base URL
+  page-global-dsc-base: &dsc_base "https://documentation.suse.com",
+
+  {
+    'url-part': 'cluster-api',
+    'title': 'Cluster API',
+    'fullTitle': 'SUSE Rancher Prime Cluster API',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'cluster-api',
+  },
+  {
+    'url-part': 'continuous-delivery',
+    'title': 'Continuous Delivery',
+    'fullTitle': 'SUSE Rancher Prime Continuous Delivery',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'continuous-delivery',
+  },
+  {
+    'url-part': 'k3s',
+    'title': 'K3s',
+    'fullTitle': 'SUSE Rancher Prime: K3s',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'k3s',
+  },
+  {
+    'url-part': 'os-manager',
+    'title': 'OS Manager',
+    'fullTitle': 'SUSE Rancher Prime: OS Manager',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'os-manager',
+  },
+  {
+    'url-part': 'admission-controller',
+    'title': 'Admission Controller',
+    'fullTitle': 'SUSE Security Admission Controller',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'admission-controller',
+  },
+  {
+    'url-part': 'rke2',
+    'title': 'RKE2',
+    'fullTitle': 'SUSE Rancher Prime: RKE2',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'rke2',
+  },
+  {
+    'url-part': 'suse-observability',
+    'title': 'SUSE Observability',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'suse-observability',
+  },
+  {
+    'url-part': 'rancher-manager',
+    'title': 'SUSE Rancher Manager',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'rancher-manager',
+  },
+  {
+    'url-part': 'rancher-srfa',
+    'title': 'SUSE Rancher for AWS',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'rancher-srfa',
+  },
+  {
+    'url-part': 'security',
+    'title': 'SUSE Security',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'security',
+  },
+  {
+    'url-part': 'storage',
+    'title': 'SUSE Storage',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'storage',
+  },
+  {
+    'url-part': 'virtualization',
+    'title': 'SUSE Virtualization',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'virtualization',
+    # 'dsc-base-url2': '',  # This is new, upcoming config
+    # 'dsc-base-url3': 'suse-virtualization',  # This is new, upcoming config
+  },
+  {
+    'url-part': 'suse-virtual-clusters',
+    'title': 'SUSE Virtual Clusters',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'suse-virtual-clusters',
+  },
+  {
+    'url-part': 'rancher-ai',
+    'title': 'Liz: The Rancher AI Assistant',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'rancher-ai',
+  },
+  {
+    'url-part': 'rancher-ai-gc',
+    'title': 'Liz<sup>GC</sup>: The Rancher & Kubernetes AI Assistant',
+    'dsc-base-url': "https://cnrancher.github.io",
+    'dsc-base-url2': 'docs-liz-gc',
+    'dsc-base-url3': '',
+  },
+  {
+    'url-part': 'vulnerability-scanner',
+    'title': 'SUSE Security Vulnerability Scanner',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'vulnerability-scanner',
+  },
+  {
+    'url-part': 'runtime-enforcer',
+    'title': 'SUSE Security Runtime Enforcer',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'runtime-enforcer',
+  },
+  {
+    'url-part': 'rancher-developer-access',
+    'title': 'SUSE Rancher Developer Access',
+    'dsc-base-url': *dsc_base,
+    'dsc-base-url2': 'cloudnative',
+    'dsc-base-url3': 'rancher-developer-access',
+  },
+]
+
+language-data:
+  - fr:
+      - ':warning-caption: Avertissement'
+      - ':caution-caption: Attention'
+      - ':tip-caption: Astuce'
+  - de:
+      - ':caution-caption: Achtung'
+      - ':warning-caption: Warnung'
+      - ':important-caption: Wichtig'
+      - ':tip-caption: Tipp'
+      - ':note-caption: Anmerkung'
+  - es:
+      - ':caution-caption: Atención'
+      - ':warning-caption: Aviso'
+      - ':important-caption: Importante'
+      - ':tip-caption: Sugerencia'
+      - ':note-caption: Nota'
+  - pt:
+      - ':caution-caption: Cuidado'
+      - ':warning-caption: Atenção'
+      - ':important-caption: Importante'
+      - ':tip-caption: Dica'
+      - ':note-caption: Nota'
+  - ja:
+      - ':caution-caption: 注意'
+      - ':warning-caption: 警告'
+      - ':important-caption: 重要'
+      - ':tip-caption: ヒント'
+      - ':note-caption: 注記'
+  - zh:
+      - ':caution-caption: 小心'
+      - ':warning-caption: 警告'
+      - ':important-caption: 重要'
+      - ':tip-caption: 提示'
+      - ':note-caption: 注意'
