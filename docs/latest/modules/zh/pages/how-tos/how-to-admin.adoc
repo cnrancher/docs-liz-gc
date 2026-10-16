@@ -677,10 +677,10 @@ image:how-tos/ai-agent-suse-appco.png[SUSE Application Collection AI Agent]
     version carries multiple 'Medium' and 'High' CVEs because it includes many
     OS utilities you likely don't need in production.
 
-    Comparison: | Feature | Current (Community) | SUSE AppCo Equivalent | | :---
-    | :--- | :--- | | Vulnerabilities | ~50-100 (estimated) | 0 Critical / 0
-    High | | Base Image | Debian/Alpine | SUSE Linux Enterprise BCI | | SBOM |
-    Not standard | Available (CycloneDX/SPDX) |
+    Comparison: \| Feature \| Current (Community) \| SUSE AppCo Equivalent \| \| :---
+    \| :--- \| :--- \| \| Vulnerabilities \| ~50-100 (estimated) \| 0 Critical / 0
+    High \| \| Base Image \| Debian/Alpine \| SUSE Linux Enterprise BCI \| \| SBOM \|
+    Not standard \| Available (CycloneDX/SPDX) \|
 
 
     ## RESPONSE FORMAT
@@ -699,10 +699,12 @@ image:how-tos/ai-agent-suse-appco.png[SUSE Application Collection AI Agent]
 apiVersion: kopilot.pandaria.io/v1alpha1
 kind: SubAgentConfig
 metadata:
-  name: agent-6-kuzvosbo
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: appco
   namespace: kopilot-system
 spec:
-  authenticationSecret: ai-agent-auth-jmjwb
+  authenticationSecret: appco-auth-secret
   authenticationType: BASIC
   description: >-
     SUSE-Application-Collection Agent is an AI assistant that provides
@@ -906,7 +908,9 @@ image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 apiVersion: kopilot.pandaria.io/v1alpha1
 kind: SubAgentConfig
 metadata:
-  name: agent-5-ysfzihe9
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: observability-agent
   namespace: kopilot-system
 spec:
   authenticationSecret: suse-obs-auth
