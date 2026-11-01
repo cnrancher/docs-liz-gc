@@ -11,3 +11,29 @@ Clone the fork with `git clone --recurse-submodules`
 * `make environment`: Sets up the environment for building the docs.
 * `make local`: Build the docs on your local machine.
 * `make preview`: Preview the docs in a web browser.
+
+== Adding a new documentation version
+
+`docs/latest` holds the version under development, `docs/version-<version>` holds released snapshots. Both playbooks read every version through `start_paths: [shared, docs/latest, docs/version-*]`, so no playbook change is needed.
+
+To add v0.7.0:
+
+* Archive the current version: `cp -r docs/latest docs/version-0.6.0`
+* Set `version: 'v0.7.0'` in `docs/latest/antora.yml` and carry on editing there
+* Verify locally: `make clean && make environment && make local && make preview`
+
+The URL comes from `version` in `antora.yml`, not from the directory name:
+
+|===
+| Directory | `version` | URL
+
+| `docs/latest`
+| `'v0.7.0'`
+| `/rancher-ai-gc/v0.7.0/`
+
+| `docs/version-0.6.0`
+| `'v0.6.0'`
+| `/rancher-ai-gc/v0.6.0/`
+|===
+
+`/rancher-ai-gc/latest/` is a symlink the build adds to the newest version, so it serves the same pages as `/rancher-ai-gc/v0.7.0/`. Values must stay unique across version directories.

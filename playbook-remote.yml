@@ -7,7 +7,7 @@ content:
   sources:
     - url: https://github.com/cnrancher/docs-liz-gc.git
       branches: [main]
-      start_paths: [shared, docs/latest]
+      start_paths: [shared, docs/latest, docs/version-*]
 
 ui:
   bundle:

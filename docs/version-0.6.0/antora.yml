@@ -1,0 +1,6 @@
+name: rancher-ai-gc
+title: 'Rancher & Kubernetes AI'
+version: 'v0.6.0'
+start_page: zh:introduction.adoc
+nav:
+- modules/zh/nav.adoc
