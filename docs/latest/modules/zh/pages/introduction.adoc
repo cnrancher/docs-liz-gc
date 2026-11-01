@@ -30,15 +30,20 @@ include::partial$variables.adoc[]
 
 基于安全至上的原则，{short-project-name}^GC^ 允许您自由选择底层 AI 引擎。
 
-* 通过 OpenAI API 兼容架构平滑接入本地或物理隔离的 LLM 实例，全面筑牢数据隐私屏障。
+* 通过 OpenAI API 兼容架构平滑接入本地或物理隔离的 LLM 实例，全面筑牢数据隐私屏障。例如：
+** 开源的 vLLM
+** 开源的 Ollama
 * 使用国内外主流公共引擎进行高性能推理，例如：
 ** OpenAI 的 ChatGPT
+** Microsoft Azure 的 ChatGPT
 ** Google 的 Gemini
+** Amazon 的 Bedrock
 ** 阿里的 Qwen
 ** 深度求索的 DeepSeek
 ** 小米的 Mimo
 ** 月之暗面的 Kimi
 ** 智谱的 GLM
+** 稀宇科技的 MiniMax
 
 === 灵活的智能体定制权
 
