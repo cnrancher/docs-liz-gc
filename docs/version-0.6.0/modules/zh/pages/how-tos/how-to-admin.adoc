@@ -14,12 +14,12 @@ include::partial$variables.adoc[]
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-0.6.0.tgz
+    kopilot-crd ./kopilot-crd-{page-version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot ./kopilot-0.6.0.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 [NOTE]
@@ -69,7 +69,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -89,7 +89,7 @@ image:how-tos/openai-like-end.png[兼容 OpenAI 规范的 API 端点]
 
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace --set llm.baseURL="https://myendpoint.example" kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace --set llm.baseURL="https://myendpoint.example" kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -129,7 +129,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -169,7 +169,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -209,7 +209,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -249,7 +249,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -289,7 +289,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -329,7 +329,7 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
 重启 Liz^GC^：
@@ -1138,7 +1138,7 @@ UI Tools 会消耗额外的 Token 并增加响应时间，因此，如果您希�
 //
 // [source,bash,subs="attributes+"]
 // ----
-// helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.6.0.tgz
+// helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 // ----
 //
 // 重启Liz GC：
