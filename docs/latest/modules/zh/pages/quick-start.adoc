@@ -2,54 +2,34 @@ include::partial$variables.adoc[]
 
 = 快速入门
 :page-languages: [zh]
-:revdate: 2026-08-23
+:revdate: 2026-11-03
 :page-revdate: {revdate}
-:description: 在 Rancher local 集群通过 Helm 安装 Liz^GC^，并启用 Rancher UI Extension 作为 AI Assistant。
+:description: 介绍 {short-project-name}^GC^ 的两种安装方式：集成到 Rancher UI，或使用独立 UI。
 
-本文介绍如何在 Rancher 环境中部署 Liz^GC^，并安装 UI Extension，以便在 Rancher UI 中直接使用 AI Assistant。
+{short-project-name}^GC^ 目前有两种安装方式，请按需选择其中一种：
+
+* *集成到 Rancher UI*：需要与 Rancher 集成时使用。
+* *使用独立 UI*：只使用 {short-project-name}^GC^ 功能、不需要与 Rancher 集成时使用。
+
+两种方式的安装步骤只在最后一步 <<helm-install-liz-gc,安装 {short-project-name}^GC^>> 时，使用的 Helm 参数不同。
 
 == 先决条件
 
 开始前请确认已满足以下条件：
 
-* Rancher 2.13 或以上版本
+* 可访问的 Kubernetes 集群
 * 已安装 Helm
 * 已准备可用的 LLM API Key
+* 选择集成到 Rancher UI 时，需要 Rancher 2.13 或以上版本
 
 == 支持模型矩阵
 
-Liz^GC^ 当前支持以下 LLM 厂商与模型。安装时需提供对应厂商的 API Key。
-
-[cols="1,3", options="header"]
-|===
-| LLM 厂商 | 支持模型
-
-| OpenAI
-| `gpt-4.1-mini`, `gpt-5.2`, `gpt-5.4-mini`, `gpt-5.4`
-
-| Gemini
-| `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-3-flash-preview`, `gemini-3.1-pro-preview`, `gemini-3.1-flash-lite`, `gemini-3.5-flash`, `gemini-3.6-flash`
-
-| Qwen
-| `qwen-plus`, `qwen3-max`, `qwen3.6-flash`, `qwen3.6-max-preview`, `qwen3.6-plus`, `qwen3.7-max`, `qwen3.7-plus`
-
-| DeepSeek
-| `deepseek-v4-flash`, `deepseek-v4-pro`
-
-| MiMo
-| `mimo-v2.5`, `mimo-v2.5-pro`
-
-| Kimi
-| `kimi-k2.6`, `kimi-k2.7-code`, `kimi-k2.7-code-highspeed`, `kimi-k3`
-
-| GLM
-| `glm-5.1`, `glm-5.2`
-|===
+{short-project-name}^GC^ 当前支持的 LLM 厂商与模型请参考 xref:/explanations/models.adoc[已验证模型]。安装时需提供对应厂商的 API Key。
 
 == 安装 cert-manager
 
-Liz^GC^ 可使用 cert-manager 签发和管理 TLS 证书。
-若 Rancher 环境中已安装 cert-manager，可跳过本节，直接使用 <<helm-install-liz-gc,Helm 安装 Liz^GC^>>。
+{short-project-name}^GC^ 可使用 cert-manager 签发和管理 TLS 证书。
+若集群中已安装 cert-manager，可跳过本节，继续 <<download-helm-chart,下载 Helm Chart>>。
 
 [source,bash]
 ----
@@ -60,29 +40,53 @@ helm install cert-manager jetstack/cert-manager \
   --create-namespace --set crds.enabled=true
 ----
 
-[[helm-install-liz-gc]]
-== Helm 安装 Liz^GC^
+[[download-helm-chart]]
+== 下载 Helm Chart
 
-在 Rancher local 集群上安装 Liz^GC^。
+从 https://github.com/cnrancher/kopilot/releases/tag/v{page-version}[GitHub Release Assets] 下载 Helm Chart：`kopilot-{page-version}.tgz` 和 `kopilot-crd-{page-version}.tgz`。
 
-. 从 https://github.com/cnrancher/kopilot/releases/tag/v{page-version}[GitHub Release Assets] 下载 Helm Chart：`kopilot-{page-version}.tgz` 和 `kopilot-crd-{page-version}.tgz`。
-. 安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者（也可使用其他 provisioner）。
-+
+== 安装 local-path-provisioner
+
+安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者（也可使用其他 provisioner）。
+
 [source,bash]
 ----
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.36/deploy/local-path-storage.yaml
 kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ----
-+
-. 在 Rancher local 集群上安装 Liz^GC^：
-+
+
+== 安装 {short-project-name}^GC^ 的 CRD
+
 [source,bash,subs="attributes+"]
 ----
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
     kopilot-crd ./kopilot-crd-{page-version}.tgz
+----
 
+[[helm-install-liz-gc]]
+== 安装 {short-project-name}^GC^
+
+[cols="1,2,2", options="header"]
+|===
+| 安装方式 | 适用场景 | 追加的参数
+
+| 集成到 Rancher UI
+| 与 Rancher 集成
+| `rancher_sso.enabled=true`、`rancher_sso.url="<your rancher url>"`
+
+| 使用独立 UI
+| 只使用 {short-project-name}^GC^
+| `hostname="<your domain>"`
+|===
+
+=== 集成到 Rancher UI
+
+需要与 Rancher 集成时，使用下面的命令安装。`rancher_sso.url` 填写 Rancher Server 地址，例如 `https://rancher.mycompany.com`。
+
+[source,bash,subs="attributes+"]
+----
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
@@ -95,18 +99,41 @@ helm upgrade --install \
     kopilot ./kopilot-{page-version}.tgz
 ----
 
+安装完成后，继续 <<install-rancher-ui-extension,安装 Rancher UI Extension>>。
+
+=== 使用独立 UI
+
+只使用 {short-project-name}^GC^ 功能、不与 Rancher 集成时，使用下面的命令安装。`hostname` 是浏览器访问 {short-project-name}^GC^ 的域名。
+
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    --set bootstrapPassword="<your bootstrap password>" \
+    --set hostname="<your domain>" \
+    --set llm.active=gemini \
+    --set llm.provider=google_genai \
+    --set llm.apiKey="<your llm api key>" \
+    kopilot ./kopilot-{page-version}.tgz
+----
+
+安装完成后，在浏览器打开 `\https://<your domain>`，使用 `bootstrapPassword` 登录。具体使用请联系 SUSE 销售或售前人员。
+
+
 [NOTE]
 ====
 
-这些说明中并没有包含其他安装选项。如果您想扩展其他配置，请参考完整的 xref:/reference/installation.adoc[Liz^GC^ 安装说明]
+这些说明中并没有包含其他安装选项。如果您想扩展其他配置，请参考完整的 xref:/reference/installation.adoc[{short-project-name}^GC^ 安装说明]
 
 ====
 
+[[install-rancher-ui-extension]]
 == 安装 Rancher UI Extension
 
-在 Rancher 中启用 UI Extension，即可在 Rancher UI 中使用 AI Assistant。
+仅在选择 *集成到 Rancher UI* 时需要完成本节。在 Rancher 中启用 UI Extension 后，即可在 Rancher UI 中使用 {short-project-name}^GC^。
 
-. 打开 Rancher，点击左侧 *Extensions* 菜单，再点击下拉菜单中的 *Manage Extension Catalogs*，导入 Liz^GC^ UI 扩展。
+. 打开 Rancher，点击左侧 *Extensions* 菜单，再点击下拉菜单中的 *Manage Extension Catalogs*，导入 {short-project-name}^GC^ UI 扩展。
 +
 image::quick-start/quick_start_1.png[Extensions 管理页面]
 +
@@ -133,16 +160,17 @@ image::quick-start/quick_start_6.png[Kopilot AI Assistant 重载页面]
 
 === 开始对话
 
-点击右上角的 *Ask Liz^GC^* 图标，进入对话页面。
+点击右上角的 *Ask {short-project-name}^GC^* 图标，进入对话页面。
 
 image::quick-start/quick_start_7.png[Ask Liz GC 对话页面]
 
 === 配置页面
 
-在 Rancher UI 中访问 *Global Settings* -> *SUSE AI Assistant GC*，可修改 Liz^GC^ 相关配置。
+在 Rancher UI 中访问 *Global Settings* -> *AI Assistant GC*，可修改 {short-project-name}^GC^ 相关配置。
 
 image::quick-start/quick_start_8.png[Settings 页面]
 
 === 用户权限
 
-Rancher 中的用户想要使用 Liz^GC^，需要设置正确的权限，具体请参考 xref:/how-tos/how-to-admin.adoc#rbac[控制访问（RBAC）]
+Rancher 中的用户想要使用 {short-project-name}^GC^，需要设置正确的权限，具体请参考 xref:/how-tos/how-to-admin.adoc#rbac[控制访问（RBAC）]
+
