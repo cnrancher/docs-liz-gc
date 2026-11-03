@@ -118,7 +118,7 @@ helm install cert-manager jetstack/cert-manager \
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-{version}.tgz
+    kopilot-crd ./kopilot-crd-{page-version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -130,7 +130,7 @@ helm upgrade --install \
     --set llm.apiKey="<your llm api key>" \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 === 使用自签名证书
@@ -144,7 +144,7 @@ kubectl -n kopilot-system create secret generic tls-kopilot-ca --from-file=cacer
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-{version}.tgz
+    kopilot-crd ./kopilot-crd-{page-version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -157,7 +157,7 @@ helm upgrade --install \
     --set privateCA=true \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 [[external-tls]]
@@ -182,7 +182,7 @@ helm upgrade --install \
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-{version}.tgz
+    kopilot-crd ./kopilot-crd-{page-version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -194,7 +194,7 @@ helm upgrade --install \
     --set tls="" \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 以下是用于快速启动外部负载均衡器的 NGINX 配置示例。

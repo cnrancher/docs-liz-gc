@@ -2,7 +2,7 @@ include::partial$variables.adoc[]
 
 = 故障排查
 :page-languages: [zh]
-:revdate: 2026-08-24
+:revdate: 2026-11-03
 :page-revdate: {revdate}
 :description: 故障排查
 
@@ -59,7 +59,7 @@ helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
     -f values.yaml \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 == 在 Extensions 可用列表中看不到 SUSE AI Assistant GC
@@ -130,7 +130,7 @@ true
 
 == 使用过程中页面自动退出登录
 
-在使用 Liz^GC^ 的过程中，页面可能会自动退出登录，并出现以下错误：
+在使用 {short-project-name}^GC^ 的过程中，页面可能会自动退出登录，并出现以下错误：
 
 [,text]
 ----
@@ -156,13 +156,13 @@ rancher_sso:
 
 修改 `values.yaml` 后重新执行 Helm upgrade，使配置生效。
 
-== 访问 Liz^GC^ UI 重定向次数过多，无法访问
+== 访问 {short-project-name}^GC^ UI 重定向次数过多，无法访问
 
-使用外部负载均衡器上终止 TLS 的方式部署 Liz^GC^，访问其 UI 时出现了重定向次数过多，无法进入页面的问题。
+使用外部负载均衡器上终止 TLS 的方式部署 {short-project-name}^GC^，访问其 UI 时出现了重定向次数过多，无法进入页面的问题。
 
 === 原因
 
-Liz^GC^ 所在集群的 ingress 控制器未启用与外部 TLS 的转发头机制。如果不设置此选项，外部 LB 将不断响应来自入口控制器的重定向请求。
+{short-project-name}^GC^ 所在集群的 ingress 控制器未启用与外部 TLS 的转发头机制。如果不设置此选项，外部 LB 将不断响应来自入口控制器的重定向请求。
 
 === 解决方法
 
@@ -198,4 +198,93 @@ spec:
     additionalArguments:
       - "--entryPoints.web.proxyProtocol.insecure"
       - "--entryPoints.web.forwardedHeaders.insecure"
+----
+
+== Rancher MCP Server 启动异常
+
+使用 {short-project-name}^GC^ 调用工具时，出现以下错误：
+
+[,text]
+----
+host must be a URL or a host:port pair: "/k8s/clusters/local"
+----
+
+=== 原因
+
+Rancher MCP Server 启动时需要读取 Rancher 的 `/v3/settings/internal-server-url` 配置。如果 Rancher 尚未完全就绪，可能无法获取正确的 Server URL，导致后续请求异常。
+
+=== 解决方法
+
+重新部署 Rancher MCP Server，然后重试 {short-project-name}^GC^ 工具调用，确认问题是否解决。
+
+[,bash]
+----
+kubectl rollout restart deployment/rancher-mcp-server -n kopilot-system
+
+kubectl rollout status deployment/rancher-mcp-server -n kopilot-system
+----
+
+[NOTE]
+====
+建议在 Rancher 完全就绪后再安装 {short-project-name}^GC^，避免 Rancher MCP Server 初始化时无法获取正确的 `internal-server-url`。
+====
+
+== 自建 OpenAI 服务连接失败（SSL 证书验证错误）
+
+使用自建 OpenAI-compatible HTTPS 服务，且服务端使用私有 CA 或自签名证书时，{short-project-name}^GC^ 调用模型接口可能出现以下错误：
+
+[,text]
+----
+[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate
+----
+
+=== 原因
+
+{short-project-name}^GC^ 无法验证自建 OpenAI 服务端的 TLS 证书，通常是因为服务端证书由私有 CA 签发，且该 CA 证书不在客户端默认信任链中。
+
+=== 解决方法
+
+将签发服务端证书的 CA 证书配置到 {short-project-name}^GC^ 的 `openaiCaSecret` 中，使其能够验证服务端证书。
+
+. 创建包含 CA 证书的 Kubernetes Secret：
++
+[,bash]
+----
+kubectl create secret generic openai-custom-ca \
+  -n kopilot-system \
+  --from-file=ca.crt=./ca.crt
+----
+
+. 在 {short-project-name}^GC^ Helm Values 中配置：
++
+[,yaml]
+----
+llm:
+  openaiCaSecret:
+    name: "openai-custom-ca"
+    key: ca.crt
+----
+
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+
+重新调用 OpenAI-compatible 接口，确认 SSL 证书验证错误已解决。
+====
+
+== OAuth2 身份认证无法自动获取 Metadata Endpoint
+
+例如配置 Github Agent，输入正确的 MCP Endpoint（`\https://api.githubcopilot.com/mcp`），选择 `OAuth2 authentication`。但是 Metadata Endpoint 自动获取失败。
+
+image::how-tos/mcp-oauth2-metadata.png[获取 Metadata Endpoint]
+
+. 请检查 kopilot-system 下所有组件是否正常运行。
+. 请确认 Rancher 是否为可信证书，如果不是，需要在 values.yaml 中额外设置：
++
+[source,bash]
+----
+extraEnv:
+  # Enable when Rancher uses an untrusted certificate.
+  - name: KOPILOT_RANCHER_SKIP_TLS
+    value: "true"
 ----
