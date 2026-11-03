@@ -1,6 +1,6 @@
 site:
   title: 'Rancher & Kubernetes AI'
-  start_page: latest@rancher-ai-gc:zh:introduction.adoc
+  start_page: rancher-ai-gc:zh:introduction.adoc
 
 content:
   sources:
