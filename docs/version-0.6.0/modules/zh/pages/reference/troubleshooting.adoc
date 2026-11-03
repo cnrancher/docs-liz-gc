@@ -59,7 +59,7 @@ helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
     -f values.yaml \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 == 在 Extensions 可用列表中看不到 SUSE AI Assistant GC

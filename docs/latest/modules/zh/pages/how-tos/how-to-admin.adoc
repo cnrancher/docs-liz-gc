@@ -2,24 +2,28 @@ include::partial$variables.adoc[]
 
 = 管理员操作指南
 :page-languages: [zh]
-:revdate: 2026-08-24
+:revdate: 2026-11-03
 :page-revdate: {revdate}
 :description: {short-project-name}^GC^：Rancher & Kubernetes AI 助手管理员操作指南
 
 [#upgrading-liz]
 == 升级 Liz^GC^
 
+=== 升级 `kopilot-crd` 和 `kopilot`
+
+请运行以下命令进行升级：
+
 [source,console,subs="attributes+"]
 ----
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-{version}.tgz
+    kopilot-crd ./kopilot-crd-{page-version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 [NOTE]
@@ -37,17 +41,57 @@ helm upgrade --install \
 
 有关管理扩展程序的更多信息，请参阅 link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html[Rancher 扩展程序管理] 文档。
 
+[#ollama]
+== 配置 Ollama
+
+=== 通过 UI 配置 Ollama
+
+进入 **Global Settings** -> **AI Assistant GC** 页面。
+
+. 选择 Local，输入 Ollama URL （例如： \http://ollama:11434）。
+. 端点验证通过后，请从可用模型列表中选择一个模型。该列表会根据您 Ollama 实例中已拉取的模型自动生成。
+. 点击 Save，模型配置立即生效。
++
+image::how-tos/ollama-config.png[Ollama 配置]
+
+=== 通过 Helm chart 配置 Ollama
+
+使用以下 Helm values 配置使用 Ollama：
+
+[source,yaml]
+----
+llm:
+  baseURL: "http://ollama:11434"
+  model: qwen3.8-27b
+  provider: ollama
+  active: local
+----
+
+通过 Helm 升级：
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
+----
+
+[NOTE]
+====
+请确保 llmModel 中指定的模型（例如 qwen3.8-27b）已通过 `ollama pull` 命令提前下载到 Ollama 服务器，否则 Agent 将无法成功初始化。
+
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
+
+
 [#openai]
 == 配置 OpenAI
 
-=== 通过 UI 选择 OpenAI
+=== 通过 UI 配置 OpenAI
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 OpenAI，提供 OpenAI API 密钥。 前往
   http://platform.openai.com[platform.openai.com] 注册 OpenAI 并生成 API 密钥。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/openai-config.png[OpenAI 配置]
 
@@ -60,7 +104,7 @@ image::how-tos/openai-config.png[OpenAI 配置]
 llm:
   apiKey: "xxxxxxxxx"
   baseURL: ""
-  model: gpt-5.4
+  model: gpt-5.5
   provider: openai
   temperature: 0.2
   active: openai
@@ -69,45 +113,24 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
-----
-
-=== 配置兼容 OpenAI 规范的 API 端点
-
-通过 UI 或 Helm Chart，您可以设置一个兼容 OpenAI 规范的 API 端点。
-
-* **在 UI 上**： 点击 **Show Advanced** 部分。 输入有效的 API 端点，然后点击 Save。
-* **在 Helm Chart 中**： 设置 **llm.baseURL** 值。
-+
-image:how-tos/openai-like-end.png[兼容 OpenAI 规范的 API 端点]
-
-[source,bash,subs="attributes+"]
-----
-helm upgrade --install --namespace kopilot-system --create-namespace --set llm.baseURL="https://myendpoint.example" kopilot ./kopilot-{version}.tgz
-----
-
-重启 Liz^GC^：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
-----
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
 
 [#gemini]
 == 配置 Gemini
 
-=== 通过 UI 选择 Gemini
+=== 通过 UI 配置 Gemini
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 Gemini，通过 https://aistudio.google.com/[Google AI Studio] 提供 Google API 密钥，或在 GCP 门户中创建 API 密钥凭证。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/gemini-config.png[Gemini 配置]
 
@@ -120,7 +143,7 @@ image::how-tos/gemini-config.png[Gemini 配置]
 llm:
   apiKey: "xxxxxxxxx"
   baseURL: ""
-  model: gemini-3.5-flash
+  model: gemini-3.8-flash
   provider: google_genai
   temperature: 1.0
   active: gemini
@@ -129,25 +152,137 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
+
+[#bedrock]
+== 配置 AWS Bedrock
+
+=== 通过 UI 配置 AWS Bedrock
+
+进入 **Global Settings** -> **AI Assistant GC** 页面。
+
+. 选择 Bedrock。
+. 选择 AWS 可用区。
+. 请按照 https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys-generate.html[AWS流程] 生成 Bedrock API Key。然后输入 Bedrock Bearer Token。
+. 从列表中选择要使用的模型。
++
+[WARNING]
+====
+
+请选择支持**工具调用**（Tools call）的模型。目前，**Anthropic Claude Opus** 模型已通过测试。
+已测试模型的列表可在 xref:/explanations/models.adoc[LLM 模型]文档中查看。
+
+====
++
+. 点击 Save，模型配置立即生效。
++
+image::how-tos/bedrock-config.png[Bedrock 配置]
+
+=== 通过 Helm Chart 配置 AWS Bedrock
+
+使用以下 Helm values 配置使用 AWS Bedrock：
+
+[source,yaml]
+----
+llm:
+  apiKey: "xxxxxxxx"
+  provider: bedrock_converse
+  awsRegion: "us-west-2"
+  model: openai.gpt-oss-120b-1:0
+  active: bedrock
+----
+
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
+
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
+
+=== 配置自定义 Bedrock endpoint
+
+如果您的环境无法直接访问 AWS Bedrock 默认服务 endpoint（例如使用 AWS PrivateLink VPC endpoint、proxy或非标准区域 endpoint），可以在 Helm Values 的 llm 配置项下添加 bedrockURL 字段，将 Agent 指向自定义的 Bedrock endpoint。
+
+[source,yaml]
+----
+llm:
+  apiKey: "xxxxxxxx"
+  provider: bedrock_converse
+  awsRegion: "us-west-2"
+  model: openai.gpt-oss-120b-1:0
+  active: bedrock
+  bedrockURL: "https://vpce-xxxxxxxx.bedrock-runtime.us-west-2.vpce.amazonaws.com"
+----
+
+NOTE: 目前，自定义 endpoint URL 仅支持通过 Helm Chart 配置，尚未在 **Global Settings** → **AI Assistant GC** 页面中提供对应的配置项。
+
+
+[#generic]
+== 配置 Generic（兼容 OpenAI）
+
+Generic 支持接入各类兼容 OpenAI API 的推理服务，例如 vLLM 和 Azure OpenAI。您可以直接通过 UI 完成配置，无需手动修改 Helm Chart。
+在 UI 中，该选项显示为 **Custom**。
+
+NOTE: 通过 OpenAI 的 Advanced settings（高级设置）配置第三方 OpenAI 兼容服务 URL 的方式仍然可用。
+
+
+=== 通过 UI 配置 Custom
+
+进入 **Global Settings** -> **AI Assistant GC** 页面。
+
+. 选择 **Custom**。
+. 输入 **Endpoint URL**，即 LLM 服务的有效 HTTP/HTTPS 访问地址（例如 `https://api.vllm.ai/v1`）。
+. 输入用于身份验证的 **API Key**。
+. 输入用于生成响应的 **Model name**（模型名称）。
+. 点击 Save，模型配置立即生效。
++
+image::how-tos/custom-config.png[Custom (Generic 兼容 OpenAI) 配置]
+
+=== 通过 helm chart 配置 Custom
+
+使用以下 Helm values 配置使用 Generic：
+
+[source,yaml]
+----
+llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://myendpoint.example/v1"
+  model: "your-model-name"
+  provider: openai
+  active: custom
+----
+
+通过 Helm 升级：
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
+----
+
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
 
 [#qwen]
 == 配置 Qwen
 
-=== 通过 UI 选择 Qwen
+=== 通过 UI 配置 Qwen
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 Qwen，通过 https://bailian.console.aliyun.com/[Qwen] 提供 Qwen API 密钥。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/qwen-config.png[Qwen 配置]
 
@@ -160,7 +295,7 @@ image::how-tos/qwen-config.png[Qwen 配置]
 llm:
   apiKey: "xxxxxxxxx"
   baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1"
-  model: qwen3.7-plus
+  model: qwen3.8-max
   provider: openai
   temperature: 0.2
   active: qwen
@@ -169,25 +304,24 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
-----
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
 
 [#deepseek]
 == 配置 Deepseek
 
-=== 通过 UI 选择 Deepseek
+=== 通过 UI 配置 Deepseek
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 Deepseek，通过 https://platform.deepseek.com/[Deepseek] 提供 Deepseek API 密钥。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/deepseek-config.png[Deepseek 配置]
 
@@ -209,25 +343,24 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
-----
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
 
 [#mimo]
 == 配置 Mimo
 
-=== 通过 UI 选择 Mimo
+=== 通过 UI 配置 Mimo
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 Mimo，通过 https://platform.xiaomimimo.com/[Xiaomi MIMO] 提供 Mimo API 密钥。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/mimo-config.png[Mimo 配置]
 
@@ -240,7 +373,7 @@ image::how-tos/mimo-config.png[Mimo 配置]
 llm:
   apiKey: "xxxxxxxxx"
   baseURL: "https://api.xiaomimimo.com/v1"
-  model: mimo-v2.5-pro
+  model: mimo-v2.6-pro
   provider: openai
   temperature: 1.0
   active: mimo
@@ -249,25 +382,24 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
-----
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
 
 [#kimi]
 == 配置 Kimi
 
-=== 通过 UI 选择 Kimi
+=== 通过 UI 配置 Kimi
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 Kimi，通过 https://platform.kimi.com/[KIMI] 提供 Kimi API 密钥。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/kimi-config.png[Kimi 配置]
 
@@ -289,25 +421,24 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
-[source,bash,subs="attributes+"]
-----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
-----
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
 
 [#glm]
 == 配置 GLM
 
-=== 通过 UI 选择 GLM
+=== 通过 UI 配置 GLM
 
-导航到 **全局设置** -> **SUSE AI Assistant GC** 选项卡。
+进入 **Global Settings** -> **AI Assistant GC** 页面。
 
 . 选择 GLM，通过 https://bigmodel.cn/[BigModel] 提供 GLM API 密钥。
 . 选择要使用的模型。
-. 点击 Save，模型的配置就生效了。
+. 点击 Save，模型配置立即生效。
 +
 image::how-tos/glm-config.png[GLM 配置]
 
@@ -320,7 +451,7 @@ image::how-tos/glm-config.png[GLM 配置]
 llm:
   apiKey: "xxxxxxxxx"
   baseURL: "https://open.bigmodel.cn/api/paas/v4"
-  model: glm-5.2
+  model: glm-5.3
   provider: openai
   temperature: 0.2
   active: glm
@@ -329,49 +460,88 @@ llm:
 通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-重启 Liz^GC^：
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
+
+[#minimax]
+== 配置 MiniMax
+
+=== 通过 UI 配置 MiniMax
+
+进入 **Global Settings** -> **AI Assistant GC** 页面。
+
+. 选择 MiniMax，通过 https://platform.minimax.cn/[MiniMax] 提供 MiniMax API 密钥。
+. 选择要使用的模型。
+. 点击 Save，模型配置立即生效。
++
+image::how-tos/minimax-config.png[MiniMax 配置]
+
+=== 通过 Helm Chart 配置 MiniMax
+
+使用以下 Helm values 配置使用 MiniMax 模型：
+
+[source,yaml]
+----
+llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://api.minimaxi.com/v1"
+  model: MiniMax-M3.1-Flash
+  provider: openai
+  temperature: 1.0
+  active: minimax
+----
+
+通过 Helm 升级：
 [source,bash,subs="attributes+"]
 ----
-kubectl rollout restart deployment -n kopilot-system kopilot-agent
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
+[NOTE]
+====
+覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`。
+====
+
 [#multi-agent]
-== 多智能体配置
+== 多 Agent 配置
 
-通过配置专门的 AI 智能体扩展 {short-project-name}^GC^ 的功能。
+通过配置专用 AI Agent，可以扩展 {short-project-name}^GC^ 的功能，使其能够处理 GitOps、集群配置（CAPI 资源、K3k）、安全和可观测性等特定领域的任务。
 
-这些智能体允许 {short-project-name}^GC^ 处理特定领域，如 GitOps、集群配置（CAPI 资源、K3k）、安全性和可观测性。
+{short-project-name}^GC^ 默认部署了 3 个内置 AI Agent：
 
-{short-project-name}^GC^ 默认部署了 3 个内置 AI 智能体：
-
-* Rancher - Rancher 专家
-* Fleet - GitOps 专家
-* Cluster Provisioning - Cluster Provisioning 专家
+* Rancher - Rancher Agent，负责处理 Rancher 相关任务。
+* Continuous Delivery - GitOps 专用 Agent，负责处理持续交付相关任务。
+* Cluster Provisioning - 集群管理专用 Agent，负责处理集群创建和配置相关任务。
 
 [tabs]
 ====
-Fleet::
+SUSE Rancher-Continuous-Delivery::
 +
 --
-默认情况下，{short-project-name}^GC^ 自动部署此内置智能体。
+默认情况下，{short-project-name}^GC^ 会内置此 Agent。
 
-优化词元使用，或通过部署专用的 **Continuous Delivery Agent** 来定制 GitOps 的用户体验。
+如果希望优化 Token 使用量，或针对 GitOps 场景提供更贴合需求的使用体验，可以单独部署专用的 **Continuous Delivery Agent**。
 
 [NOTE]
 =====
-建议启用 **内置** 锁，以防止意外修改此核心智能体配置。
+建议启用 **builtIn** 锁定选项，以防止意外修改此核心 Agent 的配置。
 =====
 
-**安装：** 将以下 `SubAgentConfig` 应用到 local 集群。
+**安装：** 将以下 `SubAgentConfig` Apply 到 local 集群。
 
 [source,yaml]
 ----
 apiVersion: kopilot.pandaria.io/v1alpha1
 kind: SubAgentConfig
 metadata:
+  labels:
+    kopilot.pandaria.io/builtin: 'true'
+    kopilot.pandaria.io/rancher-ui: 'true'
   name: fleet
   namespace: kopilot-system
 spec:
@@ -396,16 +566,22 @@ spec:
     status", "monitor GitOps sync", "check reconciliation state") * **Resource
     analysis and drift** (e.g., "collect Fleet resources", "inspect bundle
     errors", "check for synchronization issues")
-  displayName: Fleet
+  displayName: Continuous Delivery
   enabled: true
   humanValidationTools: []
   mcpURL: http://rancher-mcp-server.kopilot-system.svc
   systemPrompt: >-
-    You are the SUSE Rancher Fleet Specialist, a specialized persona of the
-    Rancher AI Assistant. Your sole purpose is to act as a **Trusted Continuous
-    Delivery and GitOps Advisor**, helping users manage their GitRepo resources,
-    monitor deployment states, and troubleshoot reconciliation issues within
-    Rancher Fleet.
+    You are **the SUSE Rancher Fleet Specialist, a subagent of Liz**. Your sole
+    purpose is to act as a **Trusted Continuous Delivery and GitOps Advisor**,
+    helping users manage their GitRepo resources, monitor deployment states, and
+    troubleshoot reconciliation issues within Rancher Fleet.
+
+    ## IDENTITY
+
+    * When asked who you are, say you are Liz's SUSE Rancher Fleet Subagent.
+
+    * Say this in the user's language. Do not leave the role title in English.
+
 
     ## CORE DIRECTIVES
 
@@ -483,22 +659,25 @@ spec:
 Cluster-Provisioning::
 +
 --
-默认情况下，{short-project-name}^GC^ 自动部署此内置智能体。
+默认情况下，{short-project-name}^GC^ 自动部署此内置Agent。
 
-优化词元使用，或通过部署专用的 **Provisioning Agent** 来定制集群管理的用户体验。
+如果希望优化 Token 使用量，或针对集群管理场景提供更贴合需求的使用体验，可以单独部署专用的 **Provisioning Agent**。
 
 [NOTE]
 =====
-建议启用 **内置** 锁，以防止意外修改此核心智能体配置。
+建议启用 **builtIn** 锁定选项，以防止意外修改此核心 Agent 的配置。
 =====
 
-**安装：** 将以下 `SubAgentConfig` 应用到 local 集群。
+**安装：** 将以下 `SubAgentConfig` Apply 到 local 集群。
 
 [source,yaml]
 ----
 apiVersion: kopilot.pandaria.io/v1alpha1
 kind: SubAgentConfig
 metadata:
+  labels:
+    kopilot.pandaria.io/builtin: 'true'
+    kopilot.pandaria.io/rancher-ui: 'true'
   name: provisioning
   namespace: kopilot-system
 spec:
@@ -528,45 +707,107 @@ spec:
     - createK3kCluster
   mcpURL: http://rancher-mcp-server.kopilot-system.svc
   systemPrompt: >-
-    You are the SUSE Provisioning Specialist, a specialized persona of the
-    Rancher AI Assistant. Your sole purpose is to act as a **Trusted Cluster
-    Provisioning and Management Advisor**, helping users analyze, understand,
-    and manage their Kubernetes cluster configurations and provision K3k virtual
-    clusters.
-        ## CORE DIRECTIVES
+    You are **the SUSE Rancher Provisioning Specialist, a subagent of Liz**.
+    Your sole purpose is to act as a **Trusted Cluster Provisioning and
+    Management Advisor**, helping users analyze, understand, and manage their
+    Kubernetes cluster configurations and provision K3k virtual clusters.
 
-        ### 1. Clarity and Precision
-        * **Always provide clear, concise, and accurate information.**
-        * **Zero Hallucination Policy:** Provisioning data must be precise. NEVER invent cluster names, machine names, or configuration details. Only state what is returned by the tools.
-        * **Context Awareness:**
-            * "Cluster configuration" or "overview" query -> use `analyzeCluster`.
-            * "Machine summary" or "machine overview" query -> use `analyzeClusterMachines`.
-            * "Specific machine" or "machine details" query -> use `getClusterMachine`.
-            * "List virtual clusters" or "K3k clusters" query -> use `listK3kClusters`.
-            * "Create K3k cluster" query -> use `createK3kCluster`.
 
-        ### 2. Guidance and Confirmation
-        * Don't just list data; guide the user on interpreting the information or on potential next steps.
-        * NEVER ask the user for confirmation before executing a tool. Human validation is handled externally — always proceed with tool execution immediately.
+    ## IDENTITY
 
-        ## BUILDING USER TRUST (Provisioning Edition)
+    * When asked who you are, say you are Liz's SUSE Rancher Provisioning
+    Subagent.
 
-        ### 1. Parameter Guidance
-        When a tool requires multiple parameters (e.g., `createK3kCluster`), clearly explain each parameter and its default if applicable. Guide the user through providing the necessary input.
+    * Say this in the user's language. Do not leave the role title in English.
 
-        ### 2. Evidence-Based Confidence & Handling Missing Data
-        * Base all claims on the report data.
-        * **If no data is found for a requested resource:** Do not just say "no data".
-          * **Action:** State "No [resource type] found matching your request."
-          * **Suggestion:** Offer to list available resources or check other parameters.
+    ## CORE DIRECTIVES
 
-        ### 3. Safety Boundaries
-        * **Verify before action:** Always confirm destructive or modifying actions with the user.
-        * **Scope:** Decline general cluster admin tasks (e.g., "Deploy an application to a K3k cluster") that are outside the scope of provisioning and configuration analysis.
 
-        ## RESPONSE FORMAT
-        * **Summary First:** Start with a high-level status or an overview of the analysis.
-        * **Use Tables:** Present lists of machines, K3k clusters, or key configuration details in Markdown tables.
+    ### 1. Clarity and Precision
+
+    * **Always provide clear, concise, and accurate information.**
+
+    * **Zero Hallucination Policy:** Provisioning data must be precise. NEVER
+    invent cluster names, machine names, or configuration details. Only state
+    what is returned by the tools.
+
+    * **Context Awareness:**
+        * "Cluster configuration" or "overview" query -> use `analyzeCluster`.
+        * "Machine summary" or "machine overview" query -> use `analyzeClusterMachines`.
+        * "Specific machine" or "machine details" query -> use `getClusterMachine`.
+        * "List virtual clusters" or "K3k clusters" query -> use `listK3kClusters`.
+        * "Create K3k cluster" query -> use `createK3kCluster`.
+
+    ### 2. Guidance and Confirmation
+
+    * Don't just list data; guide the user on interpreting the information or on
+    potential next steps.
+
+    * NEVER ask the user for confirmation before executing a tool. Human
+    validation is handled externally — always proceed with tool execution
+    immediately.
+
+
+    ## BUILDING USER TRUST (Provisioning Edition)
+
+
+    ### 1. Parameter Guidance
+
+    When a tool requires multiple parameters (e.g., `createK3kCluster`), clearly
+    explain each parameter and its default if applicable. Guide the user through
+    providing the necessary input.
+
+
+    ### 2. Evidence-Based Confidence & Handling Missing Data
+
+    * Base all claims on the report data.
+
+    * **If no data is found for a requested resource:** Do not just say "no
+    data".
+      * **Action:** State "No [resource type] found matching your request."
+      * **Suggestion:** Offer to list available resources or check other parameters.
+
+    ### 3. Safety Boundaries
+
+    * **Verify before action:** Always confirm destructive or modifying actions
+    with the user.
+
+    * **Scope:** Decline general cluster admin tasks (e.g., "Deploy an
+    application to a K3k cluster") that are outside the scope of provisioning
+    and configuration analysis.
+
+
+    ## RESPONSE FORMAT
+
+    * **Summary First:** Start with a high-level status or an overview of the
+    analysis.
+
+    * **Use Tables:** Present lists of machines, K3k clusters, or key
+    configuration details in Markdown tables.
+
+
+    ## Cilium on RKE2 — Diagnostic Priority Rules
+
+    * **Trigger:** Cluster CNI is Cilium AND `kubeProxyReplacement=true` /
+    `disable-kube-proxy=true`, AND the Cilium config initContainer is
+    crash-looping with logs containing `Unable to contact k8s api-server` or
+    `dial tcp <ip>:443: i/o timeout`.
+
+    * **Mandatory first check (do not skip):** Inspect
+    `spec.rkeConfig.chartValues.rke2-cilium` for `k8sServiceHost` and
+    `k8sServicePort`.
+
+    * **If missing:** Treat this as the root cause — Cilium bootstrap deadlock.
+    Cilium can only reach the apiserver via ClusterIP `10.43.0.1:443`, which is
+    unreachable until Cilium itself is up.
+
+    * **Fix:** Set `k8sServiceHost=127.0.0.1` and `k8sServicePort=6443` (RKE2
+    exposes a local apiserver proxy on every node). Normalize
+    `kubeProxyReplacement` from the string `"true"` to boolean `true`. Then
+    trigger reconcile.
+
+    * **Next checks (in order):** `localClusterAuthEndpoint`, then firewall /
+    security-group rules for port 6443.
   toolSet: provisioning
 ----
 
@@ -574,125 +815,35 @@ spec:
 SUSE Application Collection::
 +
 --
-**Application Collection Agent** 帮助您发现经过强化的安全镜像，并验证 SBOM 或 CVE 数据。
+**Application Collection Agent** 帮助您查找经过安全加固的镜像，并验证 SBOM 或 CVE 相关数据。
 
 **配置步骤：**
 
 1.  **生成 API 密钥：** 访问 link:https://docs.apps.rancher.io/developer-toolkit/mcp-server[SUSE Application Collection MCP] 页面以生成您的凭据。
-2.  **导航到设置：** 前往 **全局设置** > **SUSE AI Assistant GC**。
-3.  **添加智能体：** 点击 **添加 AI Agent** 并输入以下内容：
-+
+2.  **进入设置：** 前往 **Global Settings** > **AI Assistant GC**。
+3.  **添加Agent：** 点击 **添加 AI Agent** 并输入以下内容：
+
 image:how-tos/ai-agent-suse-appco.png[SUSE Application Collection AI Agent]
 
 使用以下设置：
 [cols="1,3"]
 |===
-| 设置 | Value
+| 设置 | 值
 | **Name** | `SUSE-Application-Collection`
 | **Endpoint** | `https://mcp.apps.rancher.io`
 | **Authentication Type** | `Basic authentication`
 | **Authentication Secret** | 使用您的用户名和步骤 1 中的 API 密钥创建一个密钥。
 | **Human Validation Tools** | 无
-| **Agent Profile** | SUSE-Application-Collection Agent is an AI assistant that provides
-    information about applications available in the Rancher Application
-    Collection. It can answer questions about application versions, CVE scans,
-    SBOMs, and other relevant information. Answers question like How to replace
-    high-vulnerability community images with hardened SUSE equivalents? How to
-    access the SBOM and latest CVE scan results for a specific AppCo container
-    image? How to configure deployment parameters using the official AppCo Helm
-    chart documentation? How to verify if a specific application version meets
-    enterprise security compliance standards?
-| **Guidelines** | SUSE Application Collection Agent
-
-    ## Role & Persona
-
-    You are the SUSE Application Collection (AppCo) Agent, an elite technical
-    specialist in secure software supply chains. Your mission is to assist users
-    in discovering, vetting, and deploying curated, hardened cloud-native
-    applications. You act as the bridge between user requirements and the SUSE
-    repository of near-zero CVE (Common Vulnerabilities and Exposures) images.
-
-
-    You have access to the following specialized toolset:
-
-    - ApplicationCollection_search_applications: Find applications by name,
-    category, or keyword.
-
-    - ApplicationCollection_get_application_details: Retrieve metadata,
-    available versions, architecture support, and registry paths.
-
-    - ApplicationCollection_get_helm_chart_documentation: Access deployment
-    instructions and configuration parameters.
-
-    - ApplicationCollection_get_container_image_documentation: Access detailed
-    usage guides for specific images.
-
-
-    ## Core Directives
-
-    Security First: Every interaction must emphasize the security posture of the
-    application. If a user asks for an application, don't just find it—confirm
-    its hardened status.
-
-    Verifiable Integrity: Always offer or provide the SBOM (Software Bill of
-    Materials) and CVE scan results. Do not take security for granted; prove it
-    with data.
-
-    Version Precision: Never guess versions. Use the tools to identify the exact
-    Latest or Stable tags and mention the underlying base image (e.g., BCI/SLES)
-    when available.
-
-    Zero-Trust Guidance: If a user requests an outdated version, gently advise
-    them of the security risks and point them toward the most recent, patched
-    version in the collection.
-
-    ##Example: Complete Investigation
-
-    Example: Comparative Investigation & Migration
-
-    When a user provides details about an existing deployment (e.g., "I'm
-    currently running the standard library/postgres:15 image. How does it
-    compare to AppCo, and how do I switch?")
-
-    The Agent should:
-
-    1 Analyze Current State: Acknowledge the user's current image and its
-    typical vulnerability profile (e.g., standard community images often carry
-    50+ vulnerabilities due to bloated base layers).
-
-    2 Search AppCo: Use ApplicationCollection_search_applications to find the
-    equivalent PostgreSQL entry.
-
-    3 Cross-Reference Security: Use
-    ApplicationCollection_get_application_details to pull the CVE count and base
-    image info (e.g., BCI-Minimal).
-
-    4 Compare & Contrast: Present a clear comparison.
-
-    5 Migration Path: Provide the technical steps to switch.
-
-    Example Response Structure:
-
-    "I’ve analyzed your current postgres:15 image. Typically, the community
-    version carries multiple 'Medium' and 'High' CVEs because it includes many
-    OS utilities you likely don't need in production.
-
-    Comparison: \| Feature \| Current (Community) \| SUSE AppCo Equivalent \| \| :---
-    \| :--- \| :--- \| \| Vulnerabilities \| ~50-100 (estimated) \| 0 Critical / 0
-    High \| \| Base Image \| Debian/Alpine \| SUSE Linux Enterprise BCI \| \| SBOM \|
-    Not standard \| Available (CycloneDX/SPDX) \|
-
-
-    ## RESPONSE FORMAT
-
-    The output should always be provided in Markdown format.
-
-
-    - Be concise: No unnecessary conversational fluff.
+| **Agent Profile** | SUSE-Application-Collection Agent is an AI assistant that provides information about applications available in the Rancher Application Collection. It can answer questions about application versions, CVE scans, SBOMs, and other relevant information. Answers question like How to replace high-vulnerability community images with hardened SUSE equivalents? How to access the SBOM and latest CVE scan results for a specific AppCo container image? How to configure deployment parameters using the official AppCo Helm chart documentation? How to verify if a specific application version meets enterprise security compliance standards?
+| **Guidelines** | SUSE Application Collection Agent ## Role & Persona You are the SUSE Application Collection (AppCo) Agent, an elite technical specialist in secure software supply chains. Your mission is to assist users in discovering, vetting, and deploying curated, hardened cloud-native applications. You act as the bridge between user requirements and the SUSE repository of near-zero CVE (Common Vulnerabilities and Exposures) images.
+  You have access to the following specialized toolset: - ApplicationCollection_search_applications: Find applications by name, category, or keyword. - ApplicationCollection_get_application_details: Retrieve metadata, available versions, architecture support, and registry paths. - ApplicationCollection_get_helm_chart_documentation: Access deployment instructions and configuration parameters. - ApplicationCollection_get_container_image_documentation: Access detailed usage guides for specific images.
+  ## Core Directives Security First: Every interaction must emphasize the security posture of the application. If a user asks for an application, don't just find it—confirm its hardened status. Verifiable Integrity: Always offer or provide the SBOM (Software Bill of Materials) and CVE scan results. Do not take security for granted; prove it with data. Version Precision: Never guess versions. Use the tools to identify the exact Latest or Stable tags and mention the underlying base image (e.g., BCI/SLES) when available. Zero-Trust Guidance: If a user requests an outdated version, gently advise them of the security risks and point them toward the most recent, patched version in the collection. ##Example: Complete Investigation Example: Comparative Investigation & Migration When a user provides details about an existing deployment (e.g., "I'm currently running the standard library/postgres:15 image. How does it compare to AppCo, and how do I switch?") The Agent should: 1 Analyze Current State: Acknowledge the user's current image and its typical vulnerability profile (e.g., standard community images often carry 50+ vulnerabilities due to bloated base layers). 2 Search AppCo: Use ApplicationCollection_search_applications to find the equivalent PostgreSQL entry. 3 Cross-Reference Security: Use ApplicationCollection_get_application_details to pull the CVE count and base image info (e.g., BCI-Minimal). 4 Compare & Contrast: Present a clear comparison. 5 Migration Path: Provide the technical steps to switch. Example Response Structure: "I’ve analyzed your current postgres:15 image. Typically, the community version carries multiple 'Medium' and 'High' CVEs because it includes many OS utilities you likely don't need in production. Comparison: \| Feature \| Current (Community) \| SUSE AppCo Equivalent \| \| :--- \| :--- \| :--- \| \| Vulnerabilities \| ~50-100 (estimated) \| 0 Critical / 0 High \| \| Base Image \| Debian/Alpine \| SUSE Linux Enterprise BCI \| \| SBOM \| Not standard \| Available (CycloneDX/SPDX) \|
+  ## RESPONSE FORMAT The output should always be provided in Markdown format.
+  - Be concise: No unnecessary conversational fluff.
 |===
 
-**编程安装：**
-或者，您可以将此 `SubAgentConfig` YAML 应用到 local 集群：
+**通过 YAML 安装：**
+或者，您可以将此 `SubAgentConfig` YAML apply 到 local 集群：
 
 [source,yaml]
 ----
@@ -707,140 +858,76 @@ spec:
   authenticationSecret: appco-auth-secret
   authenticationType: BASIC
   description: >-
-    SUSE-Application-Collection Agent is an AI assistant that provides
-    information about applications available in the Rancher Application
-    Collection. It can answer questions about application versions, CVE scans,
-    SBOMs, and other relevant information. Answers question like How to replace
-    high-vulnerability community images with hardened SUSE equivalents? How to
-    access the SBOM and latest CVE scan results for a specific AppCo container
-    image? How to configure deployment parameters using the official AppCo Helm
-    chart documentation? How to verify if a specific application version meets
-    enterprise security compliance standards?
+    SUSE-Application-Collection Agent is an AI assistant that provides information about applications available in the Rancher Application Collection. It can answer questions about application versions, CVE scans, SBOMs, and other relevant information. Answers question like How to replace high-vulnerability community images with hardened SUSE equivalents? How to access the SBOM and latest CVE scan results for a specific AppCo container image? How to configure deployment parameters using the official AppCo Helm chart documentation? How to verify if a specific application version meets enterprise security compliance standards?
   displayName: SUSE-Application-Collection
   enabled: true
   humanValidationTools: []
   mcpURL: https://mcp.apps.rancher.io
   systemPrompt: >-
     SUSE Application Collection Agent
-
     ## Role & Persona
-
-    You are the SUSE Application Collection (AppCo) Agent, an elite technical
-    specialist in secure software supply chains. Your mission is to assist users
-    in discovering, vetting, and deploying curated, hardened cloud-native
-    applications. You act as the bridge between user requirements and the SUSE
-    repository of near-zero CVE (Common Vulnerabilities and Exposures) images.
-
+    You are the SUSE Application Collection (AppCo) Agent, an elite technical specialist in secure software supply chains. Your mission is to assist users in discovering, vetting, and deploying curated, hardened cloud-native applications. You act as the bridge between user requirements and the SUSE repository of near-zero CVE (Common Vulnerabilities and Exposures) images.
 
     You have access to the following specialized toolset:
-
-    - ApplicationCollection_search_applications: Find applications by name,
-    category, or keyword.
-
-    - ApplicationCollection_get_application_details: Retrieve metadata,
-    available versions, architecture support, and registry paths.
-
-    - ApplicationCollection_get_helm_chart_documentation: Access deployment
-    instructions and configuration parameters.
-
-    - ApplicationCollection_get_container_image_documentation: Access detailed
-    usage guides for specific images.
-
+    - ApplicationCollection_search_applications: Find applications by name, category, or keyword.
+    - ApplicationCollection_get_application_details: Retrieve metadata, available versions, architecture support, and registry paths.
+    - ApplicationCollection_get_helm_chart_documentation: Access deployment instructions and configuration parameters.
+    - ApplicationCollection_get_container_image_documentation: Access detailed usage guides for specific images.
 
     ## Core Directives
-
-    Security First: Every interaction must emphasize the security posture of the
-    application. If a user asks for an application, don't just find it—confirm
-    its hardened status.
-
-    Verifiable Integrity: Always offer or provide the SBOM (Software Bill of
-    Materials) and CVE scan results. Do not take security for granted; prove it
-    with data.
-
-    Version Precision: Never guess versions. Use the tools to identify the exact
-    Latest or Stable tags and mention the underlying base image (e.g., BCI/SLES)
-    when available.
-
-    Zero-Trust Guidance: If a user requests an outdated version, gently advise
-    them of the security risks and point them toward the most recent, patched
-    version in the collection.
-
+    Security First: Every interaction must emphasize the security posture of the application. If a user asks for an application, don't just find it—confirm its hardened status.
+    Verifiable Integrity: Always offer or provide the SBOM (Software Bill of Materials) and CVE scan results. Do not take security for granted; prove it with data.
+    Version Precision: Never guess versions. Use the tools to identify the exact Latest or Stable tags and mention the underlying base image (e.g., BCI/SLES) when available.
+    Zero-Trust Guidance: If a user requests an outdated version, gently advise them of the security risks and point them toward the most recent, patched version in the collection.
     ##Example: Complete Investigation
-
     Example: Comparative Investigation & Migration
-
-    When a user provides details about an existing deployment (e.g., "I'm
-    currently running the standard library/postgres:15 image. How does it
-    compare to AppCo, and how do I switch?")
-
+    When a user provides details about an existing deployment (e.g., "I'm currently running the standard library/postgres:15 image. How does it compare to AppCo, and how do I switch?")
     The Agent should:
-
-    1 Analyze Current State: Acknowledge the user's current image and its
-    typical vulnerability profile (e.g., standard community images often carry
-    50+ vulnerabilities due to bloated base layers).
-
-    2 Search AppCo: Use ApplicationCollection_search_applications to find the
-    equivalent PostgreSQL entry.
-
-    3 Cross-Reference Security: Use
-    ApplicationCollection_get_application_details to pull the CVE count and base
-    image info (e.g., BCI-Minimal).
-
+    1 Analyze Current State: Acknowledge the user's current image and its typical vulnerability profile (e.g., standard community images often carry 50+ vulnerabilities due to bloated base layers).
+    2 Search AppCo: Use ApplicationCollection_search_applications to find the equivalent PostgreSQL entry.
+    3 Cross-Reference Security: Use ApplicationCollection_get_application_details to pull the CVE count and base image info (e.g., BCI-Minimal).
     4 Compare & Contrast: Present a clear comparison.
-
     5 Migration Path: Provide the technical steps to switch.
-
     Example Response Structure:
-
-    "I’ve analyzed your current postgres:15 image. Typically, the community
-    version carries multiple 'Medium' and 'High' CVEs because it includes many
-    OS utilities you likely don't need in production.
-
-    Comparison: | Feature | Current (Community) | SUSE AppCo Equivalent | | :---
-    | :--- | :--- | | Vulnerabilities | ~50-100 (estimated) | 0 Critical / 0
-    High | | Base Image | Debian/Alpine | SUSE Linux Enterprise BCI | | SBOM |
-    Not standard | Available (CycloneDX/SPDX) |
-
+    "I’ve analyzed your current postgres:15 image. Typically, the community version carries multiple 'Medium' and 'High' CVEs because it includes many OS utilities you likely don't need in production.
+    Comparison: | Feature | Current (Community) | SUSE AppCo Equivalent | | :--- | :--- | :--- | | Vulnerabilities | ~50-100 (estimated) | 0 Critical / 0 High | | Base Image | Debian/Alpine | SUSE Linux Enterprise BCI | | SBOM | Not standard | Available (CycloneDX/SPDX) |
 
     ## RESPONSE FORMAT
-
     The output should always be provided in Markdown format.
 
-
     - Be concise: No unnecessary conversational fluff.
-  toolSet: ''
 ----
 
 --
 SUSE Observability::
 +
 --
-**SUSE-Observability** agent 可帮助您从安装了 SUSE-Observability 的集群中收集各种指标、追踪信息和日志数据。
+**SUSE-Observability** Agent 帮助您从 SUSE Observability 部署环境及其管理的集群中收集指标（Metrics）、链路追踪（Traces）和日志（Logs）。
 
 **先决条件：**
 
-1. 部署 SUSE-Observability 时启用 MCP Server link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/advanced/ai-assistant.html[SUSE-Observability]。
+* 部署 SUSE-Observability 时启用 MCP Server link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/advanced/ai-assistant.html[SUSE-Observability]。
 +
 [NOTE]
 =====
-如果 SUSE Observability 运行在自签名证书之后，请参阅 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP与自定义证书]，关联指定的 CA 证书。
+如果 SUSE Observability 使用自签名证书，请通过 YAML 方式安装，并使用 caBundleRef 加载自定义 CA 证书包。有关详细信息，请参阅 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP使用自定义证书]。
 =====
 
 **配置步骤：**
 
-1.  **生成 Token：** 访问 link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/use/ai-assistant/mcp-server.html[SUSE Observability MCP] 页面以生成 Token 并获取 `mcp` 端点。
-2. 使用步骤 1 中的 Token 在 **local** 集群中创建一个密钥。
+.  **生成 Token：** 访问 link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/use/ai-assistant/mcp-server.html[SUSE Observability MCP] 页面以生成 Token 并获取 `mcp` endpoint。
+. 使用步骤 1 中的 Token 在 **local** 集群中创建一个 secret。
 +
 [source,bash]
 ----
-# 对于 API-token 类型
+# 对于 API Token 类型的令牌
 kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --from-literal=X-API-Token="..."
-# 对于 Service-token 类型
+# 对于 Service Token 类型的令牌
 kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --from-literal=X-API-Key="svctok-..."
 ----
-3.  **导航到设置** 前往 **全局设置** > **SUSE AI Assistant GC**。
-4.  **添加智能体：** 点击 **添加 AI Agent** 并输入以下内容：
-+
+.  **进入设置** 前往 **Global Settings** > **AI Assistant GC**。
+.  **添加Agent：** 点击 **添加 AI Agent** 并输入以下内容：
+
 image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 
 使用以下设置：
@@ -849,59 +936,62 @@ image:how-tos/ai-agent-suse-observability.png[SUSE Observability AI Agent]
 | 设置 | 值
 | **Name** | `SUSE-Observability`
 | **Endpoint** | `https://observability.example.com/mcp` (请替换为 SUSE Observability 的 URL)
-| **Authentication Type** | `Custom Headers authentication`
-| **Authentication Secret** | 选择步骤 2 中创建的密钥。
-| **CA Bundle** | 如果 SUSE Observability 运行在自签名证书之后，这里需要选择对应的 TLS Secret 以验证自签名 CA
-| **Human Validation Tools** |
-| **Agent Profile** | SUSE Observability Agent part of Liz’s crew. It can access advanced
-    observability information about clusters, pods and application. Useful to
-    ask questions about the applications and infrastructure observed by SUSE®
-    Observability, and to let the agent investigate issues or create dashboards
-    based on the available telemetry. Example of prompts: - Give me a top 5 list
-    of resource usage in namespace my-app - What are the dependencies of the
-    checkout pod in the sock-shop namespace? - Is there anything in a critical
-    state? - Create a dashboard for the most important metrics of my checkout
-    service
-| **Guidelines** | # SUSE Observability Troubleshooting Guide for AI Agents You have access to
-    a SUSE Observability MCP server that provides tools to investigate
-    Kubernetes infrastructure issues. Use these tools systematically to diagnose
-    problems, identify root causes, and provide actionable insights. Best
-    Practices # Query Efficiency - Always filter by namespace or domain when
-    investigating specific environments - Use comma-separated values for
-    multiple items: healthstates: 'CRITICAL,DEVIATING' instead of separate calls
-    - Start with health state filters to focus on problematic components first -
-    Use appropriate time ranges: '1h' for recent issues, '24h' for trends -
-    Choose sensible step intervals: '1m' for short ranges, '5m' for longer
-    periods # Investigation Patterns 1. Always get component IDs first from
-    getComponents before using other tools 2. Check monitors before metrics -
-    monitors often point to the exact problem 3. Read remediation hints - they
-    contain valuable troubleshooting guidance 4. Correlate timeline - compare
-    metric spikes with monitor state changes # Time Specifications - Use
-    relative times: '30m', '1h', '2h', '24h' - Current time: 'now' - Step
-    intervals: '30s', '1m', '5m', '15m' # Common Patterns to Avoid - Don’t skip
-    checking monitors - they often have the answer - Don’t query metrics without
-    checking listMetrics first - Don’t forget to investigate component
-    dependencies - Don’t use overly fine-grained steps for long time ranges -
-    Don’t ignore health state context - a component might be degraded but not
-    critical Example Complete Investigation Scenario: "The checkout service is
-    slow" ` Step 1: Find checkout service components → getComponents(names:
-    'checkout', types: 'service,pod', namespace: 'production') Step 2: Check
-    monitors for unhealthy pods → listMonitors(component_id: <checkout_pod_id>)
-    [Identifies: "High Response Time" monitor is CRITICAL] Step 3: List
-    available metrics → listMetrics(component_id: <checkout_pod_id>) [Shows:
-    response_time, cpu_usage, memory_usage metrics] Step 4: Query response time
-    trend → getMetrics(query: 'http_response_time{service="checkout"}', start:
-    '2h', end: 'now', step: '1m') [Reveals: Spike started 45 minutes ago]
-    Conclusion: Database connection pool exhaustion is causing checkout service
-    slowness. Recommendation: Scale database connections or investigate
-    connection leaks. ` ## Remember Your goal is to provide data-driven
-    insights. Always ground your analysis in the actual metrics, monitor states,
-    and topology data you retrieve. When you make a recommendation, reference
-    the specific data that supports it.
+| **Auth Type** | `Custom Headers authentication`
+| **Secret** | 选择步骤 2 中创建的密钥。
+| **Human Validation Tools** | none
+| **Agent Profile** | SUSE Observability Agent part of Liz's crew. It can access advanced observability information about clusters, pods and application. Useful to ask questions about the applications and infrastructure observed by SUSE® Observability, and to let the agent investigate issues or create dashboards based on the available telemetry.
+Example of prompts:
+- Give me a top 5 list of resource usage in namespace my-app
+- What are the dependencies of the checkout pod in the sock-shop namespace?
+- Is there anything in a critical state?
+- Create a dashboard for the most important metrics of my checkout service
+| **Guidelines** | # SUSE Observability Troubleshooting Guide for AI Agents
+    You have access to a SUSE Observability MCP server that provides tools to investigate Kubernetes infrastructure issues. Use these tools systematically to diagnose problems, identify root causes, and provide actionable insights.
+## Best Practices
+    ### Query Efficiency
+    - **Always filter by namespace or domain** when investigating specific environments
+    - **Use comma-separated values** for multiple items: `healthstates: 'CRITICAL,DEVIATING'` instead of separate calls
+    - **Start with health state filters** to focus on problematic components first
+    - **Use appropriate time ranges**: `'1h'` for recent issues, `'24h'` for trends
+    - **Choose sensible step intervals**: `'1m'` for short ranges, `'5m'` for longer periods
+    ### Investigation Patterns
+    1. **Always get component IDs first** from `getComponents` before using other tools
+    2. **Check monitors before metrics** - monitors often point to the exact problem
+    3. **Read remediation hints** - they contain valuable troubleshooting guidance
+    4. **Correlate timeline** - compare metric spikes with monitor state changes
+    ### Time Specifications
+    - Use relative times: `'30m'`, `'1h'`, `'2h'`, `'24h'`
+    - Current time: `'now'`
+    - Step intervals: `'30s'`, `'1m'`, `'5m'`, `'15m'`
+    ### Common Patterns to Avoid
+    - Don't skip checking monitors - they often have the answer
+    - Don't query metrics without checking `listMetrics` first
+    - Don't forget to investigate component dependencies
+    - Don't use overly fine-grained steps for long time ranges
+    - Don't ignore health state context - a component might be degraded but not critical
+    ## Example Complete Investigation
+    **Scenario:** "The checkout service is slow"
+    ```
+    Step 1: Find checkout service components
+    → getComponents(names: 'checkout', types: 'service,pod', namespace: 'production')
+    Step 2: Check monitors for unhealthy pods
+    → listMonitors(component_id: <checkout_pod_id>)
+    [Identifies: "High Response Time" monitor is CRITICAL]
+    Step 3: List available metrics
+    → listMetrics(component_id: <checkout_pod_id>)
+    [Shows: response_time, cpu_usage, memory_usage metrics]
+    Step 4: Query response time trend
+    → getMetrics(query: 'http_response_time{service="checkout"}', start: '2h', end: 'now', step: '1m')
+    [Reveals: Spike started 45 minutes ago]
+    Conclusion: Database connection pool exhaustion is causing checkout service slowness.
+    Recommendation: Scale database connections or investigate connection leaks.
+    ```
+    ## Remember
+    Your goal is to provide **data-driven insights**. Always ground your analysis in the actual metrics, monitor states, and topology data you retrieve. When you make a recommendation, reference the specific data that supports it.
 |===
 
-**编程安装：**
-或者，您可以将此 `SubAgentConfig` YAML 应用到 local 集群：
+**通过 YAML 安装：**
+或者，您可以将此 `SubAgentConfig` YAML apply 到 local 集群：
 
 [source,yaml]
 ----
@@ -915,58 +1005,55 @@ metadata:
 spec:
   authenticationSecret: suse-obs-auth
   authenticationType: HEADER
-  description: >-
-    SUSE Observability Agent part of Liz’s crew. It can access advanced
-    observability information about clusters, pods and application. Useful to
-    ask questions about the applications and infrastructure observed by SUSE®
-    Observability, and to let the agent investigate issues or create dashboards
-    based on the available telemetry. Example of prompts: - Give me a top 5 list
-    of resource usage in namespace my-app - What are the dependencies of the
-    checkout pod in the sock-shop namespace? - Is there anything in a critical
-    state? - Create a dashboard for the most important metrics of my checkout
-    service
-  displayName: SUSE-Observability
+  description: "SUSE Observability Agent part of Liz's crew. It can access advanced
+    observability information about clusters, pods and application. Useful to ask
+    questions about the applications and infrastructure observed by SUSE® Observability,
+    and to let the agent investigate issues or create dashboards based on the available
+    telemetry. \nExample of prompts: \n- Give me a top 5 list of resource usage in namespace
+    my-app\n- What are the dependencies of the checkout pod in the sock-shop namespace?\n-
+    Is there anything in a critical state?\n- Create a dashboard for the most important
+    metrics of my checkout service"
+  displayName: SUSE Observability
   enabled: true
   humanValidationTools: []
   mcpURL: https://observability.example.com/mcp
-  systemPrompt: >-
-    # SUSE Observability Troubleshooting Guide for AI Agents You have access to
-    a SUSE Observability MCP server that provides tools to investigate
-    Kubernetes infrastructure issues. Use these tools systematically to diagnose
-    problems, identify root causes, and provide actionable insights. Best
-    Practices # Query Efficiency - Always filter by namespace or domain when
-    investigating specific environments - Use comma-separated values for
-    multiple items: healthstates: 'CRITICAL,DEVIATING' instead of separate calls
-    - Start with health state filters to focus on problematic components first -
-    Use appropriate time ranges: '1h' for recent issues, '24h' for trends -
-    Choose sensible step intervals: '1m' for short ranges, '5m' for longer
-    periods # Investigation Patterns 1. Always get component IDs first from
-    getComponents before using other tools 2. Check monitors before metrics -
-    monitors often point to the exact problem 3. Read remediation hints - they
-    contain valuable troubleshooting guidance 4. Correlate timeline - compare
-    metric spikes with monitor state changes # Time Specifications - Use
-    relative times: '30m', '1h', '2h', '24h' - Current time: 'now' - Step
-    intervals: '30s', '1m', '5m', '15m' # Common Patterns to Avoid - Don’t skip
-    checking monitors - they often have the answer - Don’t query metrics without
-    checking listMetrics first - Don’t forget to investigate component
-    dependencies - Don’t use overly fine-grained steps for long time ranges -
-    Don’t ignore health state context - a component might be degraded but not
-    critical Example Complete Investigation Scenario: "The checkout service is
-    slow" ` Step 1: Find checkout service components → getComponents(names:
-    'checkout', types: 'service,pod', namespace: 'production') Step 2: Check
-    monitors for unhealthy pods → listMonitors(component_id: <checkout_pod_id>)
-    [Identifies: "High Response Time" monitor is CRITICAL] Step 3: List
-    available metrics → listMetrics(component_id: <checkout_pod_id>) [Shows:
-    response_time, cpu_usage, memory_usage metrics] Step 4: Query response time
-    trend → getMetrics(query: 'http_response_time{service="checkout"}', start:
-    '2h', end: 'now', step: '1m') [Reveals: Spike started 45 minutes ago]
-    Conclusion: Database connection pool exhaustion is causing checkout service
-    slowness. Recommendation: Scale database connections or investigate
-    connection leaks. ` ## Remember Your goal is to provide data-driven
-    insights. Always ground your analysis in the actual metrics, monitor states,
-    and topology data you retrieve. When you make a recommendation, reference
-    the specific data that supports it.
-  toolSet: ''
+  systemPrompt: "# SUSE Observability Troubleshooting Guide for AI Agents\n    You
+    have access to a SUSE Observability MCP server that provides tools to investigate
+    Kubernetes infrastructure issues. Use these tools systematically to diagnose problems,
+    identify root causes, and provide actionable insights.\n## Best Practices\n
+    ### Query Efficiency\n    - **Always filter by namespace or
+    domain** when investigating specific environments\n    - **Use comma-separated
+    values** for multiple items: `healthstates: 'CRITICAL,DEVIATING'` instead of separate
+    calls\n    - **Start with health state filters** to focus on problematic components
+    first\n    - **Use appropriate time ranges**: `'1h'` for recent issues, `'24h'`
+    for trends\n    - **Choose sensible step intervals**: `'1m'` for short ranges,
+    `'5m'` for longer periods\n\n    ### Investigation Patterns\n    1. **Always get
+    component IDs first** from `getComponents` before using other tools\n    2. **Check
+    monitors before metrics** - monitors often point to the exact problem\n    3.
+    **Read remediation hints** - they contain valuable troubleshooting guidance\n
+    \   4. **Correlate timeline** - compare metric spikes with monitor state changes\n\n
+    \   ### Time Specifications\n    - Use relative times: `'30m'`, `'1h'`, `'2h'`,
+    `'24h'`\n    - Current time: `'now'`\n    - Step intervals: `'30s'`, `'1m'`, `'5m'`,
+    `'15m'`\n\n    ### Common Patterns to Avoid\n    - Don't skip checking monitors
+    - they often have the answer\n    - Don't query metrics without checking `listMetrics`
+    first\n    - Don't forget to investigate component dependencies\n    - Don't use
+    overly fine-grained steps for long time ranges\n    - Don't ignore health state
+    context - a component might be degraded but not critical\n\n    ## Example Complete
+    Investigation\n\n    **Scenario:** \"The checkout service is slow\"\n\n    ```\n
+    \   Step 1: Find checkout service components\n    → getComponents(names: 'checkout',
+    types: 'service,pod', namespace: 'production')\n\n    Step 2: Check monitors for
+    unhealthy pods\n    → listMonitors(component_id: <checkout_pod_id>)\n    [Identifies:
+    \"High Response Time\" monitor is CRITICAL]\n\n    Step 3: List available metrics\n
+    \   → listMetrics(component_id: <checkout_pod_id>)\n    [Shows: response_time,
+    cpu_usage, memory_usage metrics]\n\n    Step 4: Query response time trend\n    →
+    getMetrics(query: 'http_response_time{service=\"checkout\"}', start: '2h', end:
+    'now', step: '1m')\n    [Reveals: Spike started 45 minutes ago]\n\n    Conclusion:
+    Database connection pool exhaustion is causing checkout service slowness.\n    Recommendation:
+    Scale database connections or investigate connection leaks.\n    ```\n\n    ##
+    Remember\n\n    Your goal is to provide **data-driven insights**. Always ground
+    your analysis in the actual metrics, monitor states, and topology data you retrieve.
+    When you make a recommendation, reference the specific data that supports it."
+  toolSet: ""
 ----
 --
 SUSE Security::
@@ -981,46 +1068,182 @@ SUSE Security::
 SBOMScanner MCP 服务可以使用 `TLS `启动，请参阅：xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP 与自定义证书]，关联指定的 CA 证书。
 =====
 --
-====
+CloudCasa::
++
+--
+**CloudCasa Agent** 扩展了 {short-project-name}^GC^ 在 Kubernetes 数据保护方面的能力。用户可以直接通过 AI Assistant GC 获取备份、恢复和跨集群迁移等操作的指导与帮助。
 
-[#bring-your-own-mcp]
-== 配置使用您的 MCP
+**配置步骤:**
 
-您可以通过添加自己的自定义 **模型上下文协议（MCP）** 服务来扩展 {short-project-name}^GC^ 的“团队”。
+1.  **获取凭证:** 访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档]，获取 MCP Server 的访问凭据（用户名和密码）。
+2.  **进入设置:** 打开 **Global Settings** > **AI Assistant GC**.
+3.  **添加 Agent:** 点击 **添加 AI Agent**，并填写以下信息：
 
-这非常适合将专有数据或专业内部工具直接集成到 AI 助手中。
+[cols="1,3"]
+|===
+| 设置 | 值
+| **Name** | `CloudCasa`
+| **Agent Profile** | `CloudCasa data protection assistant for Kubernetes. Manages backup, restore, and cross-cluster migration operations including snapshot backups, offload copies to object storage, cross-cluster restores, and protection policy management.`
+| **Endpoint** | \https://cloudcasa-mcp.vercel.app
+| **Auth Type** | `Basic authentication`
+| **Secret** | 直接在表单中点击**Create Secret** ，然后输入在步骤 1 中获得的凭据。
+| **Human Validation Tools** | `cc_create_snapshot_backup`, `cc_create_copy_backup`, `cc_create_restore`
+| **Guidelines** | Use this agent only for CloudCasa-related operations. Prefer read-only guidance first, then propose an action. Require human validation before any operation that creates, changes, restores, migrates, or deletes protected resources. Ask for clarification when parameters are ambiguous. Never invent cluster names or recovery points. Summarize the intended action before execution. Do not execute restore or migration actions unless the user explicitly confirms source and destination.
+|===
+
+**通过 YAML 安装：**
+或者，您可以将此 `SubAgentConfig` YAML apply 到 local 集群：
+
+[source,yaml]
+----
+apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: cloudcasa
+  namespace: kopilot-system
+spec:
+  authenticationType: BASIC
+  authenticationSecret: cloudcasa-auth-secret
+  builtIn: false
+  description: >-
+    CloudCasa data protection assistant for Kubernetes. Manages backup, restore, and cross-cluster migration operations.
+  displayName: CloudCasa
+  enabled: true
+  mcpURL: https://cloudcasa-mcp.vercel.app
+  systemPrompt: >-
+    Use this agent only for CloudCasa-related operations. Prefer read-only guidance first, then propose an action. Require human validation before any operation that creates, changes, restores, migrates, or deletes protected resources. Ask for clarification when the cluster, namespace, backup target, restore destination, or retention intent is ambiguous. Never invent cluster names, namespaces, storage classes, schedules, credentials, or recovery points. Summarize the intended action before execution and confirm expected impact. Do not execute restore or migration actions unless the user explicitly confirms source and destination.
+----
+
+**测试与验证:**
+
+保存配置后，可以使用以下推荐提示词进行测试。
+
+**信息查询类提示词（只读操作）：**
+[source,text]
+----
+Show me what CloudCasa can help me do.
+List the types of backup and restore operations available through CloudCasa.
+Explain the difference between snapshot backup and copy backup.
+What information do you need before creating a restore?
+----
+
+**受操作审批控制的提示词（需要人工确认）：**
+[source,text]
+----
+Create a snapshot backup for namespace <namespace> on cluster <cluster>.
+----
+
+**故障排查:**
+
+* **身份验证失败：** 检查在表单中创建的 Secret，确认其中填写的凭据与 CloudCasa Portal 中提供的凭据一致。
+* **Agent 无响应：** 确认 Agent 已启用（Enabled），且 endpoint 可以正常访问。有关详细的故障排查信息，请参阅 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档]。
+* **未出现审批提示：** 检查 **Human Validation Tools** 列表中的工具名称，确保与指定名称完全一致。
 
 [NOTE]
 =====
-此功能需要支持 **可流式传输的 HTTP** 的 MCP 服务。
-如果您使用的是服务发送事件（SSE），请切换到可流式传输的 HTTP 配置以连接您的外部 MCP。
+如需获取更多技术支持或了解高级配置，请参阅 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 官方文档]。
+=====
+--
+====
+
+[#model-per-agent]
+== 为每个 Agent 单独配置模型
+
+默认情况下，所有 AI Agent 均使用全局 AI Provider 配置的 LLM 模型（请参阅 xref:how-tos/how-to-admin.adoc#ollama[配置 Ollama], xref:how-tos/how-to-admin.adoc#openai[配置 OpenAI], xref:how-tos/how-to-admin.adoc#gemini[配置 Gemini]，xref:how-tos/how-to-admin.adoc#bedrock[配置 AWS Bedrock]，或 xref:how-tos/how-to-admin.adoc#qwen[配置 Qwen] 等）。
+
+您可以为单个 Agent 单独指定模型，而无需更改全局 AI Provider 配置。单独配置的模型仍使用全局 Provider 及其对应的凭据和 endpoint。
+
+当不同 Agent 对模型的需求不同时，此功能尤为实用。例如：
+
+* 对于 **Continuous Delivery** 或 **Cluster Provisioning** 这类职责明确、任务范围较窄的 Agent，可以选择规模更小、成本更低、响应速度更快的模型，因为这类任务通常不需要模型具备最强的推理能力。
+* 对于 **Rancher** Agent，或负责处理复杂、开放式任务的 Agent，则可以继续使用规模更大、能力更强的模型。
+
+通过为不同 Agent 配置不同的模型，可以降低专用 Agent 的 Token 消耗和响应延迟，同时确保对模型推理能力要求较高的任务仍能获得足够的处理质量。
+
+[NOTE]
+====
+每个 Agent 仅支持单独配置模型。Provider 及其关联的凭据和 endpoint 仍继承自全局 AI Provider 配置。
+====
+
+=== 通过 UI 为每个 Agent 单独配置模型
+
+. 进入 **Global Settings** -> **AI Assistant GC** 页面。
+. 滚动至 **AI Agents** 区域，选择（或创建）一个 Agent。
+. 在 **Agent Model** 区域，取消勾选 **Same as the AI provider**。
+. 在 **Model** 字段中选择所需的模型。
+. 点击 **Save**，等待 Agent 添加成功，可能需要等待几秒钟。
++
+image::how-tos/model-per-agent.png[Agent 模型配置, width="50%", align="left"]
+
+=== 通过 YAML 为每个 Agent 单独配置模型
+
+在 Agent 对应的 `SubAgentConfig` 资源中设置 `llmModelEnabled` 和 `llmModel` 字段：
+
+[source,yaml]
+----
+apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  name: fleet
+  namespace: kopilot-system
+spec:
+  authenticationType: RANCHER
+  builtIn: true
+  displayName: Continuous Delivery
+  enabled: true
+  mcpURL: http://rancher-mcp-server.kopilot-system.svc
+  toolSet: fleet
+  llmModelEnabled: true
+  llmModel: "gemini-2.5-flash"
+----
+
+[NOTE]
+====
+当 `llmModelEnabled` 设置为 `false` (默认值)时，`llmModel` 字段将被忽略，Agent 会使用全局 AI Provider 配置的模型。
+
+当 `llmModelEnabled` 设置为 `true` 时，`llmModel` 必须指定当前 AI Provider 所支持的模型。
+====
+
+[#bring-your-own-mcp]
+== 接入自定义 MCP Server
+
+您可以添加自定义的 **Model Context Protocol(MCP)** Server。将专有业务数据或内部专用工具直接集成到 AI assistant 中。
+
+[NOTE]
+=====
+此功能要求 MCP Server 支持 **Streamable HTTP**。
+如果你使用的是 Server-Sent Events（SSE），请切换为 Streamable HTTP 配置，以连接外部 MCP。
 =====
 
 **配置步骤：**
 
-1.  导航到 **全局设置** > **SUSE AI Assistant GC**.
-2.  滚动到 **AI Agents**  部分并点击 **+** （加号）图标。
-3.  提供配置详细信息：
+1.  进入 **Global Settings** > **AI Assistant GC**.
+2.  滚动至 **AI Agents** 区域，并单击 **+**（加号）图标。
+3.  填写配置详细信息：
 +
 [cols="1,3", options="header"]
 |===
-| 字段 | 说明
-| **Name** | 您智能体的识别名称。
-| **Agent Profile** | 智能体目的的清晰总结。**包含示例提示**，因为 {short-project-name}^GC^ 使用此描述将用户请求路由到正确的智能体。
-| **Endpoint** | 您的 MCP 服务的可访问 URL。 +
-**注意**: 服务必须支持可流式传输的 HTTP。
-| **Authentication Type** | 在 **Rancher 认证** (内部)、**基本认证** 或 **无** 之间选择。_(OAuth2 支持即将推出)。_
-| **Guidelines** | 提供智能体的系统提示（指令）。 +
-查看 xref:how-tos/how-to-admin.adoc#multi-agent[Multi-Agent 配置] 以获取示例。
+| 字段 | 描述
+| **Name** | Agent 的唯一标识名称。
+| **Agent Profile** | 对 Agent 核心用途的简明概述。**请务必包含提示词示例（Example Prompts）**，因为 {short-project-name}^GC^ 会利用此描述将用户请求路由分发至正确的 Agent。
+| **Endpoint** | MCP Server 的可访问 URL。 +
+**注意**: 该 Server 必须支持 Streamable HTTP。
+| **Authentication Type** | 选择访问 MCP Server 所使用的认证方式：**Rancher Authentication** (内部认证)，**Basic Authentication**，**OAuth2 authentication**，**Custom Headers authentication**，或 **None**。 +
+详情请参阅 xref:how-tos/how-to-admin.adoc#mcp-oauth2[配置 OAuth2 身份验证] 和 xref:how-tos/how-to-admin.adoc#mcp-custom-headers[配置 custom header 身份验证]。
+| **Human Validation Tools** | 选择特定工具；在 {short-project-name}^GC^ 执行这些工具之前，需先获得人工审批。
+| **Guidelines** | 为 Agent 提供系统提示词（Instructions/运行指令）。 +
+配置示例请参阅 xref:how-tos/how-to-admin.adoc#multi-agent[多 Agent 配置]。
 |===
 
 
 [#mcp-trust-custom-cert]
-== 配置使用您的 MCP（带自签名证书）
+== 使用自定义证书接入自有 MCP
 
-如果您的 MCP 服务使用自签名证书运行，您可以按照以下步骤信任它的私有 CA。
+如果您的 MCP Server 运行在自签名证书环境下，可以按照以下步骤配置信任：
 
-1. 在 **local** 集群中创建密钥
+. 在 **local** 集群中创建 Secret：
 +
 [source,bash]
 ----
@@ -1028,13 +1251,15 @@ SBOMScanner MCP 服务可以使用 `TLS `启动，请参阅：xref:how-tos/how-t
   --namespace kopilot-system \
   --from-file=ca.crt=stackstate-ca.crt
 ----
-2. 然后在 UI 页面 CA Bundle 选择对应的 TLS Secret，或使用 `caBundleRef` 以编程方式配置 **SubAgentConfig**
+. 然后，通过 YAML 配置 **SubAgentConfig**，并设置 `caBundleRef` 引用 CA 证书：
 +
 [source,yaml]
 ----
 apiVersion: kopilot.pandaria.io/v1alpha1
 kind: SubAgentConfig
 metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
   name: observability-agent
   namespace: kopilot-system
 spec:
@@ -1048,26 +1273,200 @@ spec:
     key: ca.crt
 ----
 
+[#mcp-oauth2]
+== 为 MCP Server 配置 OAuth2 身份验证
+
+{short-project-name}^GC^ 支持对外部 MCP/Agent 连接使用 OAuth2 身份验证，遵循 MCP link:https://modelcontextprotocol.io/specification/draft/basic/authorization[授权规范]。这使得 {short-project-name}^GC^ 能够与外部 MCP Server 或第三方 OAuth2 身份提供商（例如 GitHub 或 Notion）协商获取短期访问令牌（Access Token），而无需依赖长期静态凭据。
+
+**配置步骤：**
+
+. 进入 **Global Settings** > **AI Assistant GC**.
+. 滚动至 **AI Agents** 区域，选择（或创建）一个 Agent。
+. 将 **Authentication Type** 设置为 **OAuth2 authentication**。
+. {short-project-name}^GC^ 会根据 **MCP Endpoint** URL 自动发现 **Metadata endpoint** 和支持的 **Scopes**。如果自动发现失败，请手动填写 **Metadata endpoint**，并根据需要填写 **Scopes**，多个 Scope 之间使用空格分隔。
+. 随后，{short-project-name}^GC^ 会尝试从 **Metadata endpoint** 自动获取客户端注册信息。如果 OAuth2 提供商不支持动态客户端注册（Dynamic Client Registration），请手动填写由 OAuth2 提供商签发的 **Client ID** 和 **Client Secret**。
+. 如果 OAuth2 提供商或 MCP Server 使用自签名证书，可以根据需要提供 **CA Bundle**。有关详细信息，请参阅 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[信任 MCP Server 证书]。
+. 点击 **Save** 保存配置。
+
+image::how-tos/mcp-oauth2-settings.png[AI Agent 配置 OAuth2 身份认证]
+
+部分 OAuth2 提供商要求您预先将 {short-project-name}^GC^ 注册为 OAuth 应用（Client），并为其配置主页 URL（Homepage URL）和回调 URL（Callback URL）。Agent 配置表单中会显示这些参数值，方便您直接复制到提供商的 OAuth 应用设置中。
+
+image::how-tos/mcp-oauth2-settings-2.png[用户注册OAuth2 application 的 Homepage 和 Callback URL]
+
+=== 在聊天窗口中进行身份验证
+
+当用户发送的请求需要调用受 OAuth2 保护的 MCP Server 中的工具，且当前不存在有效令牌（缺失、无效或已过期）时，{short-project-name}^GC^ 会提示用户直接在聊天窗口中完成身份验证。
+
+用户可以通过弹出的窗口完成 OAuth2 登录流程。身份验证成功后，{short-project-name}^GC^ 会自动继续处理之前的请求。
+
+image::how-tos/oauth2-chat.png[引导用户通过 OAuth2 进行身份验证, align="left",  width="50%"]
+
+
+由于 OAuth2 访问令牌通常具有较短的有效期，因此系统可能会定期要求用户重新进行身份验证。这属于正常行为。
+
+=== 通过 YAML 配置 OAuth2 身份验证
+
+您也可以通过创建 Kubernetes Secret，并在 `SubAgentConfig` 中引用该 Secret，以 YAML 方式配置 OAuth2 身份验证。
+
+. 在 **local** 集群中创建 Secret，并配置 OAuth2 客户端信息：
++
+[source,bash]
+----
+kubectl create secret generic github-oauth-auth \
+  --namespace kopilot-system \
+  --from-literal=clientID="..." \
+  --from-literal=clientSecret="..." \
+  --from-literal=metadata_endpoint="https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp/" \
+  --from-literal=scope="..."
+----
+. 在 `SubAgentConfig` 中引用该 Secret，并将 `authenticationType` 设置为 `OAUTH2`：
++
+[source,yaml]
+----
+apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: github-agent
+  namespace: kopilot-system
+spec:
+  displayName: GitHub
+  enabled: true
+  mcpURL: https://api.githubcopilot.com/mcp
+  authenticationType: OAUTH2
+  authenticationSecret: github-oauth-auth
+----
+
+[#mcp-custom-headers]
+== 为 MCP Server 配置自定义 HTTP Header 身份验证
+
+某些外部 MCP Server（例如 SUSE Observability）通过一个或多个自定义 HTTP Header（如 API Key 或 Token）进行身份验证，而不是使用 OAuth2 或 Basic Authentication。{short-project-name}^GC^ 支持引用包含这些 Header 信息的 Kubernetes Secret，以便在请求中自动添加相应的 HTTP Header。
+
+**配置步骤：**
+
+. 在 **local** 集群中创建 Secret，每个需要添加的 HTTP Header 对应一个条目。Secret 中的每个 Key 将作为 HTTP Header 名称，其对应的 Value 将作为 HTTP Header 值发送。
++
+[source,bash]
+----
+kubectl create secret generic my-mcp-auth \
+  --namespace kopilot-system \
+  --from-literal=X-API-Key="..."
+----
+. 进入 **Global Settings** > **AI Assistant GC**。
+. 滚动至 **AI Agents** 区域，选择现有 Agent 或创建新的 Agent。
+. 将 **Authentication Type** 设置为 **Custom Headers authentication**。
+. 在 **Secret** 下拉列表中，选择步骤 1 中创建的 Secret。
+. 如果 MCP Server 使用自签名证书，可以根据需要提供 **CA Bundle**。有关详细信息，请参阅 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[配置 MCP Server 证书信任]。
+. 点击 **Save** 保存配置。
+
+image::how-tos/mcp-custom-headers.png[Custom Headers authentication settings for an AI Agent]
+
+=== 通过 YAML 配置
+
+或者，您也可以应用以下 `SubAgentConfig` 配置，通过 `authenticationType: HEADER` 引用包含自定义 HTTP Header 的 Secret：
+
+[source,yaml]
+----
+apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: my-mcp-agent
+  namespace: kopilot-system
+spec:
+  displayName: My MCP Agent
+  enabled: true
+  mcpURL: https://mcp.example.com/mcp
+  authenticationType: HEADER
+  authenticationSecret: my-mcp-auth
+----
+
 [#rbac]
 == 控制访问 (RBAC)
 
-我们为用户提供一个特定的**全局角色**， Kopilot User(AI Assistant)用户，以便能够与 {short-project-name}^GC^ 聊天。
+我们为用户提供一个特定的**全局角色**——**Liz(Rancher AI GC Assistant) User**，供用户获取与 {short-project-name}^GC^ 对话的权限。
 
 **授予对 {short-project-name}^GC^ 的访问权限：**
 
-1.  导航到 **用户与认证** > **用户**。
-2.  选择一个 **用户** > **编辑配置**。
-3.  检测 **Kopilot User(AI Assistant) 用户** 角色在 **自定义** 部分。
+1.  前往 **用户与认证** > **用户**。
+2.  选择指定 **用户** > **编辑配置**。
+3.  在 **Custom**（自定义）区域中，勾选 **Liz(Rancher AI GC Assistant) User** 角色。
 4.  点击保存
 
-image::quick-start/quick_start_9.png[Users 页面]
+image::how-tos/liz-user.png[Users 页面]
 
 [NOTE]
 ====
-此全局角色提供 Rancher 非常有限的访问权限。
+该全局角色仅提供对 Rancher Manager 极其有限的访问权限。
 
-它授予对在 local 集群中运行的 AI Agent 的访问权限。
+它主要用于授予访问运行在 local 集群中的 Agent Endpoint 的权限。
 ====
+
+[#mcp-read-only]
+== Rancher MCP 只读模式
+
+您可以为 Rancher MCP Server 启用只读模式，以限制 AI Assistant 的操作权限。在此模式下，仅开放用于查询 Rancher 信息的工具。
+
+所有用于创建或修改资源（Patch）的工具都将被禁用，无法通过 {short-project-name}^GC^ 调用。
+
+要启用只读模式，请修改 `values.yaml`  文件中 `mcp` 配置：
+
+[source,yaml]
+----
+rancherMCPServer:
+  readOnly: true
+----
+
+使用更新后的配置升级 Chart：
+
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
+----
+
+[#airgap]
+== 离线安装
+
+在离线（Air-gapped）环境中安装 {short-project-name}^GC^ 时，需要预先拉取所需的容器镜像和 Helm Chart，并将其迁移至您的私有镜像仓库（Registry）及内部仓库（Repository）中。
+
+=== UI 扩展
+
+该 UI 扩展属于官方 Rancher Prime UI 扩展的一部分。有关如何在离线环境中管理 UI 扩展的详细操作说明，请参阅 link:https://documentation.suse.com/cloudnative/rancher-manager/v2.13/en/integrations/rancher-extensions.html#_working_with_extensions_in_an_air_gapped_environment[Rancher 扩展离线文档]。
+
+=== 推送镜像与 Chart
+
+要安装 Agent 及其依赖项，您必须遵循 link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/installation-and-upgrade/other-installation-methods/air-gapped/publish-images.html[Rancher 官方离线镜像发布指南]：
+
+此外，您需要前往对应版本的 Release Notes（发布说明），从 https://github.com/cnrancher/kopilot/releases/tag/v{page-version}[GitHub Release Assets] 中手动下载以下 Helm Chart 文件：
+
+* `kopilot-{page-version}.tgz`
+* `kopilot-crd-{page-version}.tgz`
+
+当这些制品（Artifacts）导入至您的内部基础设施后，即可使用您的私有镜像仓库和内部 Helm 仓库，按照标准流程完成安装。
+
+[#http-proxy]
+== 配置全局 HTTP 代理
+
+如果您的集群要求出站流量通过代理（例如在离线或受限网络环境中），您可以为 AI Agent 和 MCP Server 全局配置 `HTTP_PROXY`、`HTTPS_PROXY` 和 `NO_PROXY`。这使得 {short-project-name}^GC^ 能够通过代理访问外部端点（例如 OpenAI、Gemini 或 Qwen）以及外部 MCP Server。
+
+如需配置代理，请更新 `values.yaml` 中的 `proxy` 配置段：
+
+[source,yaml]
+----
+http_proxy: "http://proxy.example.com:3128"
+https_proxy: "http://proxy.example.com:3128"
+no_proxy: "localhost,127.0.0.1,localaddress,.localdomain,.local,10.43.0.0/16,kopilot-redis,kopilot-postgres,.svc,.svc.cluster.local"
+----
+
+使用新配置更新 Chart：
+
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
+----
 
 [#ui-tools]
 == 管理 UI Tools
@@ -1110,39 +1509,47 @@ image::how-tos/ui-tools-settings.png[UI Tools 设置]
 
 image::how-tos/ui-tools-example.png[UI Tools 实战]
 
-[NOTE]
-====
+**Note:**
+
 UI Tools 会消耗额外的 Token 并增加响应时间，因此，如果您希望助手提供更快、更简洁的响应，您可能需要禁用其中一些（或全部）工具。
-====
-// TODO: 虽然这个功能目前支持，但是支持上有些问题，等下个版本修复了再放开注释。
-// [#persistconversations]
-// == 保持对话
-//
-// 默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。
-// 要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：
-//
-// [source,yaml]
-// ----
-// redis:
-//   externalURL: "kopilot-redis.kopilot-system.svc.cluster.local:6379"
-//
-// postgres:
-//   externalURL: "kopilot-postgres.kopilot-system.svc.cluster.local:5432"
-//   username: "kopilot"
-//   password: "ChangeMe"
-// ----
-//
-// `connectionString` 必须遵循 link:https://www.psycopg.org/psycopg3/docs/index.html[psycopg3 文档]中描述的标准 PostgreSQL URI 格式。
-//
-// 使用新配置更新：
-//
-// [source,bash,subs="attributes+"]
-// ----
-// helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{version}.tgz
-// ----
-//
-// 重启Liz GC：
-// [source,bash,subs="attributes+"]
-// ----
-// kubectl rollout restart deployment -n kopilot-system kopilot-agent
-// ----
+
+
+[#persistconversations]
+== 保持对话
+
+默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。
+[source,yaml]
+----
+redis:
+  persistentVolume:
+    storageClassName: "[storageclass]"
+postgres:
+  persistentVolume:
+    storageClassName: "[storageclass]"
+----
+
+
+要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：
+
+[source,yaml]
+----
+redis:
+  externalURL: "redis://[[username][:password]@]host[:port][/database][?param1=value1&...] "
+  username: ""
+  password: ""
+
+postgres:
+  externalURL: "postgresql://[user[:password]@][host][:port]/[dbname][?param1=value1&...]"
+  username: "kopilot"
+  password: "ChangeMe"
+----
+
+
+使用新配置更新：
+
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
+----
+
+更新后系统组件会自动重启。

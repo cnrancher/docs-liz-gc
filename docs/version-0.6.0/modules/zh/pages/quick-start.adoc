@@ -65,7 +65,7 @@ helm install cert-manager jetstack/cert-manager \
 
 在 Rancher local 集群上安装 Liz^GC^。
 
-. 从 https://github.com/cnrancher/kopilot/releases/tag/v{version}[GitHub Release Assets] 下载 Helm Chart：`kopilot-{version}.tgz` 和 `kopilot-crd-{version}.tgz`。
+. 从 https://github.com/cnrancher/kopilot/releases/tag/v{page-version}[GitHub Release Assets] 下载 Helm Chart：`kopilot-{page-version}.tgz` 和 `kopilot-crd-{page-version}.tgz`。
 . 安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者（也可使用其他 provisioner）。
 +
 [source,bash]
@@ -81,7 +81,7 @@ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storagec
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    kopilot-crd ./kopilot-crd-{version}.tgz
+    kopilot-crd ./kopilot-crd-{page-version}.tgz
 
 helm upgrade --install \
     -n kopilot-system \
@@ -92,7 +92,7 @@ helm upgrade --install \
     --set llm.apiKey="<your llm api key>" \
     --set rancher_sso.enabled=true \
     --set rancher_sso.url="<your rancher url>" \
-    kopilot ./kopilot-{version}.tgz
+    kopilot ./kopilot-{page-version}.tgz
 ----
 
 [NOTE]
@@ -114,7 +114,7 @@ image::quick-start/quick_start_1.png[Extensions 管理页面]
 +
 [source,bash,subs="attributes+"]
 ----
-registry.rancher.cn/cnrancher/ui-extension-kopilot-ai-ui:{version}
+registry.rancher.cn/cnrancher/ui-extension-kopilot-ai-ui:{page-version}
 ----
 +
 image::quick-start/quick_start_2.png[Import Extension Catalog 对话框]
