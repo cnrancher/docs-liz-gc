@@ -9,7 +9,7 @@ include::partial$variables.adoc[]
 [#upgrading-liz]
 == 升级 Liz^GC^
 
-=== 升级 `kopilot-crd` 和 `kopilot`
+=== 升级 Helm Chart
 
 请运行以下命令进行升级：
 
@@ -33,11 +33,11 @@ helm upgrade --install \
 
 === 升级 UI 扩展
 
-. 在 Rancher 中点击 **Extension** 菜单，然后在 **已安装** 列表中选择 **SUSE AI Assistant GC**，点击卸载。
+. 在 Rancher 中点击 **Extension** 菜单，然后在 **已安装** 列表中选择 **AI Assistant GC**，点击卸载。
 . 再点击下拉菜单中的 **Manage Extension Catalogs**，导入 Liz^GC^ UI 扩展。
 . 点击 **Import Extension Catalog**，输入 Catalog Image Reference。
 . 等待扩展目录状态变为 Active 后，点击 **Reload** 重新加载页面。
-. 在 **Extension** 页面安装 **SUSE AI Assistant GC**，安装完成后点击 **Reload** 重新加载页面。
+. 在 **Extension** 页面安装 **AI Assistant GC**，安装完成后点击 **Reload** 重新加载页面。
 
 有关管理扩展程序的更多信息，请参阅 link:https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html[Rancher 扩展程序管理] 文档。
 
@@ -1061,7 +1061,7 @@ SUSE Security::
 --
 **SUSE-Security** agent 可帮助您扫描环境。 该 agent 调用 SBOMscanner 来列出注册表、扫描作业和工作负载、检查特定 CVE、跟踪扫描进度、管理 VEX，以及（在您需要时）为您创建、更新或删除相应的资源。
 
-按照 SBOMscanner link:https://github.com/kubewarden/sbomscanner/blob/main/docs/user-guide/mcp-server.md#liz-rancher-ai-agent[文档] 上定义的说明设置。
+按照 SBOMscanner link:https://docs.kubewarden.io/sbom-scanner/latest/en/user-guide/mcp-server.html#_liz_rancher_ai_agent[文档] 上定义的说明设置。
 
 [NOTE]
 =====
@@ -1076,7 +1076,7 @@ CloudCasa::
 **配置步骤:**
 
 1.  **获取凭证:** 访问 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 文档]，获取 MCP Server 的访问凭据（用户名和密码）。
-2.  **进入设置:** 打开 **Global Settings** > **AI Assistant GC**.
+2.  **进入设置:** 打开 **Global Settings** > **AI Assistant GC**。
 3.  **添加 Agent:** 点击 **添加 AI Agent**，并填写以下信息：
 
 [cols="1,3"]
@@ -1219,7 +1219,7 @@ spec:
 
 **配置步骤：**
 
-1.  进入 **Global Settings** > **AI Assistant GC**.
+1.  进入 **Global Settings** > **AI Assistant GC**。
 2.  滚动至 **AI Agents** 区域，并单击 **+**（加号）图标。
 3.  填写配置详细信息：
 +
@@ -1280,7 +1280,7 @@ spec:
 
 **配置步骤：**
 
-. 进入 **Global Settings** > **AI Assistant GC**.
+. 进入 **Global Settings** > **AI Assistant GC**。
 . 滚动至 **AI Agents** 区域，选择（或创建）一个 Agent。
 . 将 **Authentication Type** 设置为 **OAuth2 authentication**。
 . {short-project-name}^GC^ 会根据 **MCP Endpoint** URL 自动发现 **Metadata endpoint** 和支持的 **Scopes**。如果自动发现失败，请手动填写 **Metadata endpoint**，并根据需要填写 **Scopes**，多个 Scope 之间使用空格分隔。
@@ -1486,7 +1486,7 @@ UI Tools 是增强 {short-project-name}^GC^ 聊天界面中用户体验的交互
 
 === 安装 UI Tools
 
-UI Tools 默认包含在 {short-project-name}^GC^ 版本中。管理员用户有权从 `SUSE AI Assistant GC` 设置中安装或刷新 UI Tools 定义。
+UI Tools 默认包含在 {short-project-name}^GC^ 版本中。管理员用户有权从 `AI Assistant GC` 设置中安装或刷新 UI Tools 定义。
 
 image::how-tos/ui-tools-installation.png[UI Tools 安装]
 
@@ -1496,7 +1496,7 @@ image::how-tos/ui-tools-refresh.png[UI Tools 刷新]
 
 === 启用和禁用 UI Tools
 
-管理员可以通过 *Global Settings* -> *SUSE AI Assistant GC* 设置页面配置可用的 UI Tools。
+管理员可以通过 *Global Settings* -> *AI Assistant GC* 设置页面配置可用的 UI Tools。
 
 1. 根据您的工作流程偏好打开或关闭单个工具。
 2. 更改立即生效。
