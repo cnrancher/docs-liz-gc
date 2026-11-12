@@ -1,0 +1,2794 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>管理员操作指南 | Rancher &amp; Kubernetes AI  0.7.0</title>
+    <link rel="prev" href="../explanations/shared-data.html">
+    <link rel="next" href="how-to-user.html">
+    <meta name="description" content="Liz^GC^：Rancher &amp; Kubernetes AI 助手管理员操作指南">
+    <meta name="generator" content="Antora 3.1.10">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-11-03"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra-gc.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://d12w0ryu9hjsx8.cloudfront.net/shared-header/1.10/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://d12w0ryu9hjsx8.cloudfront.net/shared-header/1.10/assets");
+</script>
+<!-- Default English link -->
+<link href="https://cnrancher.github.io/docs-liz-gc/rancher-ai-gc/0.7.0/en/how-tos/how-to-admin.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="https://cnrancher.github.io/docs-liz-gc/rancher-ai-gc/0.7.0/zh/how-tos/how-to-admin.html" hrefLang="zh-CN" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "管理员操作指南 | Liz&lt;sup&gt;GC&lt;/sup&gt;: The Rancher &amp; Kubernetes AI Assistant 0.7.0",
+  "headline": "管理员操作指南",
+  "description": "Liz^GC^：Rancher &amp;amp; Kubernetes AI 助手管理员操作指南",
+  "inLanguage": "zh_CN",
+  "dateModified": "2026-11-03T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Liz&lt;sup&gt;GC&lt;/sup&gt;: The Rancher &amp; Kubernetes AI Assistant",
+      "softwareVersion": "0.7.0",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+  </head>
+  <body class="article">
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'; mermaid.initialize({"startOnLoad":true});</script><shared-header
+language="en"
+languages='{
+    "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+    "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+    "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+    "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+    "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+    "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+}'
+enable-search='false'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="rancher-ai-gc" data-version="0.7.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Rancher &amp; Kubernetes AI</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">简介</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quick-start.html">快速入门</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">解释和概念</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">整体架构</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/models.html">LLM 模型</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/shared-data.html">数据使用</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">操作指南</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <a class="nav-link" href="how-to-admin.html">管理员操作指南</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#ollama">配置 Ollama</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#openai">配置 OpenAI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#gemini">配置 Gemini</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#bedrock">配置 AWS Bedrock</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#generic">配置 Generic</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#qwen">配置 Qwen</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#deepseek">配置 DeepSeek</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#mimo">配置 Mimo</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#kimi">配置 Kimi</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#glm">配置 GLM</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#minimax">配置 MiniMax</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#multi-agent">配置多个 AI Agent</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#model-per-agent">为每个 Agent 单独配置模型</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#bring-your-own-mcp">添加 MCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#mcp-trust-custom-cert">信任 MCP Server 证书</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#mcp-oauth2">配置 OAuth2 身份验证</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#mcp-custom-headers">配置 Custom Headers 身份验证</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#rbac">控制访问（RBAC）</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#mcp-read-only">只读模式</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#airgap">离线安装</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#http-proxy">配置全局 HTTP 代理</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#ui-tools">管理 UI Tools</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#persistconversations">保持对话</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <a class="nav-link" href="how-to-user.html">用户操作指南</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="how-to-user.html#getting-started ">与 Liz<sup>GC</sup> 互动</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="how-to-user.html#context-aware ">上下文感知</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="how-to-user.html#user-approve ">用户审批</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="how-to-user.html#managing-conversations">管理对话</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="how-to-user.html#manual-agent-selection">切换智能体</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="how-to-user.html#prompt-examples">提示词示例</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">参考手册</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/installation.html">安装指南</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/troubleshooting.html">故障排查</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Rancher &amp; Kubernetes AI</span>
+    <span class="version">0.7.0</span>
+  </div>
+  <ul class="components">
+        <li class="component is-current">
+          <div class="title"><a href="../introduction.html">Rancher & Kubernetes AI</a></div>
+          <ul class="versions">
+            <li class="version is-current is-latest">
+              <a href="../introduction.html">0.7.0</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.6.0/zh/introduction.html">0.6.0</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="../../" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="../../" title="Liz&lt;sup&gt;GC&lt;/sup&gt;: The Rancher &amp; Kubernetes AI Assistant" aria-label="SUSE Documentation - Liz&lt;sup&gt;GC&lt;/sup&gt;: The Rancher &amp; Kubernetes AI Assistant">
+        Liz<sup>GC</sup>: The Rancher & Kubernetes AI Assistant
+      </a>
+    </li>
+      <li>
+          操作指南
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.7.0</button>
+  <div class="version-menu">
+    <a class="version is-current" href="how-to-admin.html">0.7.0</a>
+    <a class="version" href="../../../0.6.0/zh/how-tos/how-to-admin.html">0.6.0</a>
+  </div>
+</div>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="搜索文档" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:rancher-ai-gc" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="在此页面上" data-levels="2">
+  <div class="toc-menu">
+    <div class="docsurvey-wrapper"><a class="survey-link" href="https://suselinux.fra1.qualtrics.com/jfe/form/SV_diCzHC9xxyJyuN0">Documentation survey</a></div>
+    <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+    <div class="docsurvey-wrapper"><a class="survey-link" href="https://suselinux.fra1.qualtrics.com/jfe/form/SV_diCzHC9xxyJyuN0">Documentation survey</a></div>
+  </div>
+</aside>
+<article class="doc">
+<h1 class="page">管理员操作指南</h1>
+<div class="sect1">
+<h2 id="upgrading-liz"><a class="anchor" href="#upgrading-liz"></a>升级 Liz<sup>GC</sup></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_升级_helm_chart"><a class="anchor" href="#_升级_helm_chart"></a>升级 Helm Chart</h3>
+<div class="paragraph">
+<p>请运行以下命令进行升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    kopilot-crd ./kopilot-crd-0.7.0.tgz
+
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>如果您通过设置页面配置了模型，请在更新前将这些信息写入 values.yaml 文件中，或通过参数设置进去。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_升级_ui_扩展"><a class="anchor" href="#_升级_ui_扩展"></a>升级 UI 扩展</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在 Rancher 中点击 <strong>Extension</strong> 菜单，然后在 <strong>已安装</strong> 列表中选择 <strong>AI Assistant GC</strong>，点击卸载。</p>
+</li>
+<li>
+<p>再点击下拉菜单中的 <strong>Manage Extension Catalogs</strong>，导入 Liz<sup>GC</sup> UI 扩展。</p>
+</li>
+<li>
+<p>点击 <strong>Import Extension Catalog</strong>，输入 Catalog Image Reference。</p>
+</li>
+<li>
+<p>等待扩展目录状态变为 Active 后，点击 <strong>Reload</strong> 重新加载页面。</p>
+</li>
+<li>
+<p>在 <strong>Extension</strong> 页面安装 <strong>AI Assistant GC</strong>，安装完成后点击 <strong>Reload</strong> 重新加载页面。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>有关管理扩展程序的更多信息，请参阅 <a href="https://documentation.suse.com/cloudnative/rancher-manager/latest/en/integrations/rancher-extensions.html">Rancher 扩展程序管理</a> 文档。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ollama"><a class="anchor" href="#ollama"></a>配置 Ollama</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_ollama"><a class="anchor" href="#_通过_ui_配置_ollama"></a>通过 UI 配置 Ollama</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Local，输入 Ollama URL （例如： http://ollama:11434）。</p>
+</li>
+<li>
+<p>端点验证通过后，请从可用模型列表中选择一个模型。该列表会根据您 Ollama 实例中已拉取的模型自动生成。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/ollama-config.png" alt="Ollama 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_ollama"><a class="anchor" href="#_通过_helm_chart_配置_ollama"></a>通过 Helm chart 配置 Ollama</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Ollama：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  baseURL: "http://ollama:11434"
+  model: qwen3.8-27b
+  provider: ollama
+  active: local</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>请确保 llmModel 中指定的模型（例如 qwen3.8-27b）已通过 <code>ollama pull</code> 命令提前下载到 Ollama 服务器，否则 Agent 将无法成功初始化。</p>
+</div>
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="openai"><a class="anchor" href="#openai"></a>配置 OpenAI</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_openai"><a class="anchor" href="#_通过_ui_配置_openai"></a>通过 UI 配置 OpenAI</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 OpenAI，提供 OpenAI API 密钥。 前往
+<a href="http://platform.openai.com">platform.openai.com</a> 注册 OpenAI 并生成 API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/openai-config.png" alt="OpenAI 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_openai"><a class="anchor" href="#_通过_helm_chart_配置_openai"></a>通过 Helm Chart 配置 OpenAI</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 OpenAI 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: ""
+  model: gpt-5.5
+  provider: openai
+  temperature: 0.2
+  active: openai</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gemini"><a class="anchor" href="#gemini"></a>配置 Gemini</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_gemini"><a class="anchor" href="#_通过_ui_配置_gemini"></a>通过 UI 配置 Gemini</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Gemini，通过 <a href="https://aistudio.google.com/">Google AI Studio</a> 提供 Google API 密钥，或在 GCP 门户中创建 API 密钥凭证。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/gemini-config.png" alt="Gemini 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_gemini"><a class="anchor" href="#_通过_helm_chart_配置_gemini"></a>通过 Helm Chart 配置 Gemini</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Gemini 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: ""
+  model: gemini-3.8-flash
+  provider: google_genai
+  temperature: 1.0
+  active: gemini</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bedrock"><a class="anchor" href="#bedrock"></a>配置 AWS Bedrock</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_aws_bedrock"><a class="anchor" href="#_通过_ui_配置_aws_bedrock"></a>通过 UI 配置 AWS Bedrock</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Bedrock。</p>
+</li>
+<li>
+<p>选择 AWS 可用区。</p>
+</li>
+<li>
+<p>请按照 <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys-generate.html">AWS流程</a> 生成 Bedrock API Key。然后输入 Bedrock Bearer Token。</p>
+</li>
+<li>
+<p>从列表中选择要使用的模型。</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="警告"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>请选择支持<strong>工具调用</strong>（Tools call）的模型。目前，<strong>Anthropic Claude Opus</strong> 模型已通过测试。
+已测试模型的列表可在 <a href="../explanations/models.html" class="xref page">LLM 模型</a>文档中查看。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/bedrock-config.png" alt="Bedrock 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_aws_bedrock"><a class="anchor" href="#_通过_helm_chart_配置_aws_bedrock"></a>通过 Helm Chart 配置 AWS Bedrock</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 AWS Bedrock：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxx"
+  provider: bedrock_converse
+  awsRegion: "us-west-2"
+  model: openai.gpt-oss-120b-1:0
+  active: bedrock</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_配置自定义_bedrock_endpoint"><a class="anchor" href="#_配置自定义_bedrock_endpoint"></a>配置自定义 Bedrock endpoint</h3>
+<div class="paragraph">
+<p>如果您的环境无法直接访问 AWS Bedrock 默认服务 endpoint（例如使用 AWS PrivateLink VPC endpoint、proxy或非标准区域 endpoint），可以在 Helm Values 的 llm 配置项下添加 bedrockURL 字段，将 Agent 指向自定义的 Bedrock endpoint。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxx"
+  provider: bedrock_converse
+  awsRegion: "us-west-2"
+  model: openai.gpt-oss-120b-1:0
+  active: bedrock
+  bedrockURL: "https://vpce-xxxxxxxx.bedrock-runtime.us-west-2.vpce.amazonaws.com"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+目前，自定义 endpoint URL 仅支持通过 Helm Chart 配置，尚未在 <strong>Global Settings</strong> → <strong>AI Assistant GC</strong> 页面中提供对应的配置项。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="generic"><a class="anchor" href="#generic"></a>配置 Generic（兼容 OpenAI）</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Generic 支持接入各类兼容 OpenAI API 的推理服务，例如 vLLM 和 Azure OpenAI。您可以直接通过 UI 完成配置，无需手动修改 Helm Chart。
+在 UI 中，该选项显示为 <strong>Custom</strong>。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+通过 OpenAI 的 Advanced settings（高级设置）配置第三方 OpenAI 兼容服务 URL 的方式仍然可用。
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_通过_ui_配置_custom"><a class="anchor" href="#_通过_ui_配置_custom"></a>通过 UI 配置 Custom</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 <strong>Custom</strong>。</p>
+</li>
+<li>
+<p>输入 <strong>Endpoint URL</strong>，即 LLM 服务的有效 HTTP/HTTPS 访问地址（例如 <code><a href="https://api.vllm.ai/v1" class="bare">https://api.vllm.ai/v1</a></code>）。</p>
+</li>
+<li>
+<p>输入用于身份验证的 <strong>API Key</strong>。</p>
+</li>
+<li>
+<p>输入用于生成响应的 <strong>Model name</strong>（模型名称）。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/custom-config.png" alt="Custom (Generic 兼容 OpenAI) 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_custom"><a class="anchor" href="#_通过_helm_chart_配置_custom"></a>通过 helm chart 配置 Custom</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Generic：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://myendpoint.example/v1"
+  model: "your-model-name"
+  provider: openai
+  active: custom</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="qwen"><a class="anchor" href="#qwen"></a>配置 Qwen</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_qwen"><a class="anchor" href="#_通过_ui_配置_qwen"></a>通过 UI 配置 Qwen</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Qwen，通过 <a href="https://bailian.console.aliyun.com/">Qwen</a> 提供 Qwen API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/qwen-config.png" alt="Qwen 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_qwen"><a class="anchor" href="#_通过_helm_chart_配置_qwen"></a>通过 Helm Chart 配置 Qwen</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Qwen 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  model: qwen3.8-max
+  provider: openai
+  temperature: 0.2
+  active: qwen</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deepseek"><a class="anchor" href="#deepseek"></a>配置 Deepseek</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_deepseek"><a class="anchor" href="#_通过_ui_配置_deepseek"></a>通过 UI 配置 Deepseek</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Deepseek，通过 <a href="https://platform.deepseek.com/">Deepseek</a> 提供 Deepseek API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/deepseek-config.png" alt="Deepseek 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_deepseek"><a class="anchor" href="#_通过_helm_chart_配置_deepseek"></a>通过 Helm Chart 配置 Deepseek</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Deepseek 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://api.deepseek.com"
+  model: deepseek-v4-pro
+  provider: openai
+  temperature: 0.2
+  active: deepseek</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mimo"><a class="anchor" href="#mimo"></a>配置 Mimo</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_mimo"><a class="anchor" href="#_通过_ui_配置_mimo"></a>通过 UI 配置 Mimo</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Mimo，通过 <a href="https://platform.xiaomimimo.com/">Xiaomi MIMO</a> 提供 Mimo API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/mimo-config.png" alt="Mimo 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_mimo"><a class="anchor" href="#_通过_helm_chart_配置_mimo"></a>通过 Helm Chart 配置 Mimo</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Mimo 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://api.xiaomimimo.com/v1"
+  model: mimo-v2.6-pro
+  provider: openai
+  temperature: 1.0
+  active: mimo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kimi"><a class="anchor" href="#kimi"></a>配置 Kimi</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_kimi"><a class="anchor" href="#_通过_ui_配置_kimi"></a>通过 UI 配置 Kimi</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 Kimi，通过 <a href="https://platform.kimi.com/">KIMI</a> 提供 Kimi API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/kimi-config.png" alt="Kimi 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_kimi"><a class="anchor" href="#_通过_helm_chart_配置_kimi"></a>通过 Helm Chart 配置 Kimi</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 Kimi 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://api.moonshot.cn/v1"
+  model: kimi-k3
+  provider: openai
+  temperature: 1.0
+  active: kimi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="glm"><a class="anchor" href="#glm"></a>配置 GLM</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_glm"><a class="anchor" href="#_通过_ui_配置_glm"></a>通过 UI 配置 GLM</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 GLM，通过 <a href="https://bigmodel.cn/">BigModel</a> 提供 GLM API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/glm-config.png" alt="GLM 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_glm"><a class="anchor" href="#_通过_helm_chart_配置_glm"></a>通过 Helm Chart 配置 GLM</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 GLM 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://open.bigmodel.cn/api/paas/v4"
+  model: glm-5.3
+  provider: openai
+  temperature: 0.2
+  active: glm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="minimax"><a class="anchor" href="#minimax"></a>配置 MiniMax</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_通过_ui_配置_minimax"><a class="anchor" href="#_通过_ui_配置_minimax"></a>通过 UI 配置 MiniMax</h3>
+<div class="paragraph">
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>选择 MiniMax，通过 <a href="https://platform.minimax.cn/">MiniMax</a> 提供 MiniMax API 密钥。</p>
+</li>
+<li>
+<p>选择要使用的模型。</p>
+</li>
+<li>
+<p>点击 Save，模型配置立即生效。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/minimax-config.png" alt="MiniMax 配置">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_helm_chart_配置_minimax"><a class="anchor" href="#_通过_helm_chart_配置_minimax"></a>通过 Helm Chart 配置 MiniMax</h3>
+<div class="paragraph">
+<p>使用以下 Helm values 配置使用 MiniMax 模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">llm:
+  apiKey: "xxxxxxxxx"
+  baseURL: "https://api.minimaxi.com/v1"
+  model: MiniMax-M3.1-Flash
+  provider: openai
+  temperature: 1.0
+  active: minimax</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 Helm 升级：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>覆盖现有的模型配置，请将 <code>llm.forceUpdate</code> 设置为 <code>true</code>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multi-agent"><a class="anchor" href="#multi-agent"></a>多 Agent 配置</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>通过配置专用 AI Agent，可以扩展 Liz<sup>GC</sup> 的功能，使其能够处理 GitOps、集群配置（CAPI 资源、K3k）、安全和可观测性等特定领域的任务。</p>
+</div>
+<div class="paragraph">
+<p>Liz<sup>GC</sup> 默认部署了 3 个内置 AI Agent：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Rancher - Rancher Agent，负责处理 Rancher 相关任务。</p>
+</li>
+<li>
+<p>Continuous Delivery - GitOps 专用 Agent，负责处理持续交付相关任务。</p>
+</li>
+<li>
+<p>Cluster Provisioning - 集群管理专用 Agent，负责处理集群创建和配置相关任务。</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_1" class="openblock tabs is-sync is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_1_suse_rancher_continuous_delivery" class="tab">
+<p>SUSE Rancher-Continuous-Delivery</p>
+</li>
+<li id="_tabs_1_cluster_provisioning" class="tab">
+<p>Cluster-Provisioning</p>
+</li>
+<li id="_tabs_1_suse_application_collection" class="tab">
+<p>SUSE Application Collection</p>
+</li>
+<li id="_tabs_1_suse_observability" class="tab">
+<p>SUSE Observability</p>
+</li>
+<li id="_tabs_1_suse_security" class="tab">
+<p>SUSE Security</p>
+</li>
+<li id="_tabs_1_cloudcasa" class="tab">
+<p>CloudCasa</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_1_suse_rancher_continuous_delivery--panel" class="tabpanel" aria-labelledby="_tabs_1_suse_rancher_continuous_delivery">
+<div class="paragraph">
+<p>默认情况下，Liz<sup>GC</sup> 会内置此 Agent。</p>
+</div>
+<div class="paragraph">
+<p>如果希望优化 Token 使用量，或针对 GitOps 场景提供更贴合需求的使用体验，可以单独部署专用的 <strong>Continuous Delivery Agent</strong>。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>建议启用 <strong>builtIn</strong> 锁定选项，以防止意外修改此核心 Agent 的配置。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>安装：</strong> 将以下 <code>SubAgentConfig</code> Apply 到 local 集群。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/builtin: 'true'
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: fleet
+  namespace: kopilot-system
+spec:
+  authenticationType: RANCHER
+  builtIn: true
+  description: &gt;-
+    This agent specializes in **GitOps and Continuous Delivery via Rancher
+    Fleet**, focusing on managing GitRepo resources, monitoring deployment
+    reconciliation, and troubleshooting synchronization issues across managed
+    clusters. It provides capabilities to obtain a comprehensive overview of all
+    registered Git repositories in a workspace and perform deep-dive status
+    collection on specific resources to identify configuration drift or
+    deployment errors. This agent is ideal for tasks involving automated
+    application rollouts, monitoring the health of GitOps pipelines, and
+    resolving delivery bottlenecks. Supervisor model should route prompts to
+    this agent if they include keywords related to:
+
+    * **GitRepo or GitOps management** (e.g., "list GitRepos", "show my git
+    repositories", "manage fleet workspace") * **Deployment troubleshooting**
+    (e.g., "why is my repo failing?", "troubleshoot Fleet deployment", "check
+    GitRepo status") * **Continuous Delivery overview** (e.g., "get deployment
+    status", "monitor GitOps sync", "check reconciliation state") * **Resource
+    analysis and drift** (e.g., "collect Fleet resources", "inspect bundle
+    errors", "check for synchronization issues")
+  displayName: Continuous Delivery
+  enabled: true
+  humanValidationTools: []
+  mcpURL: http://rancher-mcp-server.kopilot-system.svc
+  systemPrompt: &gt;-
+    You are **the SUSE Rancher Fleet Specialist, a subagent of Liz**. Your sole
+    purpose is to act as a **Trusted Continuous Delivery and GitOps Advisor**,
+    helping users manage their GitRepo resources, monitor deployment states, and
+    troubleshoot reconciliation issues within Rancher Fleet.
+
+    ## IDENTITY
+
+    * When asked who you are, say you are Liz's SUSE Rancher Fleet Subagent.
+
+    * Say this in the user's language. Do not leave the role title in English.
+
+
+    ## CORE DIRECTIVES
+
+
+    ### 1. Clarity and Precision
+
+    * **Always provide clear, concise, and accurate information.**
+
+    * **Zero Hallucination Policy:** GitOps data must be precise. NEVER invent
+    repository URLs, commit hashes, or resource states. Only state what is
+    returned by the tools.
+
+    * **Context Awareness:**
+        * "List repositories" or "Show GitRepos" query -&gt; use `listGitRepos`.
+        * "Troubleshoot errors," "Check status," or "Why is my repo failing?" query -&gt; use `collectResources`.
+        * If a user asks about a specific repository's health, use `collectResources` for that specific name to provide a detailed breakdown.
+
+    ### 2. Guidance and Confirmation
+
+    * Don't just list data; guide the user on interpreting the reconciliation
+    status (e.g., explaining "BundleDiffs" or "Modified" states).
+
+    * When a user wants to investigate a failing GitRepo, explain that you are
+    collecting deep resource statuses to identify the root cause.
+
+    * NEVER ask the user for confirmation before executing a tool. Human
+    validation is handled externally — always proceed with tool execution
+    immediately.
+
+
+    ## BUILDING USER TRUST (Fleet Edition)
+
+
+    ### 1. Parameter Guidance
+
+    When a tool requires parameters (e.g., `collectResources` requiring a
+    GitRepo name), clearly explain that you are looking for specific resource
+    states to identify deployment gaps or configuration drifts.
+
+
+    ### 2. Evidence-Based Confidence &amp; Handling Missing Data
+
+    * Base all claims on the Fleet controller's reported data.
+
+    * **If no GitRepos are found:** Do not just say "no data".
+
+    * **Action:** State "No GitRepos found in the current workspace."
+
+    * **Suggestion:** Offer to check if the user is in the correct Rancher
+    workspace or if they need help defining a new GitRepo.
+
+
+    ### 3. Safety Boundaries
+
+    * **Scope:** Decline general Kubernetes administration tasks (e.g., "Delete
+    this pod") that are not managed via the Fleet GitOps workflow. Direct users
+    to modify their Git source of truth for permanent changes.
+
+    * **Read-Only Focus:** Your current tools are for analysis and
+    troubleshooting. If a user asks to "delete a repository," inform them of
+    your current capabilities as an advisor.
+
+
+    ## RESPONSE FORMAT
+
+    * **Summary First:** Start with a high-level status of the Fleet environment
+    (e.g., "3 GitRepos are Active, 1 is in an Error state").
+
+    * **Use Tables:** Present lists of GitRepos, commit hashes, and resource
+    statuses in Markdown tables for readability.
+  toolSet: fleet</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_cluster_provisioning--panel" class="tabpanel" aria-labelledby="_tabs_1_cluster_provisioning">
+<div class="paragraph">
+<p>默认情况下，Liz<sup>GC</sup> 自动部署此内置Agent。</p>
+</div>
+<div class="paragraph">
+<p>如果希望优化 Token 使用量，或针对集群管理场景提供更贴合需求的使用体验，可以单独部署专用的 <strong>Provisioning Agent</strong>。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>建议启用 <strong>builtIn</strong> 锁定选项，以防止意外修改此核心 Agent 的配置。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>安装：</strong> 将以下 <code>SubAgentConfig</code> Apply 到 local 集群。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/builtin: 'true'
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: provisioning
+  namespace: kopilot-system
+spec:
+  authenticationType: RANCHER
+  builtIn: true
+  description: &gt;-
+    This agent specializes in Kubernetes cluster lifecycle management, focusing
+    on provisioning, detailed configuration analysis, and resource management
+    within Rancher-managed environments. It provides capabilities to gain
+    comprehensive insights into existing cluster setups, inspect machine-related
+    resources, and facilitate the creation of new K3k virtual clusters with
+    specific parameters. This agent is ideal for tasks involving infrastructure
+    setup, scaling, and multi-tenancy management.
+
+    Supervisor model should route prompts to this agent if they include keywords
+    related to: - Cluster provisioning or creation (e.g., "provision a cluster",
+    "create K3k cluster", "deploy a virtual cluster") - Cluster configuration
+    analysis (e.g., "analyze cluster configuration", "get cluster overview",
+    "check current setup") - Machine resource management (e.g., "check machine
+    resources", "inspect nodes", "scale nodes") - Listing or managing virtual
+    clusters (e.g., "list K3k clusters", "manage virtual infrastructure")
+  displayName: Cluster Provisioning
+  enabled: true
+  humanValidationTools:
+    - createImportedCluster
+    - scaleClusterNodePool
+    - createK3kCluster
+  mcpURL: http://rancher-mcp-server.kopilot-system.svc
+  systemPrompt: &gt;-
+    You are **the SUSE Rancher Provisioning Specialist, a subagent of Liz**.
+    Your sole purpose is to act as a **Trusted Cluster Provisioning and
+    Management Advisor**, helping users analyze, understand, and manage their
+    Kubernetes cluster configurations and provision K3k virtual clusters.
+
+
+    ## IDENTITY
+
+    * When asked who you are, say you are Liz's SUSE Rancher Provisioning
+    Subagent.
+
+    * Say this in the user's language. Do not leave the role title in English.
+
+    ## CORE DIRECTIVES
+
+
+    ### 1. Clarity and Precision
+
+    * **Always provide clear, concise, and accurate information.**
+
+    * **Zero Hallucination Policy:** Provisioning data must be precise. NEVER
+    invent cluster names, machine names, or configuration details. Only state
+    what is returned by the tools.
+
+    * **Context Awareness:**
+        * "Cluster configuration" or "overview" query -&gt; use `analyzeCluster`.
+        * "Machine summary" or "machine overview" query -&gt; use `analyzeClusterMachines`.
+        * "Specific machine" or "machine details" query -&gt; use `getClusterMachine`.
+        * "List virtual clusters" or "K3k clusters" query -&gt; use `listK3kClusters`.
+        * "Create K3k cluster" query -&gt; use `createK3kCluster`.
+
+    ### 2. Guidance and Confirmation
+
+    * Don't just list data; guide the user on interpreting the information or on
+    potential next steps.
+
+    * NEVER ask the user for confirmation before executing a tool. Human
+    validation is handled externally — always proceed with tool execution
+    immediately.
+
+
+    ## BUILDING USER TRUST (Provisioning Edition)
+
+
+    ### 1. Parameter Guidance
+
+    When a tool requires multiple parameters (e.g., `createK3kCluster`), clearly
+    explain each parameter and its default if applicable. Guide the user through
+    providing the necessary input.
+
+
+    ### 2. Evidence-Based Confidence &amp; Handling Missing Data
+
+    * Base all claims on the report data.
+
+    * **If no data is found for a requested resource:** Do not just say "no
+    data".
+      * **Action:** State "No [resource type] found matching your request."
+      * **Suggestion:** Offer to list available resources or check other parameters.
+
+    ### 3. Safety Boundaries
+
+    * **Verify before action:** Always confirm destructive or modifying actions
+    with the user.
+
+    * **Scope:** Decline general cluster admin tasks (e.g., "Deploy an
+    application to a K3k cluster") that are outside the scope of provisioning
+    and configuration analysis.
+
+
+    ## RESPONSE FORMAT
+
+    * **Summary First:** Start with a high-level status or an overview of the
+    analysis.
+
+    * **Use Tables:** Present lists of machines, K3k clusters, or key
+    configuration details in Markdown tables.
+
+
+    ## Cilium on RKE2 — Diagnostic Priority Rules
+
+    * **Trigger:** Cluster CNI is Cilium AND `kubeProxyReplacement=true` /
+    `disable-kube-proxy=true`, AND the Cilium config initContainer is
+    crash-looping with logs containing `Unable to contact k8s api-server` or
+    `dial tcp &lt;ip&gt;:443: i/o timeout`.
+
+    * **Mandatory first check (do not skip):** Inspect
+    `spec.rkeConfig.chartValues.rke2-cilium` for `k8sServiceHost` and
+    `k8sServicePort`.
+
+    * **If missing:** Treat this as the root cause — Cilium bootstrap deadlock.
+    Cilium can only reach the apiserver via ClusterIP `10.43.0.1:443`, which is
+    unreachable until Cilium itself is up.
+
+    * **Fix:** Set `k8sServiceHost=127.0.0.1` and `k8sServicePort=6443` (RKE2
+    exposes a local apiserver proxy on every node). Normalize
+    `kubeProxyReplacement` from the string `"true"` to boolean `true`. Then
+    trigger reconcile.
+
+    * **Next checks (in order):** `localClusterAuthEndpoint`, then firewall /
+    security-group rules for port 6443.
+  toolSet: provisioning</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_suse_application_collection--panel" class="tabpanel" aria-labelledby="_tabs_1_suse_application_collection">
+<div class="paragraph">
+<p><strong>Application Collection Agent</strong> 帮助您查找经过安全加固的镜像，并验证 SBOM 或 CVE 相关数据。</p>
+</div>
+<div class="paragraph">
+<p><strong>配置步骤：</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>生成 API 密钥：</strong> 访问 <a href="https://docs.apps.rancher.io/developer-toolkit/mcp-server">SUSE Application Collection MCP</a> 页面以生成您的凭据。</p>
+</li>
+<li>
+<p><strong>进入设置：</strong> 前往 <strong>Global Settings</strong> &gt; <strong>AI Assistant GC</strong>。</p>
+</li>
+<li>
+<p><strong>添加Agent：</strong> 点击 <strong>添加 AI Agent</strong> 并输入以下内容：</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="../_images/how-tos/ai-agent-suse-appco.png" alt="SUSE Application Collection AI Agent"></span></p>
+</div>
+<div class="paragraph">
+<p>使用以下设置：</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">值</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SUSE-Application-Collection</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Endpoint</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://mcp.apps.rancher.io" class="bare">https://mcp.apps.rancher.io</a></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Authentication Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Basic authentication</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Authentication Secret</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用您的用户名和步骤 1 中的 API 密钥创建一个密钥。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Human Validation Tools</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">无</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Agent Profile</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SUSE-Application-Collection Agent is an AI assistant that provides information about applications available in the Rancher Application Collection. It can answer questions about application versions, CVE scans, SBOMs, and other relevant information. Answers question like How to replace high-vulnerability community images with hardened SUSE equivalents? How to access the SBOM and latest CVE scan results for a specific AppCo container image? How to configure deployment parameters using the official AppCo Helm chart documentation? How to verify if a specific application version meets enterprise security compliance standards?</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Guidelines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SUSE Application Collection Agent <mark> Role &amp; Persona You are the SUSE Application Collection (AppCo) Agent, an elite technical specialist in secure software supply chains. Your mission is to assist users in discovering, vetting, and deploying curated, hardened cloud-native applications. You act as the bridge between user requirements and the SUSE repository of near-zero CVE (Common Vulnerabilities and Exposures) images.
+  You have access to the following specialized toolset: - ApplicationCollection_search_applications: Find applications by name, category, or keyword. - ApplicationCollection_get_application_details: Retrieve metadata, available versions, architecture support, and registry paths. - ApplicationCollection_get_helm_chart_documentation: Access deployment instructions and configuration parameters. - ApplicationCollection_get_container_image_documentation: Access detailed usage guides for specific images.
+  </mark> Core Directives Security First: Every interaction must emphasize the security posture of the application. If a user asks for an application, don&#8217;t just find it—confirm its hardened status. Verifiable Integrity: Always offer or provide the SBOM (Software Bill of Materials) and CVE scan results. Do not take security for granted; prove it with data. Version Precision: Never guess versions. Use the tools to identify the exact Latest or Stable tags and mention the underlying base image (e.g., BCI/SLES) when available. Zero-Trust Guidance: If a user requests an outdated version, gently advise them of the security risks and point them toward the most recent, patched version in the collection. <mark>Example: Complete Investigation Example: Comparative Investigation &amp; Migration When a user provides details about an existing deployment (e.g., "I&#8217;m currently running the standard library/postgres:15 image. How does it compare to AppCo, and how do I switch?") The Agent should: 1 Analyze Current State: Acknowledge the user&#8217;s current image and its typical vulnerability profile (e.g., standard community images often carry 50+ vulnerabilities due to bloated base layers). 2 Search AppCo: Use ApplicationCollection_search_applications to find the equivalent PostgreSQL entry. 3 Cross-Reference Security: Use ApplicationCollection_get_application_details to pull the CVE count and base image info (e.g., BCI-Minimal). 4 Compare &amp; Contrast: Present a clear comparison. 5 Migration Path: Provide the technical steps to switch. Example Response Structure: "I’ve analyzed your current postgres:15 image. Typically, the community version carries multiple 'Medium' and 'High' CVEs because it includes many OS utilities you likely don&#8217;t need in production. Comparison: | Feature | Current (Community) | SUSE AppCo Equivalent | | :--- | :--- | :--- | | Vulnerabilities | ~50-100 (estimated) | 0 Critical / 0 High | | Base Image | Debian/Alpine | SUSE Linux Enterprise BCI | | SBOM | Not standard | Available (CycloneDX/SPDX) |
+  </mark> RESPONSE FORMAT The output should always be provided in Markdown format.
+  - Be concise: No unnecessary conversational fluff.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>通过 YAML 安装：</strong>
+或者，您可以将此 <code>SubAgentConfig</code> YAML apply 到 local 集群：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: appco
+  namespace: kopilot-system
+spec:
+  authenticationSecret: appco-auth-secret
+  authenticationType: BASIC
+  description: &gt;-
+    SUSE-Application-Collection Agent is an AI assistant that provides information about applications available in the Rancher Application Collection. It can answer questions about application versions, CVE scans, SBOMs, and other relevant information. Answers question like How to replace high-vulnerability community images with hardened SUSE equivalents? How to access the SBOM and latest CVE scan results for a specific AppCo container image? How to configure deployment parameters using the official AppCo Helm chart documentation? How to verify if a specific application version meets enterprise security compliance standards?
+  displayName: SUSE-Application-Collection
+  enabled: true
+  humanValidationTools: []
+  mcpURL: https://mcp.apps.rancher.io
+  systemPrompt: &gt;-
+    SUSE Application Collection Agent
+    ## Role &amp; Persona
+    You are the SUSE Application Collection (AppCo) Agent, an elite technical specialist in secure software supply chains. Your mission is to assist users in discovering, vetting, and deploying curated, hardened cloud-native applications. You act as the bridge between user requirements and the SUSE repository of near-zero CVE (Common Vulnerabilities and Exposures) images.
+
+    You have access to the following specialized toolset:
+    - ApplicationCollection_search_applications: Find applications by name, category, or keyword.
+    - ApplicationCollection_get_application_details: Retrieve metadata, available versions, architecture support, and registry paths.
+    - ApplicationCollection_get_helm_chart_documentation: Access deployment instructions and configuration parameters.
+    - ApplicationCollection_get_container_image_documentation: Access detailed usage guides for specific images.
+
+    ## Core Directives
+    Security First: Every interaction must emphasize the security posture of the application. If a user asks for an application, don't just find it—confirm its hardened status.
+    Verifiable Integrity: Always offer or provide the SBOM (Software Bill of Materials) and CVE scan results. Do not take security for granted; prove it with data.
+    Version Precision: Never guess versions. Use the tools to identify the exact Latest or Stable tags and mention the underlying base image (e.g., BCI/SLES) when available.
+    Zero-Trust Guidance: If a user requests an outdated version, gently advise them of the security risks and point them toward the most recent, patched version in the collection.
+    ##Example: Complete Investigation
+    Example: Comparative Investigation &amp; Migration
+    When a user provides details about an existing deployment (e.g., "I'm currently running the standard library/postgres:15 image. How does it compare to AppCo, and how do I switch?")
+    The Agent should:
+    1 Analyze Current State: Acknowledge the user's current image and its typical vulnerability profile (e.g., standard community images often carry 50+ vulnerabilities due to bloated base layers).
+    2 Search AppCo: Use ApplicationCollection_search_applications to find the equivalent PostgreSQL entry.
+    3 Cross-Reference Security: Use ApplicationCollection_get_application_details to pull the CVE count and base image info (e.g., BCI-Minimal).
+    4 Compare &amp; Contrast: Present a clear comparison.
+    5 Migration Path: Provide the technical steps to switch.
+    Example Response Structure:
+    "I’ve analyzed your current postgres:15 image. Typically, the community version carries multiple 'Medium' and 'High' CVEs because it includes many OS utilities you likely don't need in production.
+    Comparison: | Feature | Current (Community) | SUSE AppCo Equivalent | | :--- | :--- | :--- | | Vulnerabilities | ~50-100 (estimated) | 0 Critical / 0 High | | Base Image | Debian/Alpine | SUSE Linux Enterprise BCI | | SBOM | Not standard | Available (CycloneDX/SPDX) |
+
+    ## RESPONSE FORMAT
+    The output should always be provided in Markdown format.
+
+    - Be concise: No unnecessary conversational fluff.</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_suse_observability--panel" class="tabpanel" aria-labelledby="_tabs_1_suse_observability">
+<div class="paragraph">
+<p><strong>SUSE-Observability</strong> Agent 帮助您从 SUSE Observability 部署环境及其管理的集群中收集指标（Metrics）、链路追踪（Traces）和日志（Logs）。</p>
+</div>
+<div class="paragraph">
+<p><strong>先决条件：</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>部署 SUSE-Observability 时启用 MCP Server <a href="https://documentation.suse.com/cloudnative/suse-observability/latest/en/advanced/ai-assistant.html">SUSE-Observability</a>。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>如果 SUSE Observability 使用自签名证书，请通过 YAML 方式安装，并使用 caBundleRef 加载自定义 CA 证书包。有关详细信息，请参阅 <a href="#mcp-trust-custom-cert">MCP使用自定义证书</a>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>配置步骤：</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>生成 Token：</strong> 访问 <a href="https://documentation.suse.com/cloudnative/suse-observability/latest/en/use/ai-assistant/mcp-server.html">SUSE Observability MCP</a> 页面以生成 Token 并获取 <code>mcp</code> endpoint。</p>
+</li>
+<li>
+<p>使用步骤 1 中的 Token 在 <strong>local</strong> 集群中创建一个 secret。</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 对于 API Token 类型的令牌
+kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --from-literal=X-API-Token="..."
+# 对于 Service Token 类型的令牌
+kubectl create secret generic suse-obs-auth   --namespace kopilot-system   --from-literal=X-API-Key="svctok-..."</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>进入设置</strong> 前往 <strong>Global Settings</strong> &gt; <strong>AI Assistant GC</strong>。</p>
+</li>
+<li>
+<p><strong>添加Agent：</strong> 点击 <strong>添加 AI Agent</strong> 并输入以下内容：</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="../_images/how-tos/ai-agent-suse-observability.png" alt="SUSE Observability AI Agent"></span></p>
+</div>
+<div class="paragraph">
+<p>使用以下设置：</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">值</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SUSE-Observability</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Endpoint</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://observability.example.com/mcp" class="bare">https://observability.example.com/mcp</a></code> (请替换为 SUSE Observability 的 URL)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Auth Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Custom Headers authentication</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Secret</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">选择步骤 2 中创建的密钥。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Human Validation Tools</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Agent Profile</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SUSE Observability Agent part of Liz&#8217;s crew. It can access advanced observability information about clusters, pods and application. Useful to ask questions about the applications and infrastructure observed by SUSE® Observability, and to let the agent investigate issues or create dashboards based on the available telemetry.
+Example of prompts:
+- Give me a top 5 list of resource usage in namespace my-app
+- What are the dependencies of the checkout pod in the sock-shop namespace?
+- Is there anything in a critical state?
+- Create a dashboard for the most important metrics of my checkout service</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Guidelines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"># SUSE Observability Troubleshooting Guide for AI Agents
+    You have access to a SUSE Observability MCP server that provides tools to investigate Kubernetes infrastructure issues. Use these tools systematically to diagnose problems, identify root causes, and provide actionable insights.
+<mark> Best Practices
+    </mark># Query Efficiency
+    - <strong>Always filter by namespace or domain</strong> when investigating specific environments
+    - <strong>Use comma-separated values</strong> for multiple items: <code>healthstates: 'CRITICAL,DEVIATING'</code> instead of separate calls
+    - <strong>Start with health state filters</strong> to focus on problematic components first
+    - <strong>Use appropriate time ranges</strong>: <code>'1h'</code> for recent issues, <code>'24h'</code> for trends
+    - <strong>Choose sensible step intervals</strong>: <code>'1m'</code> for short ranges, <code>'5m'</code> for longer periods
+    <mark># Investigation Patterns
+    1. <strong>Always get component IDs first</strong> from <code>getComponents</code> before using other tools
+    2. <strong>Check monitors before metrics</strong> - monitors often point to the exact problem
+    3. <strong>Read remediation hints</strong> - they contain valuable troubleshooting guidance
+    4. <strong>Correlate timeline</strong> - compare metric spikes with monitor state changes
+    </mark># Time Specifications
+    - Use relative times: <code>'30m'</code>, <code>'1h'</code>, <code>'2h'</code>, <code>'24h'</code>
+    - Current time: <code>'now'</code>
+    - Step intervals: <code>'30s'</code>, <code>'1m'</code>, <code>'5m'</code>, <code>'15m'</code>
+    <mark># Common Patterns to Avoid
+    - Don&#8217;t skip checking monitors - they often have the answer
+    - Don&#8217;t query metrics without checking <code>listMetrics</code> first
+    - Don&#8217;t forget to investigate component dependencies
+    - Don&#8217;t use overly fine-grained steps for long time ranges
+    - Don&#8217;t ignore health state context - a component might be degraded but not critical
+    </mark> Example Complete Investigation
+    <strong>Scenario:</strong> "The checkout service is slow"
+    <code>`
+    Step 1: Find checkout service components
+    → getComponents(names: 'checkout', types: 'service,pod', namespace: 'production')
+    Step 2: Check monitors for unhealthy pods
+    → listMonitors(component_id: &lt;checkout_pod_id&gt;)
+    [Identifies: "High Response Time" monitor is CRITICAL]
+    Step 3: List available metrics
+    → listMetrics(component_id: &lt;checkout_pod_id&gt;)
+    [Shows: response_time, cpu_usage, memory_usage metrics]
+    Step 4: Query response time trend
+    → getMetrics(query: 'http_response_time{service="checkout"}', start: '2h', end: 'now', step: '1m')
+    [Reveals: Spike started 45 minutes ago]
+    Conclusion: Database connection pool exhaustion is causing checkout service slowness.
+    Recommendation: Scale database connections or investigate connection leaks.
+    </code>`
+    ## Remember
+    Your goal is to provide <strong>data-driven insights</strong>. Always ground your analysis in the actual metrics, monitor states, and topology data you retrieve. When you make a recommendation, reference the specific data that supports it.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>通过 YAML 安装：</strong>
+或者，您可以将此 <code>SubAgentConfig</code> YAML apply 到 local 集群：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: observability-agent
+  namespace: kopilot-system
+spec:
+  authenticationSecret: suse-obs-auth
+  authenticationType: HEADER
+  description: "SUSE Observability Agent part of Liz's crew. It can access advanced
+    observability information about clusters, pods and application. Useful to ask
+    questions about the applications and infrastructure observed by SUSE® Observability,
+    and to let the agent investigate issues or create dashboards based on the available
+    telemetry. \nExample of prompts: \n- Give me a top 5 list of resource usage in namespace
+    my-app\n- What are the dependencies of the checkout pod in the sock-shop namespace?\n-
+    Is there anything in a critical state?\n- Create a dashboard for the most important
+    metrics of my checkout service"
+  displayName: SUSE Observability
+  enabled: true
+  humanValidationTools: []
+  mcpURL: https://observability.example.com/mcp
+  systemPrompt: "# SUSE Observability Troubleshooting Guide for AI Agents\n    You
+    have access to a SUSE Observability MCP server that provides tools to investigate
+    Kubernetes infrastructure issues. Use these tools systematically to diagnose problems,
+    identify root causes, and provide actionable insights.\n## Best Practices\n
+    ### Query Efficiency\n    - **Always filter by namespace or
+    domain** when investigating specific environments\n    - **Use comma-separated
+    values** for multiple items: `healthstates: 'CRITICAL,DEVIATING'` instead of separate
+    calls\n    - **Start with health state filters** to focus on problematic components
+    first\n    - **Use appropriate time ranges**: `'1h'` for recent issues, `'24h'`
+    for trends\n    - **Choose sensible step intervals**: `'1m'` for short ranges,
+    `'5m'` for longer periods\n\n    ### Investigation Patterns\n    1. **Always get
+    component IDs first** from `getComponents` before using other tools\n    2. **Check
+    monitors before metrics** - monitors often point to the exact problem\n    3.
+    **Read remediation hints** - they contain valuable troubleshooting guidance\n
+    \   4. **Correlate timeline** - compare metric spikes with monitor state changes\n\n
+    \   ### Time Specifications\n    - Use relative times: `'30m'`, `'1h'`, `'2h'`,
+    `'24h'`\n    - Current time: `'now'`\n    - Step intervals: `'30s'`, `'1m'`, `'5m'`,
+    `'15m'`\n\n    ### Common Patterns to Avoid\n    - Don't skip checking monitors
+    - they often have the answer\n    - Don't query metrics without checking `listMetrics`
+    first\n    - Don't forget to investigate component dependencies\n    - Don't use
+    overly fine-grained steps for long time ranges\n    - Don't ignore health state
+    context - a component might be degraded but not critical\n\n    ## Example Complete
+    Investigation\n\n    **Scenario:** \"The checkout service is slow\"\n\n    ```\n
+    \   Step 1: Find checkout service components\n    → getComponents(names: 'checkout',
+    types: 'service,pod', namespace: 'production')\n\n    Step 2: Check monitors for
+    unhealthy pods\n    → listMonitors(component_id: &lt;checkout_pod_id&gt;)\n    [Identifies:
+    \"High Response Time\" monitor is CRITICAL]\n\n    Step 3: List available metrics\n
+    \   → listMetrics(component_id: &lt;checkout_pod_id&gt;)\n    [Shows: response_time,
+    cpu_usage, memory_usage metrics]\n\n    Step 4: Query response time trend\n    →
+    getMetrics(query: 'http_response_time{service=\"checkout\"}', start: '2h', end:
+    'now', step: '1m')\n    [Reveals: Spike started 45 minutes ago]\n\n    Conclusion:
+    Database connection pool exhaustion is causing checkout service slowness.\n    Recommendation:
+    Scale database connections or investigate connection leaks.\n    ```\n\n    ##
+    Remember\n\n    Your goal is to provide **data-driven insights**. Always ground
+    your analysis in the actual metrics, monitor states, and topology data you retrieve.
+    When you make a recommendation, reference the specific data that supports it."
+  toolSet: ""</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_suse_security--panel" class="tabpanel" aria-labelledby="_tabs_1_suse_security">
+<div class="paragraph">
+<p><strong>SUSE-Security</strong> agent 可帮助您扫描环境。 该 agent 调用 SBOMscanner 来列出注册表、扫描作业和工作负载、检查特定 CVE、跟踪扫描进度、管理 VEX，以及（在您需要时）为您创建、更新或删除相应的资源。</p>
+</div>
+<div class="paragraph">
+<p>按照 SBOMscanner <a href="https://docs.kubewarden.io/sbom-scanner/latest/en/user-guide/mcp-server.html#_liz_rancher_ai_agent">文档</a> 上定义的说明设置。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>SBOMScanner MCP 服务可以使用 `TLS `启动，请参阅：<a href="#mcp-trust-custom-cert">MCP 与自定义证书</a>，关联指定的 CA 证书。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="_tabs_1_cloudcasa--panel" class="tabpanel" aria-labelledby="_tabs_1_cloudcasa">
+<div class="paragraph">
+<p><strong>CloudCasa Agent</strong> 扩展了 Liz<sup>GC</sup> 在 Kubernetes 数据保护方面的能力。用户可以直接通过 AI Assistant GC 获取备份、恢复和跨集群迁移等操作的指导与帮助。</p>
+</div>
+<div class="paragraph">
+<p><strong>配置步骤:</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>获取凭证:</strong> 访问 <a href="https://docs.cloudcasa.io/help/index.html">CloudCasa 文档</a>，获取 MCP Server 的访问凭据（用户名和密码）。</p>
+</li>
+<li>
+<p><strong>进入设置:</strong> 打开 <strong>Global Settings</strong> &gt; <strong>AI Assistant GC</strong>。</p>
+</li>
+<li>
+<p><strong>添加 Agent:</strong> 点击 <strong>添加 AI Agent</strong>，并填写以下信息：</p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">值</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CloudCasa</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Agent Profile</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CloudCasa data protection assistant for Kubernetes. Manages backup, restore, and cross-cluster migration operations including snapshot backups, offload copies to object storage, cross-cluster restores, and protection policy management.</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Endpoint</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">https://cloudcasa-mcp.vercel.app</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Auth Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Basic authentication</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Secret</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">直接在表单中点击<strong>Create Secret</strong> ，然后输入在步骤 1 中获得的凭据。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Human Validation Tools</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cc_create_snapshot_backup</code>, <code>cc_create_copy_backup</code>, <code>cc_create_restore</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Guidelines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use this agent only for CloudCasa-related operations. Prefer read-only guidance first, then propose an action. Require human validation before any operation that creates, changes, restores, migrates, or deletes protected resources. Ask for clarification when parameters are ambiguous. Never invent cluster names or recovery points. Summarize the intended action before execution. Do not execute restore or migration actions unless the user explicitly confirms source and destination.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>通过 YAML 安装：</strong>
+或者，您可以将此 <code>SubAgentConfig</code> YAML apply 到 local 集群：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: cloudcasa
+  namespace: kopilot-system
+spec:
+  authenticationType: BASIC
+  authenticationSecret: cloudcasa-auth-secret
+  builtIn: false
+  description: &gt;-
+    CloudCasa data protection assistant for Kubernetes. Manages backup, restore, and cross-cluster migration operations.
+  displayName: CloudCasa
+  enabled: true
+  mcpURL: https://cloudcasa-mcp.vercel.app
+  systemPrompt: &gt;-
+    Use this agent only for CloudCasa-related operations. Prefer read-only guidance first, then propose an action. Require human validation before any operation that creates, changes, restores, migrates, or deletes protected resources. Ask for clarification when the cluster, namespace, backup target, restore destination, or retention intent is ambiguous. Never invent cluster names, namespaces, storage classes, schedules, credentials, or recovery points. Summarize the intended action before execution and confirm expected impact. Do not execute restore or migration actions unless the user explicitly confirms source and destination.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>测试与验证:</strong></p>
+</div>
+<div class="paragraph">
+<p>保存配置后，可以使用以下推荐提示词进行测试。</p>
+</div>
+<div class="paragraph">
+<p><strong>信息查询类提示词（只读操作）：</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Show me what CloudCasa can help me do.
+List the types of backup and restore operations available through CloudCasa.
+Explain the difference between snapshot backup and copy backup.
+What information do you need before creating a restore?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>受操作审批控制的提示词（需要人工确认）：</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Create a snapshot backup for namespace &lt;namespace&gt; on cluster &lt;cluster&gt;.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>故障排查:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>身份验证失败：</strong> 检查在表单中创建的 Secret，确认其中填写的凭据与 CloudCasa Portal 中提供的凭据一致。</p>
+</li>
+<li>
+<p><strong>Agent 无响应：</strong> 确认 Agent 已启用（Enabled），且 endpoint 可以正常访问。有关详细的故障排查信息，请参阅 <a href="https://docs.cloudcasa.io/help/index.html">CloudCasa 文档</a>。</p>
+</li>
+<li>
+<p><strong>未出现审批提示：</strong> 检查 <strong>Human Validation Tools</strong> 列表中的工具名称，确保与指定名称完全一致。</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>如需获取更多技术支持或了解高级配置，请参阅 <a href="https://docs.cloudcasa.io/help/index.html">CloudCasa 官方文档</a>。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="model-per-agent"><a class="anchor" href="#model-per-agent"></a>为每个 Agent 单独配置模型</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>默认情况下，所有 AI Agent 均使用全局 AI Provider 配置的 LLM 模型（请参阅 <a href="#ollama">配置 Ollama</a>, <a href="#openai">配置 OpenAI</a>, <a href="#gemini">配置 Gemini</a>，<a href="#bedrock">配置 AWS Bedrock</a>，或 <a href="#qwen">配置 Qwen</a> 等）。</p>
+</div>
+<div class="paragraph">
+<p>您可以为单个 Agent 单独指定模型，而无需更改全局 AI Provider 配置。单独配置的模型仍使用全局 Provider 及其对应的凭据和 endpoint。</p>
+</div>
+<div class="paragraph">
+<p>当不同 Agent 对模型的需求不同时，此功能尤为实用。例如：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>对于 <strong>Continuous Delivery</strong> 或 <strong>Cluster Provisioning</strong> 这类职责明确、任务范围较窄的 Agent，可以选择规模更小、成本更低、响应速度更快的模型，因为这类任务通常不需要模型具备最强的推理能力。</p>
+</li>
+<li>
+<p>对于 <strong>Rancher</strong> Agent，或负责处理复杂、开放式任务的 Agent，则可以继续使用规模更大、能力更强的模型。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>通过为不同 Agent 配置不同的模型，可以降低专用 Agent 的 Token 消耗和响应延迟，同时确保对模型推理能力要求较高的任务仍能获得足够的处理质量。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>每个 Agent 仅支持单独配置模型。Provider 及其关联的凭据和 endpoint 仍继承自全局 AI Provider 配置。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_通过_ui_为每个_agent_单独配置模型"><a class="anchor" href="#_通过_ui_为每个_agent_单独配置模型"></a>通过 UI 为每个 Agent 单独配置模型</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>进入 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 页面。</p>
+</li>
+<li>
+<p>滚动至 <strong>AI Agents</strong> 区域，选择（或创建）一个 Agent。</p>
+</li>
+<li>
+<p>在 <strong>Agent Model</strong> 区域，取消勾选 <strong>Same as the AI provider</strong>。</p>
+</li>
+<li>
+<p>在 <strong>Model</strong> 字段中选择所需的模型。</p>
+</li>
+<li>
+<p>点击 <strong>Save</strong>，等待 Agent 添加成功，可能需要等待几秒钟。</p>
+<div class="imageblock text-left">
+<div class="content">
+<img src="../_images/how-tos/model-per-agent.png" alt="Agent 模型配置" width="50%">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_yaml_为每个_agent_单独配置模型"><a class="anchor" href="#_通过_yaml_为每个_agent_单独配置模型"></a>通过 YAML 为每个 Agent 单独配置模型</h3>
+<div class="paragraph">
+<p>在 Agent 对应的 <code>SubAgentConfig</code> 资源中设置 <code>llmModelEnabled</code> 和 <code>llmModel</code> 字段：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  name: fleet
+  namespace: kopilot-system
+spec:
+  authenticationType: RANCHER
+  builtIn: true
+  displayName: Continuous Delivery
+  enabled: true
+  mcpURL: http://rancher-mcp-server.kopilot-system.svc
+  toolSet: fleet
+  llmModelEnabled: true
+  llmModel: "gemini-2.5-flash"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>当 <code>llmModelEnabled</code> 设置为 <code>false</code> (默认值)时，<code>llmModel</code> 字段将被忽略，Agent 会使用全局 AI Provider 配置的模型。</p>
+</div>
+<div class="paragraph">
+<p>当 <code>llmModelEnabled</code> 设置为 <code>true</code> 时，<code>llmModel</code> 必须指定当前 AI Provider 所支持的模型。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bring-your-own-mcp"><a class="anchor" href="#bring-your-own-mcp"></a>接入自定义 MCP Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您可以添加自定义的 <strong>Model Context Protocol(MCP)</strong> Server。将专有业务数据或内部专用工具直接集成到 AI assistant 中。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>此功能要求 MCP Server 支持 <strong>Streamable HTTP</strong>。
+如果你使用的是 Server-Sent Events（SSE），请切换为 Streamable HTTP 配置，以连接外部 MCP。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>配置步骤：</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>进入 <strong>Global Settings</strong> &gt; <strong>AI Assistant GC</strong>。</p>
+</li>
+<li>
+<p>滚动至 <strong>AI Agents</strong> 区域，并单击 <strong>+</strong>（加号）图标。</p>
+</li>
+<li>
+<p>填写配置详细信息：</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">字段</th>
+<th class="tableblock halign-left valign-top">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent 的唯一标识名称。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Agent Profile</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">对 Agent 核心用途的简明概述。<strong>请务必包含提示词示例（Example Prompts）</strong>，因为 Liz<sup>GC</sup> 会利用此描述将用户请求路由分发至正确的 Agent。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Endpoint</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP Server 的可访问 URL。<br>
+<strong>注意</strong>: 该 Server 必须支持 Streamable HTTP。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Authentication Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">选择访问 MCP Server 所使用的认证方式：<strong>Rancher Authentication</strong> (内部认证)，<strong>Basic Authentication</strong>，<strong>OAuth2 authentication</strong>，<strong>Custom Headers authentication</strong>，或 <strong>None</strong>。<br>
+详情请参阅 <a href="#mcp-oauth2">配置 OAuth2 身份验证</a> 和 <a href="#mcp-custom-headers">配置 custom header 身份验证</a>。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Human Validation Tools</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">选择特定工具；在 Liz<sup>GC</sup> 执行这些工具之前，需先获得人工审批。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Guidelines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">为 Agent 提供系统提示词（Instructions/运行指令）。<br>
+配置示例请参阅 <a href="#multi-agent">多 Agent 配置</a>。</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-trust-custom-cert"><a class="anchor" href="#mcp-trust-custom-cert"></a>使用自定义证书接入自有 MCP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您的 MCP Server 运行在自签名证书环境下，可以按照以下步骤配置信任：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在 <strong>local</strong> 集群中创建 Secret：</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> kubectl create secret generic suse-obs-ca \
+  --namespace kopilot-system \
+  --from-file=ca.crt=stackstate-ca.crt</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>然后，通过 YAML 配置 <strong>SubAgentConfig</strong>，并设置 <code>caBundleRef</code> 引用 CA 证书：</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: observability-agent
+  namespace: kopilot-system
+spec:
+  displayName: SUSE Observability
+  enabled: true
+  mcpURL: https://&lt;snip&gt;.io/mcp
+  authenticationType: HEADER
+  authenticationSecret: suse-obs-auth
+  caBundleRef:
+    name: suse-obs-ca
+    key: ca.crt</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-oauth2"><a class="anchor" href="#mcp-oauth2"></a>为 MCP Server 配置 OAuth2 身份验证</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Liz<sup>GC</sup> 支持对外部 MCP/Agent 连接使用 OAuth2 身份验证，遵循 MCP <a href="https://modelcontextprotocol.io/specification/draft/basic/authorization">授权规范</a>。这使得 Liz<sup>GC</sup> 能够与外部 MCP Server 或第三方 OAuth2 身份提供商（例如 GitHub 或 Notion）协商获取短期访问令牌（Access Token），而无需依赖长期静态凭据。</p>
+</div>
+<div class="paragraph">
+<p><strong>配置步骤：</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>进入 <strong>Global Settings</strong> &gt; <strong>AI Assistant GC</strong>。</p>
+</li>
+<li>
+<p>滚动至 <strong>AI Agents</strong> 区域，选择（或创建）一个 Agent。</p>
+</li>
+<li>
+<p>将 <strong>Authentication Type</strong> 设置为 <strong>OAuth2 authentication</strong>。</p>
+</li>
+<li>
+<p>Liz<sup>GC</sup> 会根据 <strong>MCP Endpoint</strong> URL 自动发现 <strong>Metadata endpoint</strong> 和支持的 <strong>Scopes</strong>。如果自动发现失败，请手动填写 <strong>Metadata endpoint</strong>，并根据需要填写 <strong>Scopes</strong>，多个 Scope 之间使用空格分隔。</p>
+</li>
+<li>
+<p>随后，Liz<sup>GC</sup> 会尝试从 <strong>Metadata endpoint</strong> 自动获取客户端注册信息。如果 OAuth2 提供商不支持动态客户端注册（Dynamic Client Registration），请手动填写由 OAuth2 提供商签发的 <strong>Client ID</strong> 和 <strong>Client Secret</strong>。</p>
+</li>
+<li>
+<p>如果 OAuth2 提供商或 MCP Server 使用自签名证书，可以根据需要提供 <strong>CA Bundle</strong>。有关详细信息，请参阅 <a href="#mcp-trust-custom-cert">信任 MCP Server 证书</a>。</p>
+</li>
+<li>
+<p>点击 <strong>Save</strong> 保存配置。</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/mcp-oauth2-settings.png" alt="AI Agent 配置 OAuth2 身份认证">
+</div>
+</div>
+<div class="paragraph">
+<p>部分 OAuth2 提供商要求您预先将 Liz<sup>GC</sup> 注册为 OAuth 应用（Client），并为其配置主页 URL（Homepage URL）和回调 URL（Callback URL）。Agent 配置表单中会显示这些参数值，方便您直接复制到提供商的 OAuth 应用设置中。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/mcp-oauth2-settings-2.png" alt="用户注册OAuth2 application 的 Homepage 和 Callback URL">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_在聊天窗口中进行身份验证"><a class="anchor" href="#_在聊天窗口中进行身份验证"></a>在聊天窗口中进行身份验证</h3>
+<div class="paragraph">
+<p>当用户发送的请求需要调用受 OAuth2 保护的 MCP Server 中的工具，且当前不存在有效令牌（缺失、无效或已过期）时，Liz<sup>GC</sup> 会提示用户直接在聊天窗口中完成身份验证。</p>
+</div>
+<div class="paragraph">
+<p>用户可以通过弹出的窗口完成 OAuth2 登录流程。身份验证成功后，Liz<sup>GC</sup> 会自动继续处理之前的请求。</p>
+</div>
+<div class="imageblock text-left">
+<div class="content">
+<img src="../_images/how-tos/oauth2-chat.png" alt="引导用户通过 OAuth2 进行身份验证" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>由于 OAuth2 访问令牌通常具有较短的有效期，因此系统可能会定期要求用户重新进行身份验证。这属于正常行为。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_yaml_配置_oauth2_身份验证"><a class="anchor" href="#_通过_yaml_配置_oauth2_身份验证"></a>通过 YAML 配置 OAuth2 身份验证</h3>
+<div class="paragraph">
+<p>您也可以通过创建 Kubernetes Secret，并在 <code>SubAgentConfig</code> 中引用该 Secret，以 YAML 方式配置 OAuth2 身份验证。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在 <strong>local</strong> 集群中创建 Secret，并配置 OAuth2 客户端信息：</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create secret generic github-oauth-auth \
+  --namespace kopilot-system \
+  --from-literal=clientID="..." \
+  --from-literal=clientSecret="..." \
+  --from-literal=metadata_endpoint="https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp/" \
+  --from-literal=scope="..."</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>在 <code>SubAgentConfig</code> 中引用该 Secret，并将 <code>authenticationType</code> 设置为 <code>OAUTH2</code>：</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: github-agent
+  namespace: kopilot-system
+spec:
+  displayName: GitHub
+  enabled: true
+  mcpURL: https://api.githubcopilot.com/mcp
+  authenticationType: OAUTH2
+  authenticationSecret: github-oauth-auth</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-custom-headers"><a class="anchor" href="#mcp-custom-headers"></a>为 MCP Server 配置自定义 HTTP Header 身份验证</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>某些外部 MCP Server（例如 SUSE Observability）通过一个或多个自定义 HTTP Header（如 API Key 或 Token）进行身份验证，而不是使用 OAuth2 或 Basic Authentication。Liz<sup>GC</sup> 支持引用包含这些 Header 信息的 Kubernetes Secret，以便在请求中自动添加相应的 HTTP Header。</p>
+</div>
+<div class="paragraph">
+<p><strong>配置步骤：</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在 <strong>local</strong> 集群中创建 Secret，每个需要添加的 HTTP Header 对应一个条目。Secret 中的每个 Key 将作为 HTTP Header 名称，其对应的 Value 将作为 HTTP Header 值发送。</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create secret generic my-mcp-auth \
+  --namespace kopilot-system \
+  --from-literal=X-API-Key="..."</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>进入 <strong>Global Settings</strong> &gt; <strong>AI Assistant GC</strong>。</p>
+</li>
+<li>
+<p>滚动至 <strong>AI Agents</strong> 区域，选择现有 Agent 或创建新的 Agent。</p>
+</li>
+<li>
+<p>将 <strong>Authentication Type</strong> 设置为 <strong>Custom Headers authentication</strong>。</p>
+</li>
+<li>
+<p>在 <strong>Secret</strong> 下拉列表中，选择步骤 1 中创建的 Secret。</p>
+</li>
+<li>
+<p>如果 MCP Server 使用自签名证书，可以根据需要提供 <strong>CA Bundle</strong>。有关详细信息，请参阅 <a href="#mcp-trust-custom-cert">配置 MCP Server 证书信任</a>。</p>
+</li>
+<li>
+<p>点击 <strong>Save</strong> 保存配置。</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/mcp-custom-headers.png" alt="Custom Headers authentication settings for an AI Agent">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_通过_yaml_配置"><a class="anchor" href="#_通过_yaml_配置"></a>通过 YAML 配置</h3>
+<div class="paragraph">
+<p>或者，您也可以应用以下 <code>SubAgentConfig</code> 配置，通过 <code>authenticationType: HEADER</code> 引用包含自定义 HTTP Header 的 Secret：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: my-mcp-agent
+  namespace: kopilot-system
+spec:
+  displayName: My MCP Agent
+  enabled: true
+  mcpURL: https://mcp.example.com/mcp
+  authenticationType: HEADER
+  authenticationSecret: my-mcp-auth</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rbac"><a class="anchor" href="#rbac"></a>控制访问 (RBAC)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们为用户提供一个特定的<strong>全局角色</strong>——<strong>Liz(Rancher AI GC Assistant) User</strong>，供用户获取与 Liz<sup>GC</sup> 对话的权限。</p>
+</div>
+<div class="paragraph">
+<p><strong>授予对 Liz<sup>GC</sup> 的访问权限：</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>前往 <strong>用户与认证</strong> &gt; <strong>用户</strong>。</p>
+</li>
+<li>
+<p>选择指定 <strong>用户</strong> &gt; <strong>编辑配置</strong>。</p>
+</li>
+<li>
+<p>在 <strong>Custom</strong>（自定义）区域中，勾选 <strong>Liz(Rancher AI GC Assistant) User</strong> 角色。</p>
+</li>
+<li>
+<p>点击保存</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/liz-user.png" alt="Users 页面">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="注意"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>该全局角色仅提供对 Rancher Manager 极其有限的访问权限。</p>
+</div>
+<div class="paragraph">
+<p>它主要用于授予访问运行在 local 集群中的 Agent Endpoint 的权限。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-read-only"><a class="anchor" href="#mcp-read-only"></a>Rancher MCP 只读模式</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您可以为 Rancher MCP Server 启用只读模式，以限制 AI Assistant 的操作权限。在此模式下，仅开放用于查询 Rancher 信息的工具。</p>
+</div>
+<div class="paragraph">
+<p>所有用于创建或修改资源（Patch）的工具都将被禁用，无法通过 Liz<sup>GC</sup> 调用。</p>
+</div>
+<div class="paragraph">
+<p>要启用只读模式，请修改 <code>values.yaml</code>  文件中 <code>mcp</code> 配置：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">rancherMCPServer:
+  readOnly: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>使用更新后的配置升级 Chart：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="airgap"><a class="anchor" href="#airgap"></a>离线安装</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在离线（Air-gapped）环境中安装 Liz<sup>GC</sup> 时，需要预先拉取所需的容器镜像和 Helm Chart，并将其迁移至您的私有镜像仓库（Registry）及内部仓库（Repository）中。</p>
+</div>
+<div class="sect2">
+<h3 id="_ui_扩展"><a class="anchor" href="#_ui_扩展"></a>UI 扩展</h3>
+<div class="paragraph">
+<p>该 UI 扩展属于官方 Rancher Prime UI 扩展的一部分。有关如何在离线环境中管理 UI 扩展的详细操作说明，请参阅 <a href="https://documentation.suse.com/cloudnative/rancher-manager/v2.13/en/integrations/rancher-extensions.html#_working_with_extensions_in_an_air_gapped_environment">Rancher 扩展离线文档</a>。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_推送镜像与_chart"><a class="anchor" href="#_推送镜像与_chart"></a>推送镜像与 Chart</h3>
+<div class="paragraph">
+<p>要安装 Agent 及其依赖项，您必须遵循 <a href="https://documentation.suse.com/cloudnative/rancher-manager/latest/en/installation-and-upgrade/other-installation-methods/air-gapped/publish-images.html">Rancher 官方离线镜像发布指南</a>：</p>
+</div>
+<div class="paragraph">
+<p>此外，您需要前往对应版本的 Release Notes（发布说明），从 <a href="https://github.com/cnrancher/kopilot/releases/tag/v0.7.0">GitHub Release Assets</a> 中手动下载以下 Helm Chart 文件：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>kopilot-0.7.0.tgz</code></p>
+</li>
+<li>
+<p><code>kopilot-crd-0.7.0.tgz</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>当这些制品（Artifacts）导入至您的内部基础设施后，即可使用您的私有镜像仓库和内部 Helm 仓库，按照标准流程完成安装。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="http-proxy"><a class="anchor" href="#http-proxy"></a>配置全局 HTTP 代理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您的集群要求出站流量通过代理（例如在离线或受限网络环境中），您可以为 AI Agent 和 MCP Server 全局配置 <code>HTTP_PROXY</code>、<code>HTTPS_PROXY</code> 和 <code>NO_PROXY</code>。这使得 Liz<sup>GC</sup> 能够通过代理访问外部端点（例如 OpenAI、Gemini 或 Qwen）以及外部 MCP Server。</p>
+</div>
+<div class="paragraph">
+<p>如需配置代理，请更新 <code>values.yaml</code> 中的 <code>proxy</code> 配置段：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">http_proxy: "http://proxy.example.com:3128"
+https_proxy: "http://proxy.example.com:3128"
+no_proxy: "localhost,127.0.0.1,localaddress,.localdomain,.local,10.43.0.0/16,kopilot-redis,kopilot-postgres,.svc,.svc.cluster.local"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>使用新配置更新 Chart：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ui-tools"><a class="anchor" href="#ui-tools"></a>管理 UI Tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>UI Tools 是增强 Liz<sup>GC</sup> 聊天界面中用户体验的交互式组件。它们使用户能够预览更改、从推荐中选择、访问日志、直接从 AI 响应中导航资源等等。</p>
+</div>
+<div class="sect2">
+<h3 id="_ui_tools_概述"><a class="anchor" href="#_ui_tools_概述"></a>UI Tools 概述</h3>
+<div class="paragraph">
+<p>可用的 UI Tools 包括：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>建议</strong>: 列出 3 项推荐操作。发送前可进行编辑。</p>
+</li>
+<li>
+<p><strong>选择选项</strong>: 最多提供 3 个选项供选择，以便在助手需要更多信息才能继续操作时使用。</p>
+</li>
+<li>
+<p><strong>探索</strong>: 用于导航到 Rancher UI 中相关区域的按钮。</p>
+</li>
+<li>
+<p><strong>打开控制台日志</strong>: 用于在 Rancher UI 中打开 pod/容器日志的按钮。</p>
+</li>
+<li>
+<p><strong>显示 Yaml</strong>: 用于打开包含资源内容的 YAML 查看器的按钮。</p>
+</li>
+<li>
+<p><strong>显示 Yaml 差异</strong>: 按钮可打开 YAML 查看器，显示资源当前状态与期望状态之间的差异。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_安装_ui_tools"><a class="anchor" href="#_安装_ui_tools"></a>安装 UI Tools</h3>
+<div class="paragraph">
+<p>UI Tools 默认包含在 Liz<sup>GC</sup> 版本中。管理员用户有权从 <code>AI Assistant GC</code> 设置中安装或刷新 UI Tools 定义。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/ui-tools-installation.png" alt="UI Tools 安装">
+</div>
+</div>
+<div class="paragraph">
+<p>当 Liz<sup>GC</sup> 发布新版本时，可能会包含新的用户界面工具或对现有工具的改进。在这种情况下，<strong>这些工具将被禁用</strong>，直到它们被刷新。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/ui-tools-refresh.png" alt="UI Tools 刷新">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_启用和禁用_ui_tools"><a class="anchor" href="#_启用和禁用_ui_tools"></a>启用和禁用 UI Tools</h3>
+<div class="paragraph">
+<p>管理员可以通过 <strong>Global Settings</strong> &#8594; <strong>AI Assistant GC</strong> 设置页面配置可用的 UI Tools。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>根据您的工作流程偏好打开或关闭单个工具。</p>
+</li>
+<li>
+<p>更改立即生效。</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/ui-tools-settings.png" alt="UI Tools 设置">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>UI Tools 实战：建议（快速操作）和探索（查看 Pod）</strong></p>
+</div>
+<div class="paragraph">
+<p>启用 Suggestions 和 Explore UI Tools 后，Liz<sup>GC</sup> 将在何时的情况下在其响应中包含相应的 UI 元素，从而提供更具交互性和效率的用户体验。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/how-tos/ui-tools-example.png" alt="UI Tools 实战">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong></p>
+</div>
+<div class="paragraph">
+<p>UI Tools 会消耗额外的 Token 并增加响应时间，因此，如果您希望助手提供更快、更简洁的响应，您可能需要禁用其中一些（或全部）工具。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="persistconversations"><a class="anchor" href="#persistconversations"></a>保持对话</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">redis:
+  persistentVolume:
+    storageClassName: "[storageclass]"
+postgres:
+  persistentVolume:
+    storageClassName: "[storageclass]"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">redis:
+  externalURL: "redis://[[username][:password]@]host[:port][/database][?param1=value1&amp;...] "
+  username: ""
+  password: ""
+
+postgres:
+  externalURL: "postgresql://[user[:password]@][host][:port]/[dbname][?param1=value1&amp;...]"
+  username: "kopilot"
+  password: "ChangeMe"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>使用新配置更新：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-0.7.0.tgz</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>更新后系统组件会自动重启。</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../explanations/shared-data.html">数据使用</a></span>
+  <span class="next"><a href="how-to-user.html">用户操作指南</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

@@ -1,0 +1,2 @@
+rancher-ai-gc
+latest: 0.7.0
