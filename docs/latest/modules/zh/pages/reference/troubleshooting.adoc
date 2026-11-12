@@ -288,3 +288,18 @@ extraEnv:
   - name: KOPILOT_RANCHER_SKIP_TLS
     value: "true"
 ----
+
+== 点击 Rancher UI 最左侧全局菜单，导致会话详情页面重新加载
+
+在 Rancher v2.13.6 之前版本，打开 SUSE AI Assistant GC 会话详情页面后，切换最左侧全局菜单时（不同集群页面之间切换除外），会导致会话详情页面重新加载。
+
+image::reference/rancher-ui-reload-chat-session.png[Rancher]
+
+=== 原因
+
+切换最左侧全局菜单时，导致页面布局变更，AI Assistant 窗口被销毁，并重新初始化，导致会话详情页面重新加载。
+这个问题在 Rancher v2.13.6 版本中，由上游开源版本 UI 修复， 这里是对应的 https://github.com/rancher/dashboard/issues/15848[issue] 和 https://github.com/rancher/dashboard/pull/17371[PR]
+
+=== 解决方法
+
+升级 Rancher 版本到 v2.13.6 或更高版本。
