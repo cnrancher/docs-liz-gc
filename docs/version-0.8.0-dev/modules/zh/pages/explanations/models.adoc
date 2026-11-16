@@ -1,0 +1,89 @@
+include::partial$variables.adoc[]
+
+= 已验证模型
+:page-languages: [zh]
+:revdate: 2026-11-03
+:page-revdate: {revdate}
+:description: 对已验证模型的说明。
+
+以下模型均已通过针对性兼容性测试，确认可与 Liz^GC^ 无缝集成。
+
+[cols="1,3", options="header"]
+|===
+| 模型提供商 | 已验证模型
+
+| OpenAI
+a| * gpt-5.5
+* gpt-5.4
+* gpt-5.4-mini
+* gpt-5.2
+* gpt-4.1-mini
+
+| Gemini
+a| * gemini-3.8-flash
+* gemini-3.6-flash
+* gemini-3.5-flash
+* gemini-3.5-flash-lite
+* gemini-3.1-flash-lite
+* gemini-3-flash
+* gemini-2.5-flash
+* gemini-2.5-pro
+
+| Ollama
+a| * qwen3:8b
+* qwen3.8-27b
+
+| AWS Bedrock
+a| * global.anthropic.claude-haiku-5-5
+* global.anthropic.claude-sonnet-5-5
+* global.anthropic.claude-opus-5-5
+* global.openai.gpt-6.1-sol
+* global.openai.gpt-6-astra
+* global.openai.gpt-6-luna
+* global.openai.gpt-5.6-terra
+* global.anthropic.claude-opus-4-5-20251101-v1:0
+* global.anthropic.claude-sonnet-4-6
+* global.anthropic.claude-haiku-4-5-20251001-v1:0
+
+| Qwen
+a| * qwen3.8-max
+* qwen3.8-flash
+* qwen3.7-flash
+* qwen3.7-plus
+* qwen3.7-max
+* qwen3.6-plus
+* qwen3.6-flash
+* qwen-plus
+
+| Deepseek
+a| * deepseek-flash
+* deepseek-v4-pro
+
+| MiMo
+a| * mimo-v2.6-pro
+* mimo-v2.6-flash
+* mimo-v2.6-pro-ultraspeed
+
+| Kimi
+a| * kimi-k3
+* kimi-k2.7-code
+* kimi-k2.7-code-highspeed
+* kimi-k2.6
+
+| GLM
+a| * glm-5.3
+* glm-5.3-flash
+* glm-5.2
+* glm-5.1
+
+| MiniMax
+a| * MiniMax-M3.1-Flash
+* MiniMax-M3
+|===
+
+[NOTE]
+====
+任何支持 link:https://ollama.com/search?c=tools[tool calls] 的模型都应该是兼容的。
+
+如需支持新模型，请联系 Rancher AI GC 团队。
+====
