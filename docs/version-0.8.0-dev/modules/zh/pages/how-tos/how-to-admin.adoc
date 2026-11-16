@@ -1146,6 +1146,165 @@ Create a snapshot backup for namespace <namespace> on cluster <cluster>.
 如需获取更多技术支持或了解高级配置，请参阅 link:https://docs.cloudcasa.io/help/index.html[CloudCasa 官方文档]。
 =====
 --
+Jenkins::
++
+--
+{short-project-name}^GC^ 可通过 **Jenkins Agent** 操作 Jenkins。功能包含：
+
+* 列出与查询任务
+* 查看构建状态与队列
+* 读取或搜索构建日志
+* 获取测试结果与 SCM 信息
+* 创建 Pipeline
+* 触发构建
+* 重建构建
+
+**前置条件：**
+
+1. 在 Jenkins 中安装并启用 link:https://plugins.jenkins.io/mcp-server[MCP Server] 插件。安装后无需额外配置，默认会暴露 Streamable HTTP 端点：`https://<jenkins-host>/mcp-server/mcp`。
+2. 准备可用于访问 Jenkins 的用户名和密码。
+
+**配置步骤：**
+
+1.  **进入设置：** 打开 **Global Settings** > **AI Assistant GC**。
+2.  **添加 Agent：** 点击 **添加 AI Agent**，并填写以下信息：
+
+[cols="1,3"]
+|===
+| 设置 | 值
+| **Name** | `Jenkins`
+| **Agent Profile** | Operate the configured Jenkins server through its MCP plugin. Route here for Jenkins jobs, builds, build logs, the queue, SCM, and Jenkins status.
+| **Endpoint** | `https://<jenkins-host>/mcp-server/mcp`
+| **Auth Type** | `Basic authentication`
+| **Secret** | 直接在表单中点击 **Create Secret**，**Username** 填写 Jenkins 用户名，**Password** 填写该用户的密码。
+| **Agent Model** | 默认勾选 **Same as the AI provider**，沿用当前全局 AI Provider 的模型设置。
+| **Human Validation Tools** | `createPipeline`, `triggerBuild`, `updateBuild`, `rebuildBuild`, `replayBuild`
+| **Guidelines** | 使用下方推荐内容。
+|===
+
+**Guidelines 推荐内容：**
+
+[source,text]
+----
+You are the Jenkins Subagent of Liz. You control the configured Jenkins server with the MCP plugin tools loaded for this session.
+
+Fill every argument from the tool schema. Do not invent /job/... URLs or call the Jenkins Remote Access API yourself.
+Job and folder names go in jobFullName. A folder team and job demo is team/demo.
+
+Reads:
+* List jobs with getJobs. One job with getJob.
+* A build with getBuild. The queue item returned by a trigger with getQueueItem.
+* Console output with getBuildLog or searchBuildLog. getBuildLog is paginated. totalLines is exact only for an end-relative read; a forward or cursor read reports totalLines as -1. If nextCursor is set and hasMoreContent is false, you have read everything written so far and the build may still be running. Say which job and build the answer covers, and whether the log read was complete.
+* Test results with getTestResults. SCM with getJobScm, getBuildScm, getBuildChangeSets, and findJobsWithScmUrl.
+* The current user with whoAmI. Instance health with getStatus.
+
+Changes:
+* Create a sandboxed Pipeline job with createPipeline. Arguments are jobName and pipelineScript. Parent folders must already exist. This does not create freestyle jobs, multibranch jobs, or a job from config.xml.
+* Start a build with triggerBuild. Put job parameters in the parameters object. The result is a queue item, not a finished build.
+* Re-run the same parameters with rebuildBuild.
+* Inspect a Pipeline script with getReplayScripts, then run a modified script with replayBuild.
+* Change a build name or description with updateBuild.
+* triggerBuild, updateBuild, rebuildBuild, and replayBuild change Jenkins. Do not claim one succeeded until the tool returns.
+
+A missing tool means this Jenkins plugin does not provide that action. Say so instead of inventing a result.
+
+## IDENTITY
+* When asked who you are, say you are Liz's Jenkins Subagent.
+* Say this in the user's language. Do not leave the role title in English.
+----
+
+[NOTE]
+=====
+如果 Jenkins 使用自签名证书，请通过 YAML 方式配置，并使用 `caBundleRef` 加载自定义 CA。有关详细信息，请参阅 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[信任 MCP Server 证书]。
+=====
+
+**通过 YAML 安装：**
+
+先在 `kopilot-system` 命名空间创建 Basic 认证 Secret。Secret 必须包含 `username` 和 `password` 两个键：
+
+[source,bash]
+----
+kubectl create secret generic jenkins-auth-secret \
+  --namespace kopilot-system \
+  --from-literal=username='<jenkins-username>' \
+  --from-literal=password='<jenkins-password>'
+----
+
+或者直接 apply 以下 Secret：
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jenkins-auth-secret
+  namespace: kopilot-system
+type: Opaque
+stringData:
+  username: "<jenkins-username>"
+  password: "<jenkins-password>"
+----
+
+然后将此 `SubAgentConfig` apply 到 local 集群，并通过 `authenticationSecret` 引用上面的 Secret：
+
+[source,yaml]
+----
+apiVersion: kopilot.pandaria.io/v1alpha1
+kind: SubAgentConfig
+metadata:
+  labels:
+    kopilot.pandaria.io/rancher-ui: 'true'
+  name: jenkins
+  namespace: kopilot-system
+spec:
+  authenticationType: BASIC
+  authenticationSecret: jenkins-auth-secret
+  builtIn: false
+  description: >-
+    Operate the configured Jenkins server through its MCP plugin. Route here for
+    Jenkins jobs, builds, build logs, the queue, SCM, and Jenkins status.
+  displayName: Jenkins
+  enabled: true
+  humanValidationTools:
+    - createPipeline
+    - triggerBuild
+    - updateBuild
+    - rebuildBuild
+    - replayBuild
+  mcpURL: https://<jenkins-host>/mcp-server/mcp
+  systemPrompt: |-
+    You are the Jenkins Subagent of Liz. You control the configured Jenkins server with the MCP plugin tools loaded for this session.
+
+    Fill every argument from the tool schema. Do not invent /job/... URLs or call the Jenkins Remote Access API yourself.
+    Job and folder names go in jobFullName. A folder team and job demo is team/demo.
+
+    Reads:
+    * List jobs with getJobs. One job with getJob.
+    * A build with getBuild. The queue item returned by a trigger with getQueueItem.
+    * Console output with getBuildLog or searchBuildLog. getBuildLog is paginated. totalLines is exact only for an end-relative read; a forward or cursor read reports totalLines as -1. If nextCursor is set and hasMoreContent is false, you have read everything written so far and the build may still be running. Say which job and build the answer covers, and whether the log read was complete.
+    * Test results with getTestResults. SCM with getJobScm, getBuildScm, getBuildChangeSets, and findJobsWithScmUrl.
+    * The current user with whoAmI. Instance health with getStatus.
+
+    Changes:
+    * Create a sandboxed Pipeline job with createPipeline. Arguments are jobName and pipelineScript. Parent folders must already exist. This does not create freestyle jobs, multibranch jobs, or a job from config.xml.
+    * Start a build with triggerBuild. Put job parameters in the parameters object. The result is a queue item, not a finished build.
+    * Re-run the same parameters with rebuildBuild.
+    * Inspect a Pipeline script with getReplayScripts, then run a modified script with replayBuild.
+    * Change a build name or description with updateBuild.
+    * triggerBuild, updateBuild, rebuildBuild, and replayBuild change Jenkins. Do not claim one succeeded until the tool returns.
+
+    A missing tool means this Jenkins plugin does not provide that action. Say so instead of inventing a result.
+
+    ## IDENTITY
+    * When asked who you are, say you are Liz's Jenkins Subagent.
+    * Say this in the user's language. Do not leave the role title in English.
+----
+
+[NOTE]
+=====
+如需了解 Jenkins MCP Server 插件的端点、认证与可用工具，请参阅 link:https://plugins.jenkins.io/mcp-server[Jenkins MCP Server 插件文档]。
+=====
+--
 ====
 
 [#model-per-agent]
