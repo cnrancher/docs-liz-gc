@@ -2,7 +2,7 @@ include::partial$variables.adoc[]
 
 = 快速入门
 :page-languages: [zh]
-:revdate: 2026-11-03
+:revdate: 2026-11-23
 :page-revdate: {revdate}
 :description: 介绍 {short-project-name}^GC^ 的两种安装方式：集成到 Rancher UI，或使用独立 UI。
 
@@ -10,8 +10,6 @@ include::partial$variables.adoc[]
 
 * *集成到 Rancher UI*：需要与 Rancher 集成时使用。
 * *使用独立 UI*：只使用 {short-project-name}^GC^ 功能、不需要与 Rancher 集成时使用。
-
-两种方式的安装步骤只在最后一步 <<helm-install-liz-gc,安装 {short-project-name}^GC^>> 时，使用的 Helm 参数不同。
 
 == 先决条件
 
@@ -26,9 +24,10 @@ include::partial$variables.adoc[]
 
 {short-project-name}^GC^ 当前支持的 LLM 厂商与模型请参考 xref:/explanations/models.adoc[已验证模型]。安装时需提供对应厂商的 API Key。
 
-== 安装 cert-manager
+== 安装 cert-manager（可选）
 
-{short-project-name}^GC^ 可使用 cert-manager 签发和管理 TLS 证书。
+仅使用独立 UI 部署模式时，需要使用 cert-manager 签发和管理 TLS 证书。集成到 Rancher UI 的部署模式无需单独配置 SSL/TLS，可跳过本节。
+
 若集群中已安装 cert-manager，可跳过本节，继续 <<download-helm-chart,下载 Helm Chart>>。
 
 [source,bash]
@@ -47,11 +46,12 @@ helm install cert-manager jetstack/cert-manager \
 
 == 安装 local-path-provisioner
 
-安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者（也可使用其他 provisioner）。
+安装 https://github.com/rancher/local-path-provisioner[local-path-provisioner] 作为 StorageClass 提供者，也可以使用其他可用的 StorageClass provisioner。
 
 [source,bash]
 ----
-kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.36/deploy/local-path-storage.yaml
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+
 kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ----
 
@@ -90,7 +90,6 @@ helm upgrade --install \
 helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
-    --set bootstrapPassword="<your bootstrap password>" \
     --set llm.active=gemini \
     --set llm.provider=google_genai \
     --set llm.apiKey="<your llm api key>" \
