@@ -1515,9 +1515,19 @@ UI Tools 会消耗额外的 Token 并增加响应时间，因此，如果您希�
 
 
 [#persistconversations]
-== 保持对话
+== 缓存和数据库配置
 
-默认情况下，Liz GC 使用内置的 PostgreSQL 数据库和 Redis 保存聊天记录。
+Liz GC 使用 Redis 和 PostgreSQL 分别提供数据缓存和持久化存储能力。
+
+根据实际环境，可以选择以下任一部署方式：
+
+* **使用外部服务**： 如果已有可用的 Redis 和 PostgreSQL 服务，可以直接配置 Liz GC 接入外部服务，无需部署内置服务。
+* **使用内置服务**： 如果没有外部 Redis 和 PostgreSQL，可以使用 Liz GC 自带的 Redis 和 PostgreSQL 进行快速部署。内置服务的数据持久化依赖 Kubernetes 存储，需要在 Local 集群中配置 CSI，以提供持久化存储能力。
+
+=== 使用内置服务
+
+默认情况下，Liz GC 使用内置的 Redis 和 PostgreSQL 服务。需要为其配置持久化存储卷（PersistentVolume），具体配置如下：
+
 [source,yaml]
 ----
 redis:
@@ -1528,8 +1538,9 @@ postgres:
     storageClassName: "[storageclass]"
 ----
 
+=== 使用外部服务
 
-要使用外部自定义的 PostgreSQL 数据库和 Redis，请更新storage以下部分values.yaml：
+如果已有可用的 Redis 和 PostgreSQL 服务，可以通过修改 values.yaml 配置接入外部服务：
 
 [source,yaml]
 ----
@@ -1544,12 +1555,13 @@ postgres:
   password: "ChangeMe"
 ----
 
+根据实际环境填写外部 Redis 和 PostgreSQL 的连接地址及认证信息。
 
-使用新配置更新：
+配置完成后，使用新的 values.yaml 更新：
 
 [source,bash,subs="attributes+"]
 ----
 helm upgrade --install --namespace kopilot-system --create-namespace -f values.yaml kopilot ./kopilot-{page-version}.tgz
 ----
 
-更新后系统组件会自动重启。
+更新完成后，相关系统组件会自动重启，并使用配置的外部服务。
