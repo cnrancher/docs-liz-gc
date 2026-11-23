@@ -1,12 +1,12 @@
 include::partial$variables.adoc[]
 
-= Liz^GC^ 安装指南
+= {short-project-name}^GC^ 安装指南
 :page-languages: [zh]
 :revdate: 2026-08-27
 :page-revdate: {revdate}
-:description: 介绍 Liz^GC^ 的更多 Helm 安装参数
+:description: 介绍 {short-project-name}^GC^ 的更多 Helm 安装参数
 
-本文介绍如何在已有的 Kubernetes 集群中安装 Liz^GC^ 应用，并介绍相关的安装参数。
+本文介绍如何在已有的 Kubernetes 集群中安装 {short-project-name}^GC^ 应用，并介绍相关的安装参数。
 
 == 常规选项
 
@@ -20,7 +20,7 @@ include::partial$variables.adoc[]
 
 | hostname
 | ""
-| string - Liz^GC^ 访问的完全域名
+| string - {short-project-name}^GC^ 访问的完全域名
 
 | llm.provider
 | "google_genai"
@@ -68,7 +68,11 @@ include::partial$variables.adoc[]
 
 == TLS 选项
 
-将 Liz^GC^ 安装在 Kubernetes 集群中时，TLS 工作由集群的 ingress 控制器负责处理，用户需要选择要使用的 ingress 控制器。
+本节配置仅适用于使用独立 UI 的部署模式。
+
+{short-project-name}^GC^ 使用 Kubernetes Ingress 提供 HTTPS 访问，TLS 由集群的 Ingress 控制器负责处理。用户需要选择使用的 Ingress 控制器，并根据实际情况配置 TLS。
+
+集成到 Rancher UI 时，HTTPS 访问和证书管理由 Rancher 负责，{short-project-name}^GC^ 无需单独配置 TLS，以下选项无需配置。
 
 [cols="1,1,3", options="header"]
 |===
@@ -89,7 +93,11 @@ include::partial$variables.adoc[]
 
 == SSL 配置
 
-Liz^GC^ 默认需要配置 SSL/TLS 协议。
+{short-project-name}^GC^ 默认需要配置 SSL/TLS 协议。
+
+本节仅适用于使用独立 UI 的部署模式。集成到 Rancher UI 时，{short-project-name}^GC^ 无需单独配置 SSL/TLS。
+
+独立 UI 模式下，Liz GC 需要配置 SSL/TLS，以保护 WebSocket 和 HTTPS 通信。
 
 [NOTE]
 ====
@@ -98,12 +106,14 @@ Liz^GC^ 默认需要配置 SSL/TLS 协议。
 
 ====
 
-关于 Liz^GC^ SSL 配置有两种推荐方案：
+独立 UI 模式支持以下两种证书配置方案：
 
-* Liz^GC^ 生成的 TLS 证书：在这种情况下，您需要将 `cert-manager` 安装到集群中，Liz^GC^ 使用 `cert-manager` 来颁发和维护其证书，Liz^GC^ 会自行生成自己的 CA 证书，并使用该 CA 来签名证书，后续 `cert-manager` 就负责管理该证书。
-* 使用您自己的证书：这种方案允许您使用自己拥有的、由公共或私有CA签名的证书。Liz^GC^ 会使用该证书来保护 WebSocket 和 HTTPS 流量。在这种情况下，您需要将该证书（以及相关的密钥）以 PEM 格式上传，文件名为 `tls.crt` 和 `tls.key`。如果您使用的是私有CA，那么还需要上传该证书，因为您的节点可能不信任这个私有 CA。
+* **使用 {short-project-name}^GC^ 生成的 TLS 证书**：需要在集群中安装 `cert-manager`。{short-project-name}^GC^ 会自动生成 CA 证书，并使用该 CA 签发 TLS 证书，后续由 cert-manager 负责证书管理。
+* **使用自定义证书**：可以使用由公共或私有 CA 签发的证书。需要将证书及对应的私钥以 PEM 格式上传，文件名分别为 tls.crt 和 tls.key。如果使用私有 CA，还需要提供对应的 CA 证书，以确保相关节点能够信任该证书。
 
-=== Liz^GC^ 生成 TLS 证书
+=== {short-project-name}^GC^ 自动生成 TLS 证书
+
+以下示例适用于独立 UI 部署模式：
 
 [source,bash,subs="attributes+"]
 ----
@@ -124,16 +134,17 @@ helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
     --set bootstrapPassword="<your bootstrap password>" \
+    --set hostname="<your domain>" \
     --set tls="ingress" \
     --set llm.active=gemini \
     --set llm.provider=google_genai \
     --set llm.apiKey="<your llm api key>" \
-    --set rancher_sso.enabled=true \
-    --set rancher_sso.url="<your rancher url>" \
     kopilot ./kopilot-{page-version}.tgz
 ----
 
-=== 使用自签名证书
+=== 使用自定义证书
+
+以下示例适用于独立 UI 部署模式：
 
 [source,bash,subs="attributes+"]
 ----
@@ -150,20 +161,19 @@ helm upgrade --install \
     -n kopilot-system \
     --create-namespace \
     --set bootstrapPassword="<your bootstrap password>" \
+    --set hostname="<your domain>" \
     --set llm.active=gemini \
     --set llm.provider=google_genai \
     --set llm.apiKey="<your llm api key>" \
     --set tls="ingress" \
     --set privateCA=true \
-    --set rancher_sso.enabled=true \
-    --set rancher_sso.url="<your rancher url>" \
     kopilot ./kopilot-{page-version}.tgz
 ----
 
 [[external-tls]]
 === 在外部负载均衡器上终止 TLS
 
-您的负载均衡器必须能够支持长期存在的 WebSocket 连接，并且需要插入代理头信息，以便 Liz^GC^ 能够正确地处理这些连接。
+如果使用外部负载均衡器处理 HTTPS，负载均衡器必须支持长期存在的 WebSocket 连接，并正确传递代理头信息，以便 {short-project-name}^GC^ 正确处理请求。
 
 ==== Required Headers
 * Host
@@ -197,7 +207,7 @@ helm upgrade --install \
     kopilot ./kopilot-{page-version}.tgz
 ----
 
-以下是用于快速启动外部负载均衡器的 NGINX 配置示例。
+以下是用于配置外部负载均衡器的 NGINX 示例：
 
 [source,bash]
 ----
