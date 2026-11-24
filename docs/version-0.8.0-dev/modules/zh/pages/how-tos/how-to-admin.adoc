@@ -1378,7 +1378,7 @@ stringData:
 | **Secret** | 选择已准备好的 `my-mcp-bearer-auth`
 | **CA Bundle** | 选择已准备好的 `my-mcp-ca`（密钥使用 `tls.crt`）
 | **Agent Model** | 默认勾选 **Same as the AI provider**，沿用当前全局 AI Provider 的模型设置。
-| **Human Validation Tools** | `sync_application`
+| **Human Validation Tools** | `create.application`, `update.application`, `delete.application`, `sync.application`, `run.resource.action`
 | **Guidelines** | 使用下方推荐内容。
 |===
 
@@ -1445,7 +1445,11 @@ spec:
   displayName: Argo CD
   enabled: true
   humanValidationTools:
-    - sync_application
+    - create.application
+    - update.application
+    - delete.application
+    - sync.application
+    - run.resource.action
   mcpURL: https://<argocd-mcp-host>/mcp
   systemPrompt: |-
     You are the Argo CD Subagent of Liz. You control the configured Argo CD server with the MCP plugin tools loaded for this session.
