@@ -77,14 +77,37 @@ image::quick-start/quick_start_4.png[Repositories 列表页面]
 
 == 更新模型配置
 
-如果您通过 SUSE AI Assistant GC Settings 页面修改了模型配置，在执行 Helm upgrade 时需要将对应的模型配置同步到 `values.yaml` 中。
+如果您通过 Global Setting -> AI Assistant GC 页面修改了模型配置，在执行 Helm upgrade 时，需要将对应的模型配置同步到 `values.yaml` 中。
 
-默认情况下，执行 Helm upgrade 时不会覆盖当前使用的模型配置，如果您希望使用 `values.yaml` 中的配置覆盖现有的模型配置，请将 `llm.forceUpdate` 设置为 `true`：
+默认情况下，执行 Helm upgrade 时不会覆盖当前使用的模型配置。如果您希望使用 `values.yaml` 中的配置覆盖现有模型配置，请将 `llm.forceUpdate` 设置为 `true`：
 
-[,yaml]
+[source,yaml]
 ----
 llm:
   forceUpdate: true
+----
+
+**注意：** 使用 Helm 4 升级时，即使设置了 `forceUpdate: true`，也可能因 Server-Side Apply 字段所有权冲突导致升级失败，报错如下：
+
+[source,text]
+----
+Error: UPGRADE FAILED: conflict occurred while applying object kopilot-system/kopilot-llm-config /v1, Kind=Secret: Apply failed with 4 conflicts: conflicts with "rancher" using v1:
+- .data.ACTIVE_LLM
+- .data.LLM_API_KEY
+- .data.LLM_BASE_URL
+- .data.LLM_MODEL
+----
+
+如果遇到此问题，请在 Helm upgrade 命令中添加 `--server-side=false`：
+
+[source,bash,subs="attributes+"]
+----
+helm upgrade --install \
+    -n kopilot-system \
+    --create-namespace \
+    -f values.yaml \
+    kopilot ./kopilot-{page-version}.tgz \
+    --server-side=false
 ----
 
 == 使用 Ingress NGINX 时出现 `missing user header` 错误
