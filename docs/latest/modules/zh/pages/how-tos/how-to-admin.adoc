@@ -991,7 +991,7 @@ Example of prompts:
 |===
 
 **通过 YAML 安装：**
-或者，您可以将此 `SubAgentConfig` YAML apply 到 local 集群：
+或者，您可以将以下完整的 `SubAgentConfig` YAML apply 到 local 集群。如果使用自签名证书，请参考 xref:how-tos/how-to-admin.adoc#mcp-trust-custom-cert[MCP使用自定义证书] 中的说明，添加 `caBundleRef`。
 
 [source,yaml]
 ----
@@ -1272,6 +1272,11 @@ spec:
     name: suse-obs-ca
     key: ca.crt
 ----
+
+[NOTE]
+=====
+以上示例仅展示如何配置 `caBundleRef`。完整的 `SubAgentConfig` 配置请参考 xref:how-tos/how-to-admin.adoc#multi-agent[配置多个AI Agent - SUSE Observability]。
+=====
 
 [#mcp-oauth2]
 == 为 MCP Server 配置 OAuth2 身份验证
